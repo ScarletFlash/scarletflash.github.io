@@ -10,7 +10,7 @@
       "es2018",
       "esnext"
     ],
-    "locale": "ru",
+    "locale": "en",
     "module": "es2015",
     "moduleResolution": "node",
     "newLine": "lf",
