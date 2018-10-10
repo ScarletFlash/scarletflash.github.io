@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "clean-root": "./static-files-cleanup.sh",
-    "build-github": "npm run lint && npm run clean-root && ng build --prod --output-path ../ --base-href scarletflash.github.io --no-delete-output-path"
+    "create-404": "./create-error-page.sh",
+    "build-github": "npm run lint && npm run clean-root && ng build --prod --output-path ../ --base-href scarletflash.github.io --no-delete-output-path && npm run create-404"
   },
   "private": true,
   "dependencies": {
