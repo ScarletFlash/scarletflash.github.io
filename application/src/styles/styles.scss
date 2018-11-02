@@ -1,0 +1,28 @@
+@import 'variables.scss';
+
+@font-face {
+  font-family: 'cormorant';
+  font-display: block;
+  font-weight: normal;
+  src: url(/assets/fonts/cormorant/cormorant-regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'cormorant';
+  font-display: block;
+  font-weight: bold;
+  src: url(/assets/fonts/cormorant/cormorant-bold.ttf) format('truetype');
+}
+
+html { font-size: 14px; }
+
+body {
+  all: unset;
+  background: $background-color_main;
+  color: $font-color_main;
+
+  * {
+    box-sizing: border-box;
+    font-family: $font-family_main;
+  }
+}
