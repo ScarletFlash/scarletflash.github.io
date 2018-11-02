@@ -1,20 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HeaderComponent, FooterComponent } from '@app/shared/components';
+import { SidebarComponent } from '@app/shared/components';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
   declarations: [
-    FooterComponent,
-    HeaderComponent
+    SidebarComponent,
   ],
   exports: [
-    FooterComponent,
-    HeaderComponent
+    HttpClientModule,
+    SidebarComponent
   ]
 })
 export class SharedModule { }

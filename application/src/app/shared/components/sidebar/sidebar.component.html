@@ -1,0 +1,12 @@
+<div class="logo">
+</div>
+<nav class="nav">
+  <a *ngFor="let link of navLinks"
+    class="nav__link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    [routerLinkActive]="'nav__link_active'"
+    [routerLink]="link.path"
+  >
+    {{ link.name }}
+  </a>
+</nav>
