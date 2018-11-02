@@ -1,2 +1,1 @@
-export * from '@app/shared/components/footer/footer.component';
-export * from '@app/shared/components/header/header.component';
+export * from '@app/shared/components/sidebar/sidebar.component';
