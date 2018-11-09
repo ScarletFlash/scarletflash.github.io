@@ -21,7 +21,7 @@ body {
   background: $background-color_main;
   color: $font-color_main;
 
-  * {
+  > {
     box-sizing: border-box;
     font-family: $font-family_main;
   }
