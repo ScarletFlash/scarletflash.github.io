@@ -29,7 +29,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._subscriptions.forEach(
       (subscription: Subscription) => { subscription.unsubscribe(); }
-    )
+    );
   }
 
   dismiss(): void { this._notificationService.clean(); }
