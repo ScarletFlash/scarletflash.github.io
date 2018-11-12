@@ -1,0 +1,33 @@
+.notification {
+  width: 100%;
+  box-sizing: border-box;
+  padding: .5rem;
+  border: .05rem solid transparent;
+  border-radius: .2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &_error { border-color: #ff5050; }
+  &_info { border-color: #50bfff; }
+  &_warning { border-color: #ffd650; }
+  &_success { border-color: #08d45d; }
+  &_custom { border-color: #ffffff; }
+
+  &__message { padding: 0 .5rem; }
+
+  &__controll {
+    all: unset;
+    cursor: pointer;
+    padding: .25rem;
+    margin: 0 .5rem;
+    color: #b6b9ba;
+    transition: all .3s;
+
+    &:hover {
+      color: #ff5050;
+    }
+  }
+
+}

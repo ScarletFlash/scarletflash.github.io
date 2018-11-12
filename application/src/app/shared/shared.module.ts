@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '@app/shared/components';
 
+import { NotificationComponent } from './components/notification/notification.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -12,10 +14,12 @@ import { SidebarComponent } from '@app/shared/components';
   ],
   declarations: [
     SidebarComponent,
+    NotificationComponent,
   ],
   exports: [
     HttpClientModule,
-    SidebarComponent
+    SidebarComponent,
+    NotificationComponent
   ]
 })
 export class SharedModule { }
