@@ -8,8 +8,8 @@ import {
   SidebarComponent,
   SidebarLangSwitcherComponent,
   SidebarNavigationComponent,
+  TileComponent,
 } from '@app/shared/components';
-
 
 @NgModule({
   imports: [
@@ -23,6 +23,7 @@ import {
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
+    TileComponent,
   ],
   exports: [
     HttpClientModule,
@@ -31,6 +32,7 @@ import {
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
+    TileComponent
   ]
 })
 export class SharedModule { }
