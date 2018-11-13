@@ -7,4 +7,17 @@
   min-height: 100vh;
   box-sizing: border-box;
   padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  &__top {
+    width: 100%;
+    padding: 0 0 1rem;
+  }
+  &__bottom {
+    width: 100%;
+    padding: 1rem 0 0;
+  }
 }
