@@ -1,0 +1,31 @@
+@import 'variables.scss';
+
+.lang-switcher {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  user-select: none;
+
+  &__option {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: all .3s;
+    color: #ffffff;
+    font-size: .8rem;
+    padding: .1rem .5rem;
+
+    &_selected {
+      cursor: default;
+      pointer-events: none;
+      opacity: 1;
+    }
+
+    &_disabled {
+      cursor: default;
+      pointer-events: none;
+      opacity: .7;
+    }
+  }
+}
