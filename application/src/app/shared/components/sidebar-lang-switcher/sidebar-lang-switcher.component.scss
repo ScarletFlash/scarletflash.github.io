@@ -12,20 +12,20 @@
     background: transparent;
     border: none;
     transition: all .3s;
-    color: #ffffff;
     font-size: .8rem;
     padding: .1rem .5rem;
+    color: #b6b9ba;
 
     &_selected {
       cursor: default;
       pointer-events: none;
-      opacity: 1;
+      color: #ff5050;
     }
 
     &_disabled {
       cursor: default;
       pointer-events: none;
-      opacity: .7;
+      color: #b6b9ba;
     }
   }
 }
