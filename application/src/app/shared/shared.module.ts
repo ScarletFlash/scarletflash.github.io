@@ -2,9 +2,14 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SidebarComponent } from '@app/shared/components';
+import {
+  LogoComponent,
+  NotificationComponent,
+  SidebarComponent,
+  SidebarLangSwitcherComponent,
+  SidebarNavigationComponent,
+} from '@app/shared/components';
 
-import { NotificationComponent } from './components/notification/notification.component';
 
 @NgModule({
   imports: [
@@ -13,13 +18,19 @@ import { NotificationComponent } from './components/notification/notification.co
     HttpClientModule
   ],
   declarations: [
-    SidebarComponent,
+    LogoComponent,
     NotificationComponent,
+    SidebarComponent,
+    SidebarLangSwitcherComponent,
+    SidebarNavigationComponent,
   ],
   exports: [
     HttpClientModule,
+    LogoComponent,
+    NotificationComponent,
     SidebarComponent,
-    NotificationComponent
+    SidebarLangSwitcherComponent,
+    SidebarNavigationComponent,
   ]
 })
 export class SharedModule { }

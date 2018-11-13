@@ -1,0 +1,13 @@
+@import 'variables.scss';
+
+.logo {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  margin: 0 0 1rem 0;
+  height: 3rem;
+  background-image: url('/assets/imgs/scarletflash.svg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
