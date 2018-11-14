@@ -13,6 +13,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
   public repositories: GithubRepositoryModel[] = [];
 
   private _subscriptions: Subscription[] = [];
+  private _filterCondition: string;
 
   constructor(
     private _githubControllerService: GithubControllerService
@@ -31,6 +32,14 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     this._subscriptions.forEach(
       (subscription: Subscription) => { subscription.unsubscribe(); }
     );
+  }
+
+  setFilter(condition: string): void {
+    this._filterCondition = condition;
+  }
+
+  getFilter(): string {
+    return this._filterCondition;
   }
 
 }
