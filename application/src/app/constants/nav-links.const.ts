@@ -6,6 +6,10 @@ export const NavLinksConst: NavLinkModel[] = [
     path: ``
   },
   {
+    name: `Repositories`,
+    path: `repos`
+  },
+  {
     name: `Contacts`,
     path: `contacts`
   }
