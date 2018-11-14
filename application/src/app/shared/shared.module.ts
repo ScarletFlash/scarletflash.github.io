@@ -5,11 +5,13 @@ import { RouterModule } from '@angular/router';
 import {
   LogoComponent,
   NotificationComponent,
+  SearchInputComponent,
   SidebarComponent,
   SidebarLangSwitcherComponent,
   SidebarNavigationComponent,
   TileComponent,
 } from '@app/shared/components';
+import { ObjectArrayFilterPipe } from '@app/shared/pipes';
 
 @NgModule({
   imports: [
@@ -20,19 +22,23 @@ import {
   declarations: [
     LogoComponent,
     NotificationComponent,
+    SearchInputComponent,
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
     TileComponent,
+    ObjectArrayFilterPipe,
   ],
   exports: [
     HttpClientModule,
     LogoComponent,
     NotificationComponent,
+    SearchInputComponent,
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
-    TileComponent
+    TileComponent,
+    ObjectArrayFilterPipe
   ]
 })
 export class SharedModule { }

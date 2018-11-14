@@ -1,0 +1,17 @@
+@import 'variables.scss';
+
+.search-input {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  &__field {
+    color: #ff0000;
+  }
+
+  &__button {
+    color: #00ff00;
+  }
+}
