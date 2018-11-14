@@ -1,5 +1,5 @@
-import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
     {
@@ -9,6 +9,10 @@ const routes: Routes = [
     {
         path: 'contacts',
         loadChildren: '@app/pages/contacts/contacts.module#ContactsModule'
+    },
+    {
+        path: 'repos',
+        loadChildren: '@app/pages/repositories/repositories.module#RepositoriesModule'
     },
     {
         path: '**',
