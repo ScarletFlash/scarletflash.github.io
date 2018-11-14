@@ -12,17 +12,17 @@ export class GithubControllerService {
 
   public myRepositories: BehaviorSubject<GithubRepositoryModel[]> = new BehaviorSubject<GithubRepositoryModel[]>([]);
 
-  private _username: string;
-
   constructor(
     private _requestGithubUsersService: RequestGithubUsersService,
     private _notificationService: NotificationService
-  ) {
-    this._username = (window.location.hostname === 'localhost') ? 'scarletflash' : window.location.hostname;
-   }
+  ) {}
 
   requestMyRepositories(): void {
-    this._requestGithubUsersService.getUsersRepos(this._username).subscribe(
+    this.requestUsersRepositories('scarletflash');
+  }
+
+  requestUsersRepositories(username: string): void {
+    this._requestGithubUsersService.getUsersRepos(username).subscribe(
       (response: GithubRepositoryModel[]) => { this.myRepositories.next(response); },
       (response: HttpErrorResponse) => { this.throwAlert(response); }
     );
