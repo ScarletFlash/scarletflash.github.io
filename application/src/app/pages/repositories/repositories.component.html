@@ -2,15 +2,22 @@
   <div class="repositories-list__title">
     <h1>Repositories</h1>
     <app-search-input
+      [placeholder]="'filter repositories'"
       (onvaluechange)="setFilter($event.detail)"
     ></app-search-input>
   </div>
 
   <app-tile
-  *ngFor="let repository of repositories | objectArrayFilter:getFilter()"
-  class="repositories-list__item"
-  style="margin-bottom: 1rem;"
->
-  {{ repository.name }}
-</app-tile>
+    *ngFor="let repository of repositories | objectArrayFilter:getFilter()"
+    class="repositories-list__item"
+    style="margin-bottom: 1rem;"
+  >
+    {{ repository.name }}
+  </app-tile>
+  <div
+    *ngIf="(repositories | objectArrayFilter:getFilter()).length === 0"
+    class="repositories-list__placeholder"
+  >
+    No matches
+  </div>
 </main>

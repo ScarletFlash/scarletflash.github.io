@@ -20,4 +20,16 @@
     margin: 0 0 .5rem;
     width: 100%;
   }
+
+  &__placeholder {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: .5rem 0;
+    color: #b6b9ba;
+    opacity: .3;
+  }
 }
