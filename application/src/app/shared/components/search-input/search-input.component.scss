@@ -6,12 +6,25 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  border-bottom: .05rem solid #b6b9ba;
+  transition: all .3s;
+
+  &_focused {
+    border-bottom: .05rem solid #ff5050;
+  }
 
   &__field {
-    color: #ff0000;
+    background: none;
+    border: none;
+    outline: none;
+    color: #f4f4f4;
   }
 
   &__button {
-    color: #00ff00;
+    all: unset;
+    background-image: url('/assets/icons/magnifier.svg');
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 }
