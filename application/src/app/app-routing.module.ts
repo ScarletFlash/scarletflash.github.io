@@ -15,6 +15,10 @@ const routes: Routes = [
         loadChildren: '@app/pages/repositories/repositories.module#RepositoriesModule'
     },
     {
+        path: 'design',
+        loadChildren: '@app/pages/design-system/design-system.module#DesignSystemModule'
+    },
+    {
         path: '**',
         redirectTo: '/'
     }

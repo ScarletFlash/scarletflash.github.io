@@ -12,5 +12,9 @@ export const NavLinksConst: NavLinkModel[] = [
   {
     name: `Contacts`,
     path: `contacts`
+  },
+  {
+    name: `Design system`,
+    path: `design`
   }
 ];
