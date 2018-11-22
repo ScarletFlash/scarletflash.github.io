@@ -6,6 +6,10 @@ const routes: Routes = [
     {
         path: '',
         component: RepositoriesComponent
+    },
+    {
+        path: '*',
+        loadChildren: '@app/pages/repository/repository.module#RepositoryModule'
     }
 ];
 
