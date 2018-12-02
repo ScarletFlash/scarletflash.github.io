@@ -13,21 +13,21 @@ export class SearchInputComponent {
 
   private _focused: boolean = false;
 
-  emitValue(value: string): void {
+  public emitValue(value: string): void {
     this.onvaluechange.emit(
       new CustomEvent<string>('valuewaschanged', { detail: value })
     );
   }
 
-  getElementStyles(element: HTMLElement): CSSStyleDeclaration {
+  public getElementStyles(element: HTMLElement): CSSStyleDeclaration {
     return getComputedStyle(element);
   }
 
-  setFocused(focused: boolean): void {
+  public setFocused(focused: boolean): void {
     this._focused = focused;
   }
 
-  getFocused(): boolean {
+  public getFocused(): boolean {
     return this._focused;
   }
 

@@ -19,7 +19,7 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     private _githubControllerService: GithubControllerService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._subscriptions.push(
       this._githubControllerService.myRepositories.subscribe(
         (response: GithubRepositoryModel[]) => { this.repositories = response; }
@@ -28,17 +28,17 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
     this._githubControllerService.requestMyRepositories();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this._subscriptions.forEach(
       (subscription: Subscription) => { subscription.unsubscribe(); }
     );
   }
 
-  setFilter(condition: string): void {
+  public setFilter(condition: string): void {
     this._filterCondition = condition;
   }
 
-  getFilter(): string {
+  public getFilter(): string {
     return this._filterCondition;
   }
 
