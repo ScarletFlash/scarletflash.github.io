@@ -18,7 +18,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     private _notificationService: NotificationService
   ) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._subscriptions.push(
       this._notificationService.notification$.subscribe(
         (response: NotificationModel) => { this.notification = { ...response }; }
@@ -26,12 +26,12 @@ export class NotificationComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this._subscriptions.forEach(
       (subscription: Subscription) => { subscription.unsubscribe(); }
     );
   }
 
-  dismiss(): void { this._notificationService.clean(); }
+  public dismiss(): void { this._notificationService.clean(); }
 
 }

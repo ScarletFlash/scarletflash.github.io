@@ -9,7 +9,7 @@ export class SidebarLangSwitcherComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
 }

@@ -13,46 +13,46 @@ export class NotificationService {
   private _latestNotification: NotificationModel = { ...nullNotification };
   private _delay: number = 3000;
 
-  addNotification(notification: NotificationModel): void {
-    this.notification$.next(notification);
-    this._latestNotification = notification;
-    setTimeout(() => {
-      if (this._latestNotification === notification && !notification.canCancel) { this.clean(); }
-    }, this._delay);
-  }
+  public clean(): void { this.notification$.next(null); }
 
-  clean(): void { this.notification$.next(null); }
-
-  throwError(message: string, canCancel: boolean = false): void {
-    this.addNotification({
+  public throwError(message: string, canCancel: boolean = false): void {
+    this._addNotification({
       type: 'error',
       message,
       canCancel
     });
   }
 
-  throwInfo(message: string, canCancel: boolean = false): void {
-    this.addNotification({
+  public throwInfo(message: string, canCancel: boolean = false): void {
+    this._addNotification({
       type: 'info',
       message,
       canCancel
     });
   }
 
-  throwWarning(message: string, canCancel: boolean = false): void {
-    this.addNotification({
+  public throwWarning(message: string, canCancel: boolean = false): void {
+    this._addNotification({
       type: 'warning',
       message,
       canCancel
     });
   }
 
-  throwSuccess(message: string, canCancel: boolean = false): void {
-    this.addNotification({
+  public throwSuccess(message: string, canCancel: boolean = false): void {
+    this._addNotification({
       type: 'success',
       message,
       canCancel
     });
+  }
+
+  private _addNotification(notification: NotificationModel): void {
+    this.notification$.next(notification);
+    this._latestNotification = notification;
+    setTimeout(() => {
+      if (this._latestNotification === notification && !notification.canCancel) { this.clean(); }
+    }, this._delay);
   }
 
 }

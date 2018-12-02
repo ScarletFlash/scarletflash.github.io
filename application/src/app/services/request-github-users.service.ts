@@ -15,7 +15,7 @@ export class RequestGithubUsersService {
     protected http: HttpClient
   ) { }
 
-  getUsersRepos(username: string): Observable<GithubRepositoryModel[]> {
+  public getUsersRepos(username: string): Observable<GithubRepositoryModel[]> {
     return this.http.get<GithubRepositoryModel[]>(`${this.requestUrl}/${username}/repos`);
   }
 }

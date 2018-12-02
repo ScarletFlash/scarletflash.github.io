@@ -12,7 +12,7 @@ export class RepositoryTileComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
 }

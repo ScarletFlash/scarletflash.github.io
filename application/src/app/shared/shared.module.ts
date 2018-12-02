@@ -9,7 +9,6 @@ import {
   SidebarComponent,
   SidebarLangSwitcherComponent,
   SidebarNavigationComponent,
-  TileComponent,
 } from '@app/shared/components';
 import { ObjectArrayFilterPipe } from '@app/shared/pipes';
 
@@ -26,7 +25,6 @@ import { ObjectArrayFilterPipe } from '@app/shared/pipes';
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
-    TileComponent,
     ObjectArrayFilterPipe,
   ],
   exports: [
@@ -37,7 +35,6 @@ import { ObjectArrayFilterPipe } from '@app/shared/pipes';
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
-    TileComponent,
     ObjectArrayFilterPipe
   ]
 })

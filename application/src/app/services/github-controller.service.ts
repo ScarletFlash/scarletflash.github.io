@@ -17,18 +17,18 @@ export class GithubControllerService {
     private _notificationService: NotificationService
   ) {}
 
-  requestMyRepositories(): void {
-    this.requestUsersRepositories('scarletflash');
+  public requestMyRepositories(): void {
+    this._requestUsersRepositories('scarletflash');
   }
 
-  requestUsersRepositories(username: string): void {
+  private _requestUsersRepositories(username: string): void {
     this._requestGithubUsersService.getUsersRepos(username).subscribe(
       (response: GithubRepositoryModel[]) => { this.myRepositories.next(response); },
-      (response: HttpErrorResponse) => { this.throwAlert(response); }
+      (response: HttpErrorResponse) => { this._throwAlert(response); }
     );
   }
 
-  throwAlert(response: HttpErrorResponse): void {
+  private _throwAlert(response: HttpErrorResponse): void {
     this._notificationService.throwError(response.message);
   }
 }
