@@ -5,13 +5,7 @@ import { MainComponent } from '@app/pages/main/main.component';
 import { SharedModule } from '@app/shared';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    MainRoutingModule
-  ],
-  declarations: [
-    MainComponent
-  ]
+  imports: [CommonModule, SharedModule, MainRoutingModule],
+  declarations: [MainComponent]
 })
-export class MainModule { }
+export class MainModule {}

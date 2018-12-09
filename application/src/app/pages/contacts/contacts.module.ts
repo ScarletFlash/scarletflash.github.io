@@ -5,13 +5,7 @@ import { ContactsComponent } from '@app/pages/contacts/contacts.component';
 import { SharedModule } from '@app/shared';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule,
-    ContactsRoutingModule
-  ],
-  declarations: [
-    ContactsComponent
-  ]
+  imports: [CommonModule, SharedModule, ContactsRoutingModule],
+  declarations: [ContactsComponent]
 })
-export class ContactsModule { }
+export class ContactsModule {}

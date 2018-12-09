@@ -11,13 +11,14 @@ import { RequestGithubUsersService } from './requests';
   providedIn: 'root'
 })
 export class RepositoriesPageStateService {
-
-  public repositories$: BehaviorSubject<GithubRepositoryModel[]> = new BehaviorSubject<GithubRepositoryModel[]>([]);
+  public repositories$: BehaviorSubject<
+    GithubRepositoryModel[]
+  > = new BehaviorSubject<GithubRepositoryModel[]>([]);
 
   constructor(
     private _requestGuthubUsersService: RequestGithubUsersService,
     private _notificationsService: NotificationService
-  ) { }
+  ) {}
 
   public refreshRepositories(): void {
     this._requestUsersRepositories(UsernameConst);

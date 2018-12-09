@@ -8,9 +8,8 @@ describe('RepositoryTileComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RepositoryTileComponent ]
-    })
-    .compileComponents();
+      declarations: [RepositoryTileComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

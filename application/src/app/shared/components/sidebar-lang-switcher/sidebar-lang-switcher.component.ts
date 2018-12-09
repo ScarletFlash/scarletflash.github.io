@@ -6,10 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sidebar-lang-switcher.component.scss']
 })
 export class SidebarLangSwitcherComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  public ngOnInit(): void {
-  }
-
+  public ngOnInit(): void {}
 }

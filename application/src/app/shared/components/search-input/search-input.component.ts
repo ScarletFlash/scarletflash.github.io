@@ -6,10 +6,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./search-input.component.scss']
 })
 export class SearchInputComponent {
-
   @Input() public placeholder?: string = '';
 
-  @Output() public onvaluechange: EventEmitter<CustomEvent<string>> = new EventEmitter<CustomEvent<string>>(true);
+  @Output() public onvaluechange: EventEmitter<
+    CustomEvent<string>
+  > = new EventEmitter<CustomEvent<string>>(true);
 
   private _focused: boolean = false;
 
@@ -30,5 +31,4 @@ export class SearchInputComponent {
   public getFocused(): boolean {
     return this._focused;
   }
-
 }

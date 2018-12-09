@@ -8,14 +8,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RequestGithubUsersService {
-
   readonly requestUrl: string = `${GithubApiUrlConst}/users`;
 
-  constructor(
-    protected http: HttpClient
-  ) { }
+  constructor(protected http: HttpClient) {}
 
   public getUsersRepos(username: string): Observable<GithubRepositoryModel[]> {
-    return this.http.get<GithubRepositoryModel[]>(`${this.requestUrl}/${username}/repos`);
+    return this.http.get<GithubRepositoryModel[]>(
+      `${this.requestUrl}/${username}/repos`
+    );
   }
 }

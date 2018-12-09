@@ -6,14 +6,16 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class NotificationService {
-
-  public notification$: BehaviorSubject<NotificationModel | null> =
-  new BehaviorSubject<NotificationModel | null>(null);
+  public notification$: BehaviorSubject<NotificationModel | null> = new BehaviorSubject<NotificationModel | null>(
+    null
+  );
 
   private _latestNotification: NotificationModel = { ...nullNotification };
   private _delay: number = 3000;
 
-  public clean(): void { this.notification$.next(null); }
+  public clean(): void {
+    this.notification$.next(null);
+  }
 
   public throwError(message: string, canCancel: boolean = false): void {
     this._addNotification({
@@ -51,8 +53,12 @@ export class NotificationService {
     this.notification$.next(notification);
     this._latestNotification = notification;
     setTimeout(() => {
-      if (this._latestNotification === notification && !notification.canCancel) { this.clean(); }
+      if (
+        this._latestNotification === notification &&
+        !notification.canCancel
+      ) {
+        this.clean();
+      }
     }, this._delay);
   }
-
 }

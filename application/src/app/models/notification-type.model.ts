@@ -1,1 +1,6 @@
-export type NotificationTypeModel = 'error' | 'warning' | 'info' | 'success' | 'custom';
+export type NotificationTypeModel =
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'success'
+  | 'custom';

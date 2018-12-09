@@ -6,10 +6,6 @@ import { SharedModule } from '@app/shared';
 
 @NgModule({
   declarations: [DesignSystemComponent],
-  imports: [
-    CommonModule,
-    SharedModule,
-    DesignSystemRoutingModule
-  ]
+  imports: [CommonModule, SharedModule, DesignSystemRoutingModule]
 })
-export class DesignSystemModule { }
+export class DesignSystemModule {}

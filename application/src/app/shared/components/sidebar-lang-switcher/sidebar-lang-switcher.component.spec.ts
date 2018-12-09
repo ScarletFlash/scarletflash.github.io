@@ -8,9 +8,8 @@ describe('SidebarLangSwitcherComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidebarLangSwitcherComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarLangSwitcherComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

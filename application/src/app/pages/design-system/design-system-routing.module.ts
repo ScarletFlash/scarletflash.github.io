@@ -3,19 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { DesignSystemComponent } from '@app/pages/design-system/design-system.component';
 
 const routes: Routes = [
-    {
-        path: '',
-        component: DesignSystemComponent
-    }
+  {
+    path: '',
+    component: DesignSystemComponent
+  }
 ];
 
 @NgModule({
-    imports: [
-        RouterModule.forChild(routes)
-    ],
-    exports: [
-        RouterModule
-    ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
 })
-
 export class DesignSystemRoutingModule {}

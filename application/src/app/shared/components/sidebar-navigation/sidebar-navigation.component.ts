@@ -8,7 +8,5 @@ import { NavLinkModel } from '@app/models';
   styleUrls: ['./sidebar-navigation.component.scss']
 })
 export class SidebarNavigationComponent {
-
   public navLinks: NavLinkModel[] = NavLinksConst;
-
 }

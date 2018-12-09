@@ -9,8 +9,9 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class GithubControllerService {
-
-  public myRepositories: BehaviorSubject<GithubRepositoryModel[]> = new BehaviorSubject<GithubRepositoryModel[]>([]);
+  public myRepositories: BehaviorSubject<
+    GithubRepositoryModel[]
+  > = new BehaviorSubject<GithubRepositoryModel[]>([]);
 
   constructor(
     private _requestGithubUsersService: RequestGithubUsersService,
@@ -23,8 +24,12 @@ export class GithubControllerService {
 
   private _requestUsersRepositories(username: string): void {
     this._requestGithubUsersService.getUsersRepos(username).subscribe(
-      (response: GithubRepositoryModel[]) => { this.myRepositories.next(response); },
-      (response: HttpErrorResponse) => { this._throwAlert(response); }
+      (response: GithubRepositoryModel[]) => {
+        this.myRepositories.next(response);
+      },
+      (response: HttpErrorResponse) => {
+        this._throwAlert(response);
+      }
     );
   }
 
