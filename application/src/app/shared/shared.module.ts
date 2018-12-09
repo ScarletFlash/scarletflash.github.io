@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import {
   LogoComponent,
@@ -15,13 +13,7 @@ import {
 import { ObjectArrayFilterPipe } from '@app/shared/pipes';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule,
-    HttpClientModule,
-    BrowserModule,
-    BrowserAnimationsModule
-  ],
+  imports: [CommonModule, RouterModule, HttpClientModule],
   declarations: [
     LogoComponent,
     NotificationComponent,
@@ -39,9 +31,7 @@ import { ObjectArrayFilterPipe } from '@app/shared/pipes';
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
-    ObjectArrayFilterPipe,
-    BrowserModule,
-    BrowserAnimationsModule
+    ObjectArrayFilterPipe
   ]
 })
 export class SharedModule {}
