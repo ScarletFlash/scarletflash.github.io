@@ -1,5 +1,6 @@
 <nav class="nav">
-  <a *ngFor="let link of navLinks"
+  <a
+    *ngFor="let link of navLinks"
     class="nav__link"
     [routerLinkActiveOptions]="{ exact: true }"
     [routerLinkActive]="'nav__link_active'"

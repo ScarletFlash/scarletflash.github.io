@@ -7,12 +7,9 @@ import { GithubRepositoryModel } from '@app/models';
   styleUrls: ['./repository-tile.component.scss']
 })
 export class RepositoryTileComponent implements OnInit {
-
   @Input() public repository: GithubRepositoryModel;
 
-  constructor() { }
+  constructor() {}
 
-  public ngOnInit(): void {
-  }
-
+  public ngOnInit(): void {}
 }

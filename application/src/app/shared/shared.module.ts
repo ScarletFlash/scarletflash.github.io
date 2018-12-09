@@ -29,7 +29,7 @@ import { ObjectArrayFilterPipe } from '@app/shared/pipes';
     SidebarComponent,
     SidebarLangSwitcherComponent,
     SidebarNavigationComponent,
-    ObjectArrayFilterPipe,
+    ObjectArrayFilterPipe
   ],
   exports: [
     HttpClientModule,
@@ -44,4 +44,4 @@ import { ObjectArrayFilterPipe } from '@app/shared/pipes';
     BrowserAnimationsModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

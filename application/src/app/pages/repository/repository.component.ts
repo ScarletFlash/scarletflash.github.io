@@ -6,10 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./repository.component.scss']
 })
 export class RepositoryComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  public ngOnInit(): void {
-  }
-
+  public ngOnInit(): void {}
 }

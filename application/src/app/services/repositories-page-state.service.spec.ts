@@ -6,7 +6,9 @@ describe('RepositoriesPageStateService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RepositoriesPageStateService = TestBed.get(RepositoriesPageStateService);
+    const service: RepositoriesPageStateService = TestBed.get(
+      RepositoriesPageStateService
+    );
     expect(service).toBeTruthy();
   });
 });

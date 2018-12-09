@@ -6,7 +6,9 @@ describe('RequestGithubUsersService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RequestGithubUsersService = TestBed.get(RequestGithubUsersService);
+    const service: RequestGithubUsersService = TestBed.get(
+      RequestGithubUsersService
+    );
     expect(service).toBeTruthy();
   });
 });

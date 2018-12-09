@@ -6,10 +6,6 @@ import { SharedModule } from '@app/shared';
 
 @NgModule({
   declarations: [RepositoryComponent],
-  imports: [
-    SharedModule,
-    RepositoryRoutingModule,
-    CommonModule
-  ]
+  imports: [SharedModule, RepositoryRoutingModule, CommonModule]
 })
-export class RepositoryModule { }
+export class RepositoryModule {}

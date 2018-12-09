@@ -13,11 +13,11 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: .5rem 0 1rem;
+    padding: 0.5rem 0 1rem;
   }
 
   &__item {
-    margin: 0 0 .5rem;
+    margin: 0 0 0.5rem;
     width: 100%;
   }
 
@@ -28,8 +28,8 @@
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
-    padding: .5rem 0;
+    padding: 0.5rem 0;
     color: #b6b9ba;
-    opacity: .3;
+    opacity: 0.3;
   }
 }

@@ -6,10 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./design-system.component.scss']
 })
 export class DesignSystemComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  public ngOnInit(): void {
-  }
-
+  public ngOnInit(): void {}
 }
