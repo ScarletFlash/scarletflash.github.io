@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GithubRepositoryModel } from '@app/models';
 
 @Component({
@@ -6,10 +6,6 @@ import { GithubRepositoryModel } from '@app/models';
   templateUrl: './repository-tile.component.html',
   styleUrls: ['./repository-tile.component.scss']
 })
-export class RepositoryTileComponent implements OnInit {
+export class RepositoryTileComponent {
   @Input() public repository: GithubRepositoryModel;
-
-  constructor() {}
-
-  public ngOnInit(): void {}
 }
