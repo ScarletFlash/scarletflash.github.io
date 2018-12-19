@@ -1,0 +1,13 @@
+@import 'variables.scss';
+
+:host {
+  width: 100%;
+}
+
+.color-palette-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
