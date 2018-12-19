@@ -1,3 +1,5 @@
-import { ColorPaletteItemModel } from '@app/models';
+import { ColorPaletteItemInterface } from '@app/declarations';
 
-export const ColorPaletteConst: ColorPaletteItemModel[] = [];
+export const ColorPaletteConst: ColorPaletteItemInterface[] = [
+  { colorCode: '#ff5050', colorName: 'main' }
+];

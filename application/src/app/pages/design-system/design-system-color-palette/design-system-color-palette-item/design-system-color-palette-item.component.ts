@@ -1,11 +1,17 @@
-import { Component, HostBinding, Input, OnChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+} from '@angular/core';
 
 @Component({
   selector: 'app-design-system-color-palette-item',
   templateUrl: './design-system-color-palette-item.component.html',
-  styleUrls: ['./design-system-color-palette-item.component.scss']
+  styleUrls: ['./design-system-color-palette-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DesignSystemColorPaletteItemComponent implements OnChanges {
+export class DesignSystemColorPaletteItemComponent {
   @Input() public colorCode: string;
   @Input() public diameter: string;
 
@@ -15,9 +21,5 @@ export class DesignSystemColorPaletteItemComponent implements OnChanges {
 
   @HostBinding('style.height') get _getHeight(): string {
     return this.diameter;
-  }
-
-  ngOnChanges(changes) {
-    console.log(changes);
   }
 }

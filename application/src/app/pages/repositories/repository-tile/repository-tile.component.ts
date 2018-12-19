@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { GithubRepositoryModel } from '@app/models';
+import { GithubRepositoryModel } from '@app/declarations';
 
 @Component({
   selector: 'app-repository-tile',

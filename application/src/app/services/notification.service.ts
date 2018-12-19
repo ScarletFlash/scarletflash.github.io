@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { NotificationModel, nullNotification } from '@app/models';
+import { NotificationInterface } from '@app/declarations';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  public notification$: BehaviorSubject<NotificationModel | null> = new BehaviorSubject<NotificationModel | null>(
+  public notification$: BehaviorSubject<NotificationInterface | null> = new BehaviorSubject<NotificationInterface | null>(
     null
   );
 
-  private _latestNotification: NotificationModel = { ...nullNotification };
+  private _latestNotification: Partial<NotificationInterface> = {};
   private _delay: number = 3000;
 
   public clean(): void {
@@ -49,7 +49,7 @@ export class NotificationService {
     });
   }
 
-  private _addNotification(notification: NotificationModel): void {
+  private _addNotification(notification: NotificationInterface): void {
     this.notification$.next(notification);
     this._latestNotification = notification;
     setTimeout(() => {

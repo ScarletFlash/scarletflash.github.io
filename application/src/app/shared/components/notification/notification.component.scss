@@ -12,7 +12,7 @@
   justify-content: space-between;
 
   &_error {
-    border-color: #ff5050;
+    border-color: $essential-color-red;
   }
   &_info {
     border-color: #50bfff;
@@ -40,7 +40,7 @@
     transition: all 0.3s;
 
     &:hover {
-      color: #ff5050;
+      color: $essential-color-red;
     }
   }
 }

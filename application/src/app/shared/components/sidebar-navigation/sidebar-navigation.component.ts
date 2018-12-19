@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavLinksConst } from '@app/constants';
-import { NavLinkModel } from '@app/models';
+import { NavLinkInterface } from '@app/declarations';
 
 @Component({
   selector: 'app-sidebar-navigation',
@@ -8,5 +8,5 @@ import { NavLinkModel } from '@app/models';
   styleUrls: ['./sidebar-navigation.component.scss']
 })
 export class SidebarNavigationComponent {
-  public navLinks: NavLinkModel[] = NavLinksConst;
+  public navLinks: Partial<NavLinkInterface>[] = NavLinksConst;
 }
