@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GithubApiUrlConst } from '@app/constants';
-import { GithubRepositoryModel } from '@app/models';
+import { GithubRepositoryModel } from '@app/declarations';
 import { Observable } from 'rxjs';
 
 @Injectable({

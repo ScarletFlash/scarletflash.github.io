@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UsernameConst } from '@app/constants';
-import { GithubRepositoryModel } from '@app/models';
+import { GithubRepositoryModel } from '@app/declarations';
 import { BehaviorSubject } from 'rxjs';
 
 import { NotificationService } from './notification.service';

@@ -1,6 +1,6 @@
-import { NavLinkModel } from '@app/models';
+import { NavLinkInterface } from '@app/declarations';
 
-export const NavLinksConst: NavLinkModel[] = [
+export const NavLinksConst: Partial<NavLinkInterface>[] = [
   {
     name: `Main page`,
     path: ``

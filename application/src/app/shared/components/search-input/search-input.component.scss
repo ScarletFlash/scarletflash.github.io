@@ -10,7 +10,7 @@
   transition: all 0.3s;
 
   &_focused {
-    border-bottom: 0.05rem solid #ff5050;
+    border-bottom: 0.05rem solid $essential-color-red;
   }
 
   &__field {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NotificationModel, nullNotification } from '@app/models';
+import { NotificationInterface } from '@app/declarations';
 import { NotificationService } from '@app/services';
 import { Subscription } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./notification.component.scss']
 })
 export class NotificationComponent implements OnInit, OnDestroy {
-  public notification: NotificationModel = { ...nullNotification };
+  public notification: Partial<NotificationInterface> = {};
 
   private _subscriptions: Subscription[] = [];
 
@@ -18,7 +18,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._subscriptions.push(
       this._notificationService.notification$.subscribe(
-        (response: NotificationModel) => {
+        (response: NotificationInterface) => {
           this.notification = { ...response };
         }
       )

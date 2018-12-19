@@ -24,13 +24,13 @@
     user-select: none;
 
     &_active {
-      color: #ff5050;
+      color: $essential-color-red;
       pointer-events: none;
       cursor: default;
     }
 
     &:hover {
-      color: #ff5050;
+      color: $essential-color-red;
     }
   }
 }

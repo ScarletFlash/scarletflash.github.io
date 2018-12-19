@@ -1,4 +1,4 @@
-export type NotificationTypeModel =
+export type NotificationType =
   | 'error'
   | 'warning'
   | 'info'

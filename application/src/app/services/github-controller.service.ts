@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { GithubRepositoryModel } from '@app/models';
+import { GithubRepositoryModel } from '@app/declarations';
 import { NotificationService } from '@app/services/notification.service';
 import { RequestGithubUsersService } from '@app/services/requests';
 import { BehaviorSubject } from 'rxjs';

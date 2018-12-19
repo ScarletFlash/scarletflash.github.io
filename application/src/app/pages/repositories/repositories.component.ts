@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GithubRepositoryModel } from '@app/models';
+import { GithubRepositoryModel } from '@app/declarations';
 import { GithubControllerService } from '@app/services';
 import { Subscription } from 'rxjs';
 

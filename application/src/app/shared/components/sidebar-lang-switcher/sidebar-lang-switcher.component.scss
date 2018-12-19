@@ -19,7 +19,7 @@
     &_selected {
       cursor: default;
       pointer-events: none;
-      color: #ff5050;
+      color: $essential-color-red;
     }
 
     &_disabled {

@@ -1,6 +1,7 @@
 <p>design-system-color-palette works!</p>
 
 <app-design-system-color-palette-item
-  [colorCode]="'#ff0000'"
-  [diameter]="'3rem'"
+  *ngFor="let color of colors"
+  [colorCode]="color.colorCode"
+  [diameter]="diameter"
 ></app-design-system-color-palette-item>
