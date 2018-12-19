@@ -1,7 +1,8 @@
-<p>design-system-color-palette works!</p>
-
-<app-design-system-color-palette-item
-  *ngFor="let color of colors"
-  [colorCode]="color.colorCode"
-  [diameter]="diameter"
-></app-design-system-color-palette-item>
+<h2>Main color palette</h2>
+<section class="color-palette-wrapper">
+  <app-design-system-color-palette-item
+    *ngFor="let color of colors"
+    [colorCode]="color.colorCode"
+    [diameter]="diameter"
+  ></app-design-system-color-palette-item>
+</section>
