@@ -1,7 +1,10 @@
 <section class="repositories-list">
   <header class="repositories-list__title">
     <h1>Repositories</h1>
-    <app-search-input [placeholder]="'filter repositories'" (onvaluechange)="setFilter($event.detail)"></app-search-input>
+    <app-search-input
+      [placeholder]="'filter repositories'"
+      (onvaluechange)="setFilter($event.detail)"
+    ></app-search-input>
   </header>
 
   <app-repository-tile
@@ -9,5 +12,7 @@
     class="repositories-list__item"
     [repository]="repository"
   ></app-repository-tile>
-  <section *ngIf="(repositories | objectArrayFilter: getFilter()).length === 0" class="repositories-list__placeholder">No matches</section>
+  <section *ngIf="(repositories | objectArrayFilter: getFilter()).length === 0" class="repositories-list__placeholder">
+    No matches
+  </section>
 </section>

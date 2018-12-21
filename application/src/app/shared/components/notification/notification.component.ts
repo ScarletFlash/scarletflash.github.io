@@ -17,11 +17,9 @@ export class NotificationComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this._subscriptions.push(
-      this._notificationService.notification$.subscribe(
-        (response: NotificationInterface) => {
-          this.notification = { ...response };
-        }
-      )
+      this._notificationService.notification$.subscribe((response: NotificationInterface) => {
+        this.notification = { ...response };
+      })
     );
   }
 

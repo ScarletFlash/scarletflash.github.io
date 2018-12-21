@@ -8,7 +8,7 @@ import {
   SearchInputComponent,
   SidebarComponent,
   SidebarLangSwitcherComponent,
-  SidebarNavigationComponent,
+  SidebarNavigationComponent
 } from '@app/shared/components';
 import { ObjectArrayFilterPipe } from '@app/shared/pipes';
 

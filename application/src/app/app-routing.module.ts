@@ -12,13 +12,11 @@ const routes: Routes = [
   },
   {
     path: 'repos',
-    loadChildren:
-      '@app/pages/repositories/repositories.module#RepositoriesModule'
+    loadChildren: '@app/pages/repositories/repositories.module#RepositoriesModule'
   },
   {
     path: 'design',
-    loadChildren:
-      '@app/pages/design-system/design-system.module#DesignSystemModule'
+    loadChildren: '@app/pages/design-system/design-system.module#DesignSystemModule'
   },
   {
     path: '**',

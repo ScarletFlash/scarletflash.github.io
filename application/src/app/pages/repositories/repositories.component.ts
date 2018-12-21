@@ -18,11 +18,9 @@ export class RepositoriesComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this._subscriptions.push(
-      this._githubControllerService.myRepositories.subscribe(
-        (response: GithubRepositoryModel[]) => {
-          this.repositories = response;
-        }
-      )
+      this._githubControllerService.myRepositories.subscribe((response: GithubRepositoryModel[]) => {
+        this.repositories = response;
+      })
     );
     this._githubControllerService.requestMyRepositories();
   }

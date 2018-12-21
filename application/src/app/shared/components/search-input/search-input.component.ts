@@ -8,16 +8,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 export class SearchInputComponent {
   @Input() public placeholder?: string = '';
 
-  @Output() public onvaluechange: EventEmitter<
-    CustomEvent<string>
-  > = new EventEmitter<CustomEvent<string>>(true);
+  @Output() public onvaluechange: EventEmitter<CustomEvent<string>> = new EventEmitter<CustomEvent<string>>(true);
 
   private _focused: boolean = false;
 
   public emitValue(value: string): void {
-    this.onvaluechange.emit(
-      new CustomEvent<string>('valuewaschanged', { detail: value })
-    );
+    this.onvaluechange.emit(new CustomEvent<string>('valuewaschanged', { detail: value }));
   }
 
   public getElementStyles(element: HTMLElement): CSSStyleDeclaration {
