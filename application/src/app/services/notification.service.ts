@@ -53,10 +53,7 @@ export class NotificationService {
     this.notification$.next(notification);
     this._latestNotification = notification;
     setTimeout(() => {
-      if (
-        this._latestNotification === notification &&
-        !notification.canCancel
-      ) {
+      if (this._latestNotification === notification && !notification.canCancel) {
         this.clean();
       }
     }, this._delay);

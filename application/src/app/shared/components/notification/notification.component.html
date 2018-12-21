@@ -1,4 +1,7 @@
-<section *ngIf="!!notification.type" [class]="!!notification.type ? 'notification notification_' + notification.type : 'notification'">
+<section
+  *ngIf="!!notification.type"
+  [class]="!!notification.type ? 'notification notification_' + notification.type : 'notification'"
+>
   <span class="notification__message"> {{ notification.message }} </span>
   <button class="notification__controll" (click)="dismiss()">⨯</button>
 </section>
