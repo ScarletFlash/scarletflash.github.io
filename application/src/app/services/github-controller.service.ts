@@ -9,9 +9,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class GithubControllerService {
-  public myRepositories: BehaviorSubject<
-    GithubRepositoryModel[]
-  > = new BehaviorSubject<GithubRepositoryModel[]>([]);
+  public myRepositories: BehaviorSubject<GithubRepositoryModel[]> = new BehaviorSubject<GithubRepositoryModel[]>([]);
 
   constructor(
     private _requestGithubUsersService: RequestGithubUsersService,
