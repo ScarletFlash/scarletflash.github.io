@@ -75,7 +75,10 @@
             "progress": true,
             "scripts": [],
             "showCircularDependencies": true,
-            "styles": ["src/styles.scss"],
+            "styles": ["src/styles/primary.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles/"]
+            },
             "subresourceIntegrity": true,
             "tsConfig": "src/tsconfig.app.json"
           }
@@ -147,7 +150,10 @@
             "main": "src/test.ts",
             "polyfills": "src/polyfills.ts",
             "scripts": [],
-            "styles": ["src/styles.scss"],
+            "styles": ["src/styles/primary.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles/"]
+            },
             "tsConfig": "src/tsconfig.spec.json"
           }
         }
