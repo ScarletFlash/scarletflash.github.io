@@ -1,0 +1,117 @@
+{
+  "misc": {
+    "compileTime": 67745
+  },
+  "plugins": {
+    "AngularCompilerPlugin": 24807,
+    "SubresourceIntegrityPlugin": 23,
+    "MiniCssExtractPlugin": 99,
+    "ProfilingPlugin": 8167,
+    "ProgressPlugin": 1707,
+    "CircularDependencyPlugin": 3,
+    "LicenseWebpackPlugin": 139,
+    "SourceMapDevToolPlugin": 1440,
+    "SuppressExtractedTextChunksWebpackPlugin": 3,
+    "HashedModuleIdsPlugin": 9,
+    "CleanCssWebpackPlugin": 26,
+    "TerserPlugin": 3202,
+    "Object": 8154,
+    "StatsPlugin": 11,
+    "IndexHtmlWebpackPlugin": 20,
+    "BundleBudgetPlugin": 2
+  },
+  "loaders": {
+    "build": [
+      {
+        "averages": {
+          "dataPoints": 1,
+          "median": 5021,
+          "mean": 5021,
+          "range": {
+            "start": 5021,
+            "end": 5021
+          }
+        },
+        "activeTime": 5021,
+        "loaders": [
+          "mini-css-extract-plugin",
+          "@angular-devkit/build-angular",
+          "postcss-loader",
+          "sass-loader"
+        ],
+        "subLoadersTime": {}
+      },
+      {
+        "averages": {
+          "dataPoints": 1,
+          "median": 743,
+          "mean": 743,
+          "range": {
+            "start": 743,
+            "end": 743
+          }
+        },
+        "activeTime": 743,
+        "loaders": [
+          "raw-loader",
+          "postcss-loader",
+          "sass-loader"
+        ],
+        "subLoadersTime": {}
+      },
+      {
+        "averages": {
+          "dataPoints": 1,
+          "median": 4152,
+          "mean": 4152,
+          "range": {
+            "start": 4152,
+            "end": 4152
+          }
+        },
+        "activeTime": 4152,
+        "loaders": [
+          "@angular-devkit/build-angular",
+          "postcss-loader",
+          "sass-loader"
+        ],
+        "subLoadersTime": {}
+      },
+      {
+        "averages": {
+          "dataPoints": 439,
+          "median": 16,
+          "mean": 39,
+          "range": {
+            "start": 7,
+            "end": 4438
+          },
+          "variance": 53723
+        },
+        "activeTime": 17312,
+        "loaders": [
+          "@angular-devkit/build-optimizer"
+        ],
+        "subLoadersTime": {}
+      },
+      {
+        "averages": {
+          "dataPoints": 10,
+          "median": 272,
+          "mean": 61,
+          "range": {
+            "start": 8,
+            "end": 272
+          },
+          "variance": 6484
+        },
+        "activeTime": 570,
+        "loaders": [
+          "@angular-devkit/build-optimizer",
+          "@ngtools/webpack"
+        ],
+        "subLoadersTime": {}
+      }
+    ]
+  }
+}
