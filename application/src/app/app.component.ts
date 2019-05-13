@@ -6,5 +6,19 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-  public title: string = 'frontend';
+  public title: string = 'ScarletFlash';
+
+  private _isHovered: boolean = false;
+
+  public isHovered(): boolean {
+    return this._isHovered;
+  }
+
+  public onEnter(): void {
+    this._isHovered = true;
+  }
+
+  public onLeave(): void {
+    this._isHovered = false;
+  }
 }
