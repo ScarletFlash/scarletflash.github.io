@@ -1,0 +1,41 @@
+@import 'variables';
+@import 'mixins';
+
+:host {
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 0;
+  @include flex-container(column, flex-start, flex-start, nowrap, 'normal');
+}
+
+.row {
+  width: 100%;
+  min-height: 95vh;
+  overflow: visible;
+  position: relative;
+  background: $color_white;
+  @include flex-container(column, flex-start, flex-start, nowrap, 'normal');
+
+  &_primary {
+    background: $color_primary-red;
+  }
+
+  &_dark {
+    background: $color_grey-dark;
+  }
+
+  &__background {
+    position: absolute;
+    top: -25%;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: inherit;
+    transform: rotate(10deg);
+  }
+
+  &__content {
+    z-index: 1;
+  }
+}

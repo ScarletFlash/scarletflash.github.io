@@ -16,7 +16,8 @@
     "lib": ["es2018", "es2019", "esnext", "dom"],
     "paths": {
       "@environment": ["src/environments/environment.ts"],
-      "@declarations/*": ["src/declarations/*"]
+      "@declarations": ["src/declarations/*", "src/declarations"],
+      "@helpers": ["src/app/helpers/*", "src/app/helpers"]
     }
   },
   "angularCompilerOptions": {
