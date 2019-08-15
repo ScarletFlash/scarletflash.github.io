@@ -1,4 +1,4 @@
-import { Environment } from '@declarations/interfaces';
+import { Environment } from '@declarations';
 
 export const environment: Environment = {
   production: true
