@@ -3,7 +3,7 @@
 
 :host {
   width: 100%;
-  height: auto;
+  height: 95vh;
   position: relative;
   z-index: 0;
   @include flex-container(column, flex-start, flex-start, nowrap, 'normal');
@@ -11,7 +11,7 @@
 
 .row {
   width: 100%;
-  min-height: 95vh;
+  height: inherit;
   overflow: visible;
   position: relative;
   background: $color_white;
@@ -19,6 +19,11 @@
 
   &_primary {
     background: $color_primary-red;
+
+    .row__content {
+      top: 0;
+      padding: 0;
+    }
   }
 
   &_dark {
@@ -33,9 +38,16 @@
     height: 100%;
     background: inherit;
     transform: rotate(10deg);
+    overflow: hidden;
+
   }
 
   &__content {
+    position: absolute;
+    top: -40%;
+    padding: 3rem 1rem 1rem;
+    width: 100%;
+    height: 100%;
     z-index: 1;
   }
 }

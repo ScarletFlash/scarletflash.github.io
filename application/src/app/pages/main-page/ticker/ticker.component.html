@@ -1,5 +1,0 @@
-<div [@tickerAnimation]="currentState$ | async" (@tickerAnimation.done)="processStateChange($event)" class="ticker">
-  <span class="ticker__text">
-    {{ visibleText$ | async }}
-  </span>
-</div>

@@ -2,6 +2,11 @@
 $color_primary-red: #ff1744;
 $color_grey-dark: #333333;
 $color_white: #ffffff;
+$color_black: #000000;
 
 // font-families
 $font-family_satisfy: 'Satisfy', cursive;
+$font-family_raleway: 'Raleway', sans-serif;
+
+// text-shadow
+$text-shadow_title: .125rem .125rem .5rem $color_black;

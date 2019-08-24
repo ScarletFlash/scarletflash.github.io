@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Publication } from '@declarations';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,4 +13,6 @@ export class MainPageComponent {
     'Frontend developer at SNH MeisterSoft',
     'Full-Stack developer at home'
   ];
+
+  public publications: Publication[] = [];
 }

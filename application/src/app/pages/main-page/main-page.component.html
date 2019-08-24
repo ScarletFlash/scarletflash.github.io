@@ -1,4 +1,4 @@
-<app-row-section type="primary">
+<app-row-section type="primary" [style.height.vh]="95">
   <h1 class="title">
     <span class="title__greeting">
       Hello,
@@ -10,12 +10,56 @@
   <img class="photo" src="/assets/img/sample-photo.png" />
 </app-row-section>
 
-<app-row-section type="light">
-  <div class="ticker-wrapper">
-    <app-ticker [values]="tickerValues"></app-ticker>
-  </div>
+<app-row-section type="light" [style.height.vh]="75" [backgroundTemplateRef]="whoAmIBackground">
+  <h3 class="title title_category title_dark">
+    Who am I
+  </h3>
 </app-row-section>
 
-<app-row-section type="dark">
-  123
+<ng-template #whoAmIBackground>
+  <div class="custom-background">
+    <div class="custom-background__element">
+      angular
+    </div>
+    <div class="custom-background__element">
+      typescript
+    </div>
+    <div class="custom-background__element">
+      angular
+    </div>
+    <div class="custom-background__element">
+      typescript
+    </div>
+    <div class="custom-background__element">
+      angular
+    </div>
+    <div class="custom-background__element">
+      typescript
+    </div>
+    <div class="custom-background__element">
+      angular
+    </div>
+    <div class="custom-background__element">
+      typescript
+    </div>
+    <div class="custom-background__element">
+      angular
+    </div>
+    <div class="custom-background__element">
+      typescript
+    </div>
+    <div class="custom-background__element">
+      angular
+    </div>
+    <div class="custom-background__element">
+      typescript
+    </div>
+  </div>
+</ng-template>
+
+<app-row-section type="dark" [style.height.vh]="75">
+  <h3 class="title title_category">
+    Publications
+  </h3>
+  <div class="tiles"></div>
 </app-row-section>

@@ -13,11 +13,12 @@
     "target": "es2015",
     "types": ["jest"],
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "es2019", "esnext", "dom"],
+    "lib": ["es2018", "es2019", "es2020", "esnext", "dom"],
     "paths": {
+      "@shared": ["src/app/shared"],
       "@environment": ["src/environments/environment.ts"],
       "@declarations": ["src/declarations/*", "src/declarations"],
-      "@helpers": ["src/app/helpers/*", "src/app/helpers"]
+      "@functions": ["src/app/functions/*", "src/app/functions"]
     }
   },
   "angularCompilerOptions": {
