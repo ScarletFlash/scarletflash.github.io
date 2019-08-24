@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,4 +8,5 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class RowSectionComponent {
   @Input() public type: 'dark' | 'light' | 'primary' = 'light';
+  @Input() public backgroundTemplateRef?: TemplateRef<HTMLDivElement>;
 }

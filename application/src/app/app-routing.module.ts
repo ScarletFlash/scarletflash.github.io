@@ -6,6 +6,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/main-page/main-page.module').then(module => module.MainPageModule),
     path: '',
     pathMatch: 'full'
+  },
+  {
+    loadChildren: () => import('./pages/talks-page//talks-page.module').then(module => module.TalksPageModule),
+    path: 'talks',
+    pathMatch: 'full'
   }
 ];
 

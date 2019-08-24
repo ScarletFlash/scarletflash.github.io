@@ -12,7 +12,18 @@
   color: $color_white;
   padding: 1rem;
   margin: 0;
+  user-select: none;
   @include flex-container(column, flex-start, flex-start, nowrap, 'normal');
+
+  &_category {
+    text-shadow: $text-shadow_title;
+  }
+
+  &_dark {
+    color: $color_black;
+    text-shadow: none;
+    text-decoration: underline;
+  }
 
   &__greeting {
     transform: rotate(-30deg);
@@ -39,4 +50,20 @@
   width: 100%;
   height: 100%;
   @include flex-container(column, center, center, nowrap, 'normal');
+}
+
+.custom-background {
+      position: absolute;
+      top: -10%;
+      height: 150%;
+      width: 100%;
+    transform: rotate(-10deg);
+  @include flex-container(row, flex-start, flex-start, wrap, 'normal');
+
+
+  &__element {
+    width: 3rem;
+    height: 3rem;
+    margin: 1rem;
+  }
 }

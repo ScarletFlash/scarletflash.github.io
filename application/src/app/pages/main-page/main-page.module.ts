@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { SharedModule } from '@shared';
 
 import { MainPageRoutingModule } from './main-page-routing.module';
 import { MainPageComponent } from './main-page.component';
 import { RowSectionComponent } from './row-section/row-section.component';
-import { TickerComponent } from './ticker/ticker.component';
 
 @NgModule({
-  declarations: [MainPageComponent, RowSectionComponent, TickerComponent],
-  imports: [CommonModule, MainPageRoutingModule]
+  declarations: [MainPageComponent, RowSectionComponent],
+  imports: [SharedModule, MainPageRoutingModule]
 })
 export class MainPageModule {}
