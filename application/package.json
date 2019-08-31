@@ -13,7 +13,8 @@
     "test": "npm run test:debug",
     "test:debug": "ng test --configuration=debugging",
     "test:ci": "ng test --configuration=ci",
-    "prettify": "npx prettier --write ./**/*.{html,css,scss,json,js,ts} && npm run lint:debug"
+    "autofix": "npm run prettier:fix && npm run lint:debug",
+    "prettier:fix": "npx prettier --write ./**/*.{html,css,scss,json,js,ts}"
   },
   "private": true,
   "dependencies": {

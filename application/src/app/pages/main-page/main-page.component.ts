@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Publication } from '@declarations';
+import { Publication } from '@app-declarations';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
