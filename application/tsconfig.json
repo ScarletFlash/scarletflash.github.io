@@ -15,10 +15,11 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2018", "es2019", "es2020", "esnext", "dom"],
     "paths": {
-      "@shared": ["src/app/shared"],
-      "@environment": ["src/environments/environment.ts"],
-      "@declarations": ["src/declarations/*", "src/declarations"],
-      "@functions": ["src/app/functions/*", "src/app/functions"]
+      "@app-shared": ["src/app/shared"],
+      "@app-pages": ["src/app/pages"],
+      "@app-environment": ["src/environments/environment.ts"],
+      "@app-declarations": ["src/declarations"],
+      "@app-functions": ["src/app/functions"]
     }
   },
   "angularCompilerOptions": {

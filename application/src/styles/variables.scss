@@ -1,6 +1,7 @@
 // colors
 $color_primary-red: #ff1744;
 $color_grey-dark: #333333;
+$color_grey-light: #e5e5e5;
 $color_white: #ffffff;
 $color_black: #000000;
 
@@ -9,4 +10,7 @@ $font-family_satisfy: 'Satisfy', cursive;
 $font-family_raleway: 'Raleway', sans-serif;
 
 // text-shadow
-$text-shadow_title: .125rem .125rem .5rem $color_black;
+$text-shadow_title: 0.125rem 0.125rem 0.5rem $color_black;
+
+// box-shadow
+$box-shadow_common: 0 0 0.5rem $color_black;

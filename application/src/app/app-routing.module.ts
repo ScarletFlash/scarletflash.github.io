@@ -9,8 +9,7 @@ const routes: Routes = [
   },
   {
     loadChildren: () => import('./pages/talks-page//talks-page.module').then(module => module.TalksPageModule),
-    path: 'talks',
-    pathMatch: 'full'
+    path: 'talks'
   }
 ];
 

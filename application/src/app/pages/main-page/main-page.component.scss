@@ -53,13 +53,12 @@
 }
 
 .custom-background {
-      position: absolute;
-      top: -10%;
-      height: 150%;
-      width: 100%;
-    transform: rotate(-10deg);
+  position: absolute;
+  top: -10%;
+  height: 150%;
+  width: 100%;
+  transform: rotate(-10deg);
   @include flex-container(row, flex-start, flex-start, wrap, 'normal');
-
 
   &__element {
     width: 3rem;
