@@ -1,0 +1,17 @@
+@mixin flex-container(
+  $flex-direction: row,
+  $align-items: flex-start,
+  $justify-content: flex-start,
+  $flex-wrap: nowrap,
+  $flex-type: 'normal'
+) {
+  @if $flex-type == 'inline' {
+    display: inline-flex;
+  } @else {
+    display: flex;
+  }
+  flex-direction: $flex-direction;
+  align-items: $align-items;
+  justify-content: $justify-content;
+  flex-wrap: $flex-wrap;
+}

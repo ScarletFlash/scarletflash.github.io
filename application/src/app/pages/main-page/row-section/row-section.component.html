@@ -1,0 +1,11 @@
+<section class="row" [ngClass]="['row_' + type]">
+  <div class="row__background">
+    <ng-container
+      *ngIf="backgroundTemplateRef | isNullOrUndefined; else backgroundTemplateRef"
+      class="sample"
+    ></ng-container>
+  </div>
+  <div class="row__content">
+    <ng-content></ng-content>
+  </div>
+</section>
