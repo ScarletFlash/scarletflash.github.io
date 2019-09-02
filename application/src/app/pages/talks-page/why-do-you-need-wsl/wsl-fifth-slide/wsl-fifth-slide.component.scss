@@ -1,0 +1,12 @@
+@import 'variables';
+@import 'mixins';
+
+:host {
+  display: block;
+  background-color: $color_white;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  @include flex-container(row, center, center, nowrap, 'normal');
+}

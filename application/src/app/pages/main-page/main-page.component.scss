@@ -54,15 +54,27 @@
 
 .custom-background {
   position: absolute;
-  top: -10%;
+  top: -20%;
   height: 150%;
   width: 100%;
   transform: rotate(-10deg);
-  @include flex-container(row, flex-start, flex-start, wrap, 'normal');
+  background: $color_white;
+  overflow: hidden;
+
+  &__content {
+    position: absolute;
+    top: -25%;
+    left: -25%;
+    height: 150%;
+    width: 150%;
+    transform: rotate(-10deg);
+    @include flex-container(row, flex-start, flex-start, wrap, 'normal');
+  }
 
   &__element {
     width: 3rem;
-    height: 3rem;
-    margin: 1rem;
+    height: auto;
+    margin: 2.5rem;
+    opacity: 0.35;
   }
 }

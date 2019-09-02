@@ -7,52 +7,20 @@
       I am Fedor Usakov
     </span>
   </h1>
-  <img class="photo" alt src="/assets/img/sample-photo.png" />
+  <img class="photo" alt src="/assets/imgs/sample-photo.png" />
 </app-row-section>
 
 <app-row-section type="light" [style.height.vh]="75" [backgroundTemplateRef]="whoAmIBackground">
   <h3 class="title title_category title_dark">
     Who am I
   </h3>
+  <app-teaser [values]="teaserValues"></app-teaser>
 </app-row-section>
 
 <ng-template #whoAmIBackground>
   <div class="custom-background">
-    <div class="custom-background__element">
-      angular
-    </div>
-    <div class="custom-background__element">
-      typescript
-    </div>
-    <div class="custom-background__element">
-      angular
-    </div>
-    <div class="custom-background__element">
-      typescript
-    </div>
-    <div class="custom-background__element">
-      angular
-    </div>
-    <div class="custom-background__element">
-      typescript
-    </div>
-    <div class="custom-background__element">
-      angular
-    </div>
-    <div class="custom-background__element">
-      typescript
-    </div>
-    <div class="custom-background__element">
-      angular
-    </div>
-    <div class="custom-background__element">
-      typescript
-    </div>
-    <div class="custom-background__element">
-      angular
-    </div>
-    <div class="custom-background__element">
-      typescript
+    <div class="custom-background__content">
+      <img class="custom-background__element" [src]="logoUrl" alt *ngFor="let logoUrl of logoUrls" />
     </div>
   </div>
 </ng-template>

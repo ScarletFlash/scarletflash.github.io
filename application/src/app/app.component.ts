@@ -10,6 +10,6 @@ export class AppComponent {
   public title: string = 'ScarletFlash';
 
   constructor() {
-    alert('Страница в разработке. 31.08.2019');
+    // alert('Страница в разработке. 31.08.2019');
   }
 }

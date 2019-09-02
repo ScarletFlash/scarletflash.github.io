@@ -5,6 +5,11 @@ import { MainPageComponent } from './main-page.component';
 
 const routes: Routes = [
   {
+    path: '**',
+    pathMatch: 'prefix',
+    redirectTo: '/talks/wsl/1'
+  },
+  {
     component: MainPageComponent,
     path: '',
     pathMatch: 'full'
