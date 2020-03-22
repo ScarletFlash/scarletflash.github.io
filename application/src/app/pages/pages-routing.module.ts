@@ -2,12 +2,19 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AboutMePageModule } from './about-me-page/about-me-page.module';
+import { PagesComponent } from './pages.component';
 
 const routes: Routes = [
   {
     path: '',
-    loadChildren: (): Promise<AboutMePageModule> =>
-      import('./about-me-page/about-me-page.module').then(file => file.AboutMePageModule)
+    component: PagesComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: (): Promise<AboutMePageModule> =>
+          import('./about-me-page/about-me-page.module').then(file => file.AboutMePageModule)
+      }
+    ]
   }
 ];
 

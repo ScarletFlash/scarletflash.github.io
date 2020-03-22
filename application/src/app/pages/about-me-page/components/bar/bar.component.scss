@@ -1,0 +1,33 @@
+.bar {
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  width: 100%;
+  min-height: 30px;
+  border-radius: 1px;
+  padding: 6px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  cursor: pointer;
+
+  &__item {
+    box-sizing: border-box;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+}

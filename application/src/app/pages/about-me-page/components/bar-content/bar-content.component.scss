@@ -1,0 +1,20 @@
+.bar-content {
+  width: 100%;
+  max-height: 100%;
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
+
+  &__collapse-button {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+  }
+
+  &__scroll-area {
+    box-sizing: border-box;
+    height: auto;
+    max-height: 100%;
+    overflow: hidden auto;
+  }
+}

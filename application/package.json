@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~9.0.3",
     "@angular/router": "~9.0.3",
     "gulp-cli": "^2.2.0",
+    "ramda": "^0.27.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
@@ -33,6 +34,7 @@
     "@angular/compiler-cli": "~9.0.3",
     "@angular/language-service": "~9.0.3",
     "@types/node": "^13.7.7",
+    "@types/ramda": "^0.26.43",
     "codelyzer": "^5.2.1",
     "gulp": "^4.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",

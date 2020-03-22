@@ -32,7 +32,11 @@
           },
           "options": {
             "aot": true,
-            "assets": ["src/assets", "src/favicon.ico"],
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              { "glob": "**/*", "input": "src/assets/", "output": "/assets/" }
+            ],
             "baseHref": "/",
             "budgets": [
               {
@@ -48,7 +52,7 @@
             ],
             "buildOptimizer": false,
             "commonChunk": false,
-            "crossOrigin": "anonymous",
+            "crossOrigin": "none",
             "deleteOutputPath": true,
             "extractCss": false,
             "extractLicenses": false,

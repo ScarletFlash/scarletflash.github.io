@@ -1,1 +1,1 @@
-export * from './load-children.util';
+export * from './get-deepest-activated-route.util';

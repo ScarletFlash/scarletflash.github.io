@@ -1,0 +1,11 @@
+<section class="bar-content">
+  <app-bar-content-collapse-button
+    class="bar-content__collapse-button"
+    [isVisible]="isCollapseButtonVisible$ | async"
+    (close)="collapseContent()"
+  ></app-bar-content-collapse-button>
+
+  <section class="bar-content__scroll-area">
+    <ng-content></ng-content>
+  </section>
+</section>

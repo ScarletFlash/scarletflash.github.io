@@ -1,0 +1,6 @@
+<button
+  class="collapse-button"
+  [@isAppeared]="isVisible | stringify"
+  [class.collapse-button_visible]="isVisible"
+  (click)="processButtonClick($event)"
+></button>

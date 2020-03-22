@@ -19,7 +19,7 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["esnext", "dom"],
     "paths": {
-      "@app/*": ["./src/*"]
+      "@app/*": ["./src/*", "./src/app/*"]
     }
   },
   "angularCompilerOptions": {

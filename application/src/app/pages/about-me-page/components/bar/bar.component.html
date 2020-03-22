@@ -1,0 +1,11 @@
+<section class="bar">
+  <app-bar-content>
+    <router-outlet></router-outlet>
+  </app-bar-content>
+
+  <nav class="bar__navigation navigation">
+    <a class="navigation__item" *ngFor="let item of barItems; trackBy: trackByName" (click)="selectTabByName(item)">
+      {{ item }}
+    </a>
+  </nav>
+</section>
