@@ -1,0 +1,45 @@
+{
+  "name": "application",
+  "version": "0.1.0",
+  "scripts": {
+    "ng": "ng",
+    "build": "npm run build:prod",
+    "build:dev": "ng build --configuration=development",
+    "build:prod": "ng build --configuration=production",
+    "start": "npm run start:dev",
+    "start:dev": "ng serve --configuration=development",
+    "start:prod": "ng serve --configuration=production",
+    "lint": "npm run lint:inspect",
+    "lint:debug": "ng lint --configuration=debugging",
+    "lint:inspect": "ng lint --configuration=inspection",
+    "autofix": "npm run lint:debug & npm run prettier:format && npm run lint:inspect",
+    "prettier:check": "npx prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{html,css,scss,json,js,ts}\"",
+    "prettier:format": "npx prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{html,css,scss,json,js,ts}\""
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~9.0.7",
+    "@angular/common": "~9.0.7",
+    "@angular/compiler": "~9.0.7",
+    "@angular/core": "~9.0.7",
+    "@angular/forms": "~9.0.7",
+    "@angular/platform-browser": "~9.0.7",
+    "@angular/platform-browser-dynamic": "~9.0.7",
+    "@angular/router": "~9.0.7",
+    "rxjs": "~6.5.4",
+    "tslib": "^1.10.0",
+    "zone.js": "~0.10.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.900.7",
+    "@angular/cli": "~9.0.7",
+    "@angular/compiler-cli": "~9.0.7",
+    "@angular/language-service": "~9.0.7",
+    "@types/node": "^12.11.1",
+    "codelyzer": "^5.2.1",
+    "prettier": "^2.0.1",
+    "ts-node": "~8.3.0",
+    "tslint": "^5.18.0",
+    "typescript": "~3.7.5"
+  }
+}

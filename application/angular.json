@@ -1,0 +1,181 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "defaultProject": "frontend",
+  "newProjectRoot": "projects",
+  "projects": {
+    "frontend": {
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "configurations": {
+            "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/current.env.ts",
+                  "with": "src/environments/development.env.ts"
+                }
+              ]
+            },
+            "production": {
+              "buildOptimizer": true,
+              "commonChunk": true,
+              "extractCss": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/current.env.ts",
+                  "with": "src/environments/production.env.ts"
+                }
+              ],
+              "namedChunks": true,
+              "optimization": true,
+              "outputHashing": "all",
+              "progress": false,
+              "sourceMap": false,
+              "statsJson": false,
+              "vendorChunk": true
+            }
+          },
+          "options": {
+            "budgets": [
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "6kb"
+              }
+            ],
+            "buildOptimizer": false,
+            "commonChunk": false,
+            "extractCss": false,
+            "extractLicenses": false,
+            "namedChunks": false,
+            "optimization": false,
+            "outputHashing": "none",
+            "progress": true,
+            "sourceMap": true,
+            "statsJson": true,
+            "vendorChunk": false,
+            "watch": false,
+            "aot": true,
+            "assets": ["src/assets"],
+            "deleteOutputPath": true,
+            "es5BrowserSupport": false,
+            "forkTypeChecker": true,
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "outputPath": "dist/frontend",
+            "polyfills": "src/polyfills.ts",
+            "preserveSymlinks": true,
+            "scripts": [],
+            "serviceWorker": false,
+            "showCircularDependencies": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/styles"]
+            },
+            "styles": ["src/styles/styles.scss"],
+            "subresourceIntegrity": false,
+            "tsConfig": "tsconfig.app.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "configurations": {
+            "debugging": {
+              "fix": true,
+              "force": true,
+              "format": "prose",
+              "silent": true
+            },
+            "inspection": {
+              "fix": false,
+              "force": false,
+              "format": "stylish",
+              "silent": false
+            }
+          },
+          "options": {
+            "exclude": ["node_modules"],
+            "tsConfig": ["tsconfig.app.json"],
+            "typeCheck": true
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "frontend:build:development"
+            },
+            "production": {
+              "browserTarget": "frontend:build:production",
+              "disableHostCheck": false,
+              "liveReload": false,
+              "open": false,
+              "optimization": true,
+              "sourceMap": false,
+              "vendorChunk": true,
+              "watch": false
+            }
+          },
+          "options": {
+            "disableHostCheck": true,
+            "liveReload": true,
+            "open": true,
+            "optimization": false,
+            "sourceMap": true,
+            "vendorChunk": false,
+            "watch": true,
+            "aot": true,
+            "browserTarget": "frontend:build",
+            "commonChunk": true,
+            "host": "0.0.0.0",
+            "progress": true,
+            "ssl": false
+          }
+        }
+      },
+      "prefix": "app",
+      "projectType": "application",
+      "root": "",
+      "schematics": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
+          "export": false,
+          "flat": false,
+          "inlineStyle": false,
+          "inlineTemplate": false,
+          "skipImport": false,
+          "spec": false,
+          "style": "scss",
+          "viewEncapsulation": "Emulated"
+        },
+        "@schematics/angular:module": {
+          "commonModule": false,
+          "flat": false,
+          "routing": false,
+          "routingScope": "Child",
+          "spec": false
+        },
+        "@schematics/angular:service": {
+          "flat": true,
+          "spec": false
+        },
+        "@schematics/angular:pipe": {
+          "export": true,
+          "flat": true,
+          "skipImport": false,
+          "spec": true
+        },
+        "@schematics/angular:directive": {
+          "export": true,
+          "flat": true,
+          "skipImport": false,
+          "spec": true
+        }
+      },
+      "sourceRoot": "src"
+    }
+  },
+  "version": 1,
+  "cli": {
+    "analytics": false
+  }
+}

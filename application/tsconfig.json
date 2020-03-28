@@ -1,0 +1,37 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "declaration": false,
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "lib": ["dom", "dom.iterable", "es2017", "es2018", "es2019", "es2020", "esnext"],
+    "importHelpers": true,
+    "locale": "en",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "esModuleInterop": true,
+    "outDir": "./dist/out-tsc",
+    "paths": {
+      "@app/*": ["./src/app/*"],
+      "@environment": ["./src/environments/current.env.ts"]
+    },
+    "plugins": [
+      {
+        "name": "@angular/language-service"
+      }
+    ],
+    "pretty": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "target": "es2020",
+    "typeRoots": ["node_modules/@types"]
+  },
+  "exclude": ["node_modules"]
+}
