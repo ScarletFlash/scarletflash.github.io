@@ -1,14 +1,15 @@
 import { NgModule, Type } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { pluck } from 'rxjs/operators';
 
-import { PagesRoutingModule } from './pages/pages-routing.module';
+import { PagesModule } from './pages/pages.module';
 
 const routes: Routes = [
   {
-    path: '*',
-    loadChildren: (): Observable<Type<PagesRoutingModule>> => newFunction().pipe(map((file) => file.PagesRoutingModule))
+    path: '',
+    pathMatch: 'prefix',
+    loadChildren: (): Observable<Type<PagesModule>> => from(import('./pages/pages.module')).pipe(pluck('PagesModule'))
   }
 ];
 
@@ -17,6 +18,3 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
-function newFunction(): Observable<any> {
-  return from(import('./pages/pages-routing.module'));
-}
