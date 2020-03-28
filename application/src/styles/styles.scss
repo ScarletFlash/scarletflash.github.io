@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'fonts';
+@use 'colors';
+
+::selection {
+  background-color: lighten(colors.$color_red, 15);
+  color: colors.$color_white;
+}
+
+html {
+  font-size: 16px;
+}
+
+h1 {
+  all: unset;
+
+  font-family: fonts.$font-family_baloo-chettan-2;
+  line-height: 100%;
+  font-size: 4rem;
+}
+
+h2 {
+  all: unset;
+
+  font-family: fonts.$font-family_baloo-bhai-2;
+  line-height: 100%;
+}
