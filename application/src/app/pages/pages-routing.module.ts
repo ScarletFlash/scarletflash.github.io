@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 
-import { ErrorPageModule } from './error-page/error-page.module';
-import { MainPageModule } from './main-page/main-page.module';
+import type { ErrorPageModule } from './error-page/error-page.module';
+import type { MainPageModule } from './main-page/main-page.module';
 
 const routes: Routes = [
   {

@@ -1,21 +1,33 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": false,
     "allowSyntheticDefaultImports": true,
+    "allowUmdGlobalAccess": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "alwaysStrict": true,
     "baseUrl": "./",
+    "charset": "utf8",
+    "checkJs": false,
     "declaration": false,
     "downlevelIteration": true,
     "emitDecoratorMetadata": false,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
-    "lib": ["dom", "dom.iterable", "es2017", "es2018", "es2019", "es2020", "esnext"],
     "importHelpers": true,
+    "importsNotUsedAsValues": "error",
+    "keyofStringsOnly": true,
+    "lib": ["dom", "dom.iterable", "es2017", "es2018", "es2019", "es2020", "esnext"],
     "locale": "en",
     "module": "umd",
     "moduleResolution": "node",
     "newLine": "lf",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "esModuleInterop": true,
     "outDir": "./dist/out-tsc",
     "paths": {
       "@app/*": ["./src/app/*"],
@@ -26,12 +38,20 @@
         "name": "@angular/language-service"
       }
     ],
+    "preserveSymlinks": true,
     "pretty": true,
     "removeComments": true,
-    "sourceMap": true,
     "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "suppressImplicitAnyIndexErrors": false,
     "target": "es2020",
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types"],
+    "useDefineForClassFields": true
   },
   "exclude": ["node_modules"]
 }

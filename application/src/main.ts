@@ -13,4 +13,4 @@ platformBrowserDynamic()
     defaultEncapsulation: ViewEncapsulation.ShadowDom
   })
   // tslint:disable-next-line: no-console
-  .catch((err) => console.error(err));
+  .catch((err: Error) => console.error(err));

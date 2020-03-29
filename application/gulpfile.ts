@@ -37,7 +37,7 @@ namespace CleanFoldersTasks {
 
   export const root: TaskFunction = (done: VoidFunction): void => {
     const fileMatchPattern: RegExp = new RegExp(
-      /^(?!(.*\/(((application)|(\.git)|(license)|(readme\.md))\/*))).*$/,
+      /^(?!(.*\/(((application)|(\.git)|(license)|(readme\.md)|(cname))\/*))).*$/,
       'i'
     );
     warn(

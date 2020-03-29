@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { AssetsRequestsService } from '@app/services';
-import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+
+import type { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import type { AssetsRequestsService } from '@app/services';
+import type { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-background',

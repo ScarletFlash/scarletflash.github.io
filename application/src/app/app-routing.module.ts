@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { from, Observable } from 'rxjs';
 import { pluck } from 'rxjs/operators';
 
-import { PagesModule } from './pages/pages.module';
+import type { PagesModule } from './pages/pages.module';
 
 const routes: Routes = [
   {
