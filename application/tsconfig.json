@@ -10,7 +10,7 @@
     "lib": ["dom", "dom.iterable", "es2017", "es2018", "es2019", "es2020", "esnext"],
     "importHelpers": true,
     "locale": "en",
-    "module": "esnext",
+    "module": "umd",
     "moduleResolution": "node",
     "newLine": "lf",
     "noUnusedLocals": true,
