@@ -13,8 +13,8 @@
     "lint:debug": "ng lint --configuration=debugging",
     "lint:inspect": "ng lint --configuration=inspection",
     "autofix": "npm run lint:debug & npm run prettier:format && npm run lint:inspect",
-    "prettier:check": "npx prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{html,css,scss,json,js,ts}\"",
-    "prettier:format": "npx prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{html,css,scss,json,js,ts}\""
+    "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{html,css,scss,json,js,ts}\"",
+    "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{html,css,scss,json,js,ts}\""
   },
   "private": true,
   "dependencies": {
