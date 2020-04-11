@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Event, NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { getDeepestActivatedRoute } from '@_utils/get-deepest-activated-route.util';
+import { filterByInstanceOf, filterNotNill } from '@_utils/rxjs-operators';
 import { Observable, Subscription } from 'rxjs';
 import { distinctUntilKeyChanged, map, shareReplay, switchMap } from 'rxjs/operators';
-
-import { filterByInstanceOf, getDeepestActivatedRoute } from './utils';
-import { filterNotNill } from './utils/rxjs-operators/filter-not-nill.operator';
 
 @Component({
   selector: 'app-root',

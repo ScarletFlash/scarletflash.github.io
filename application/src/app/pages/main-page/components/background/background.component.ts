@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { map, shareReplay } from 'rxjs/operators';
 
 import type { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import type { AssetsRequestsService } from '@app/services';
+import type { AssetsRequestsService } from '@_app/services';
 import type { Observable } from 'rxjs';
 
 @Component({
