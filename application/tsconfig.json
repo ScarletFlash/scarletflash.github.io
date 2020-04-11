@@ -18,10 +18,10 @@
     "importHelpers": true,
     "importsNotUsedAsValues": "error",
     "keyofStringsOnly": true,
-    "lib": ["dom", "dom.iterable", "es2017", "es2018", "es2019", "es2020", "esnext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "locale": "en",
-    "module": "umd",
-    "moduleResolution": "node",
+    "module": "UMD",
+    "moduleResolution": "Node",
     "newLine": "lf",
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -30,8 +30,11 @@
     "noUnusedParameters": true,
     "outDir": "./dist/out-tsc",
     "paths": {
-      "@app/*": ["./src/app/*"],
-      "@environment": ["./src/environments/current.env.ts"]
+      "@_app/*": ["./src/app/*"],
+      "@_constants/*": ["./src/constants/*"],
+      "@_declarations/*": ["./src/declarations/*"],
+      "@_utils/*": ["./src/utils/*"],
+      "@_environment": ["./src/environments/current.env.ts"]
     },
     "plugins": [
       {
