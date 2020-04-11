@@ -4,6 +4,25 @@
     "outDir": "./out-tsc/app",
     "module": "esnext"
   },
+  "angularCompilerOptions": {
+    "allowEmptyCodegenFiles": false,
+    "annotationsAs": "static fields",
+    "annotateForClosureCompiler": false,
+    "disableExpressionLowering": true,
+    "disableTypeScriptVersionCheck": false,
+    "enableIvy": true,
+    "enableResourceInlining": false,
+    "enableLegacyTemplate": false,
+    "fullTemplateTypeCheck": true,
+    "generateCodeForLibraries": true,
+    "preserveWhitespaces": false,
+    "skipMetadataEmit": false,
+    "skipTemplateCodegen": false,
+    "strictMetadataEmit": false,
+    "strictInjectionParameters": true,
+    "strictTemplates": true,
+    "trace": true
+  },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "include": ["src/**/*.d.ts"]
 }
