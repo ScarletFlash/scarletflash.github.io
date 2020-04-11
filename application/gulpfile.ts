@@ -6,6 +6,8 @@ import { argv } from 'process';
 
 import { copyFolderWithFiles, deleteFolderWithFiles, isNill } from './src/app/utils';
 
+import type { Nullable } from '@app/declarations/types';
+
 const BEFORE_DELETE_START_MESSAGE: string = '\x1b[0m' + 'These files are removed:' + '\x1b[31m';
 
 const PASSED_ARGUMENT: string = argv[3];
@@ -13,7 +15,7 @@ const VERBOSE_MODE_IS_ENABLED: boolean =
   !isNill(PASSED_ARGUMENT) && String(PASSED_ARGUMENT).toLowerCase() === '--verbose';
 
 namespace CleanFoldersTasks {
-  const logOnFileDeleteIfVerboseModeIsEnabled: (filePath: string) => void = VERBOSE_MODE_IS_ENABLED
+  const logOnFileDeleteIfVerboseModeIsEnabled: Nullable<(filePath: string) => void> = VERBOSE_MODE_IS_ENABLED
     ? (filePath: string) => info(filePath)
     : null;
 
@@ -76,8 +78,11 @@ namespace CopyTasks {
     \x1b[0m`
   );
 
-  const logOnFileCopyIfVerboseModeIsEnabled: (sourcePath: string, targetPath: string) => void = VERBOSE_MODE_IS_ENABLED
-    ? (sourcePath: string, targetPath: string) => info(`${sourcePath} ⇒ ${targetPath}`)
+  const logOnFileCopyIfVerboseModeIsEnabled: Nullable<(
+    sourcePath?: string,
+    targetPath?: string
+  ) => void> = VERBOSE_MODE_IS_ENABLED
+    ? (sourcePath?: string, targetPath?: string) => info(`${sourcePath} ⇒ ${targetPath}`)
     : null;
 
   export const distToRoot: TaskFunction = (done: VoidFunction): void => {
@@ -114,16 +119,19 @@ namespace BuildTasks {
     );
 
     try {
-      exec('ng build --configuration=production', (errorException: ExecException, stdout: string, stderr: string) => {
-        if (!isNill(errorException)) {
-          throw errorException.message;
+      exec(
+        'ng build --configuration=production',
+        (errorException: Nullable<ExecException>, stdout: string, stderr: string) => {
+          if (!isNill(errorException) && 'message' in errorException && !isNill(errorException.message)) {
+            throw errorException.message;
+          }
+          if (!isNill(stderr)) {
+            error(stderr);
+          }
+          info(stdout);
+          done();
         }
-        if (!isNill(stderr)) {
-          error(stderr);
-        }
-        info(stdout);
-        done();
-      });
+      );
     } catch (exception) {
       error(exception);
       done();

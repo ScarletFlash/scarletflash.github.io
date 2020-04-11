@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
-    "build": "npx gulp build",
+    "build": "gulp build",
     "start": "npm run start:dev",
     "start:dev": "ng serve --configuration=development",
     "start:prod": "ng serve --configuration=production",
@@ -11,8 +11,8 @@
     "lint:debug": "ng lint --configuration=debugging",
     "lint:inspect": "ng lint --configuration=inspection",
     "autofix": "npm run lint:debug & npm run prettier:format && npm run lint:inspect",
-    "prettier:check": "npx prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{html,css,scss,json,js,ts}\"",
-    "prettier:format": "npx prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{html,css,scss,json,js,ts}\""
+    "prettier:check": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check \"./**/*.{html,css,scss,json,js,ts}\"",
+    "prettier:format": "prettier --loglevel log --config ./.prettierrc --ignore-path ./.prettierignore --write \"./**/*.{html,css,scss,json,js,ts}\""
   },
   "private": true,
   "dependencies": {
@@ -43,5 +43,9 @@
     "ts-node": "^8.8.1",
     "tslint": "^6.1.0",
     "typescript": "^3.8.3"
+  },
+  "browser": {
+    "fs": false,
+    "path": false
   }
 }
