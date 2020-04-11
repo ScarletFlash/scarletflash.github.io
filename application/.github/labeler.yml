@@ -1,0 +1,19 @@
+configurations:
+  - /application/.npmrc
+  - /application/tsconfig.json
+  - /application/tsconfig.*.json
+  - /application/gulpfile.*
+  - /application/angular.json
+  - /application/browserslist
+  - /application/.github/**/*
+
+tools:
+  - /application/.prettier*
+  - /application/tslint.json
+
+dependencies:
+  - /application/package.json
+  - /application/package-lock.json
+
+build:
+  - /!(application)/**/*
