@@ -143,32 +143,33 @@
           "inlineStyle": false,
           "inlineTemplate": false,
           "skipImport": false,
-          "spec": false,
+          "skipTests": true,
           "style": "scss",
-          "viewEncapsulation": "Emulated"
+          "viewEncapsulation": "ShadowDom",
+          "displayBlock": true
         },
         "@schematics/angular:module": {
           "commonModule": false,
           "flat": false,
           "routing": false,
           "routingScope": "Child",
-          "spec": false
+          "skipTests": true
         },
         "@schematics/angular:service": {
           "flat": true,
-          "spec": false
+          "skipTests": true
         },
         "@schematics/angular:pipe": {
           "export": true,
           "flat": true,
           "skipImport": false,
-          "spec": true
+          "skipTests": false
         },
         "@schematics/angular:directive": {
           "export": true,
           "flat": true,
           "skipImport": false,
-          "spec": true
+          "skipTests": true
         }
       },
       "sourceRoot": "src"

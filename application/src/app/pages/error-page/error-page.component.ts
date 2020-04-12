@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   selector: 'app-error-page',
   templateUrl: './error-page.component.html',
   styleUrls: ['./error-page.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
+  encapsulation: ViewEncapsulation.ShadowDom,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ErrorPageComponent {}

@@ -8,6 +8,17 @@
 
 html {
   font-size: 16px;
+
+  @media only screen and (min-width: 640px) and (max-width: 1024px) {
+    & {
+      font-size: calc(100vw / 64);
+    }
+  }
+  @media only screen and (max-width: 639px) {
+    & {
+      font-size: 10px;
+    }
+  }
 }
 
 h1 {
@@ -23,16 +34,4 @@ h2 {
 
   font-family: fonts.$font-family_baloo-bhai-2;
   line-height: 100%;
-}
-
-@media only screen and (min-width: 640px) and (max-width: 1024px) {
-  html {
-    font-size: calc(100vw / 64);
-  }
-}
-
-@media only screen and (max-width: 639px) {
-  html {
-    font-size: 10px;
-  }
 }

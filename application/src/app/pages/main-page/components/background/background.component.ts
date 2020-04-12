@@ -17,7 +17,7 @@ import type { AssetsRequestsService } from '@_app/services';
   selector: 'app-background',
   templateUrl: './background.component.html',
   styleUrls: ['./background.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
+  encapsulation: ViewEncapsulation.ShadowDom,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('placeholderVisibility', [
