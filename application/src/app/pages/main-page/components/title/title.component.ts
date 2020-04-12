@@ -11,7 +11,7 @@ import {
   selector: 'app-title',
   templateUrl: './title.component.html',
   styleUrls: ['./title.component.scss'],
-  encapsulation: ViewEncapsulation.Emulated,
+  encapsulation: ViewEncapsulation.ShadowDom,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleComponent implements OnInit, AfterViewInit {
