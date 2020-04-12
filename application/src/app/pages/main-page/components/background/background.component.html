@@ -1,1 +1,3 @@
-<section class="background" [style.background-image]="backgroundImageSafeStyle$ | async"></section>
+<section class="background" [style.background-image]="backgroundImageSafeStyle$ | async">
+  <section [@placeholderVisibility]="placeholderVisibilityState$ | async" class="background__placeholder"></section>
+</section>

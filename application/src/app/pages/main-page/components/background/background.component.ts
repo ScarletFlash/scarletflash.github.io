@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -7,8 +8,8 @@ import {
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { delay, distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators';
 
 import type { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import type { AssetsRequestsService } from '@_app/services';
@@ -17,10 +18,34 @@ import type { AssetsRequestsService } from '@_app/services';
   templateUrl: './background.component.html',
   styleUrls: ['./background.component.scss'],
   encapsulation: ViewEncapsulation.Emulated,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('placeholderVisibility', [
+      state(
+        'hidden',
+        style({
+          opacity: 0
+        })
+      ),
+      state(
+        'void',
+        style({
+          opacity: 1
+        })
+      ),
+      transition('void => hidden', animate(1000))
+    ])
+  ]
 })
 export class BackgroundComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly subscription: Subscription = new Subscription();
+
+  private readonly placeholderIsVisible$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  public readonly placeholderVisibilityState$: Observable<'hidden' | 'void'> = this.placeholderIsVisible$.pipe(
+    distinctUntilChanged(),
+    map((isVisible: boolean) => (isVisible ? 'void' : 'hidden')),
+    shareReplay(1)
+  );
 
   private readonly image$: Observable<Blob> = this.assetsRequestsService
     .getMainPageBackgroundImage()
@@ -33,6 +58,8 @@ export class BackgroundComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public readonly backgroundImageSafeStyle$: Observable<SafeStyle> = this.imageUrl$.pipe(
     map((imageUrl: string) => this.domSanitizer.bypassSecurityTrustStyle(`url(${imageUrl})`)),
+    delay(1000),
+    tap(() => this.placeholderIsVisible$.next(false)),
     shareReplay(1)
   );
 
