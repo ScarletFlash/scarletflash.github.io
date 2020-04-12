@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
 
 @Component({
   selector: 'app-main-page',
@@ -7,4 +14,14 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainPageComponent {}
+export class MainPageComponent implements OnInit, AfterViewInit {
+  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {}
+
+  public ngOnInit(): void {
+    this.changeDetectorRef.detach();
+  }
+
+  public ngAfterViewInit(): void {
+    this.changeDetectorRef.detectChanges();
+  }
+}

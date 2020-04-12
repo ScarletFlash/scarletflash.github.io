@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Event, NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { getDeepestActivatedRoute } from '@_utils/get-deepest-activated-route.util';
 import { filterByInstanceOf, filterNotNill } from '@_utils/rxjs-operators';
@@ -10,7 +10,7 @@ import { distinctUntilKeyChanged, map, shareReplay, switchMap } from 'rxjs/opera
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly subscription: Subscription = new Subscription();
 
   private readonly navigationEndEvents$: Observable<RouterEvent> = this.router.events.pipe(
@@ -28,14 +28,22 @@ export class AppComponent implements OnInit, OnDestroy {
     filterNotNill()
   );
 
-  private readonly deepestActivatedRouteData$: Observable<Data> = this.deepestActivatedRoute$.pipe(
+  public readonly deepestActivatedRouteData$: Observable<Data> = this.deepestActivatedRoute$.pipe(
     switchMap((deepestActivatedRoute: ActivatedRoute) => deepestActivatedRoute.data)
   );
 
-  constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
+  constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   public ngOnInit(): void {
-    this.subscription.add(this.deepestActivatedRouteData$.subscribe());
+    this.changeDetectorRef.detach();
+  }
+
+  public ngAfterViewInit(): void {
+    this.changeDetectorRef.detectChanges();
   }
 
   public ngOnDestroy(): void {

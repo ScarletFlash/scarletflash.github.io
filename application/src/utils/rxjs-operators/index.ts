@@ -1,2 +1,3 @@
 export * from './filter-by-instance-of.operator';
 export * from './filter-not-nill.operator';
+export * from './tap-log.operator';

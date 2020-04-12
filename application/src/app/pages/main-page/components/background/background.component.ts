@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewEncapsulation
+} from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 
 import type { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import type { AssetsRequestsService } from '@_app/services';
-import type { Observable } from 'rxjs';
-
 @Component({
   selector: 'app-background',
   templateUrl: './background.component.html',
@@ -12,7 +19,9 @@ import type { Observable } from 'rxjs';
   encapsulation: ViewEncapsulation.Emulated,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BackgroundComponent {
+export class BackgroundComponent implements OnInit, AfterViewInit, OnDestroy {
+  private readonly subscription: Subscription = new Subscription();
+
   private readonly image$: Observable<Blob> = this.assetsRequestsService
     .getMainPageBackgroundImage()
     .pipe(shareReplay(1));
@@ -29,6 +38,21 @@ export class BackgroundComponent {
 
   constructor(
     private readonly assetsRequestsService: AssetsRequestsService,
-    private readonly domSanitizer: DomSanitizer
-  ) {}
+    private readonly domSanitizer: DomSanitizer,
+    private readonly changeDetectorRef: ChangeDetectorRef
+  ) {
+    this.subscription.add(this.backgroundImageSafeStyle$.subscribe(() => this.changeDetectorRef.detectChanges()));
+  }
+
+  public ngOnInit(): void {
+    this.changeDetectorRef.detach();
+  }
+
+  public ngAfterViewInit(): void {
+    this.changeDetectorRef.detectChanges();
+  }
+
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 }
