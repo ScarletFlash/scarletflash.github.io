@@ -1,11 +1,11 @@
 import { state, style, trigger } from '@angular/animations';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { filterNotNill } from '@_utils/rxjs-operators/filter-not-nill.operator';
+import { filterNotNill } from '@src/utils/rxjs-operators/filter-not-nill.operator';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { delay, map, shareReplay, take } from 'rxjs/operators';
 
 import type { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import type { AssetsRequestsService } from '@_app/services';
+import type { AssetsRequestsService } from '@src/app/services/assets-requests.service';
 type PlaceHolderState = 'true' | 'false';
 
 @Component({
