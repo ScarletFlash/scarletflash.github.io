@@ -1,1 +1,9 @@
-<p>contacts-page works!</p>
+<section class="contacts">
+  <a class="contacts__item" *ngFor="let link of contactLinks" [href]="link.url" target="_blank">
+    <svg class="logo">
+      <use [attr.href]="link.iconSrc" />
+    </svg>
+
+    {{ link.title }}
+  </a>
+</section>
