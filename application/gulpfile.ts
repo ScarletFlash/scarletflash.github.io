@@ -124,7 +124,7 @@ namespace BuildTasks {
       exec(
         'ng build --configuration=production',
         (errorException: Nullable<ExecException>, stdout: string, stderr: string) => {
-          if (!isNill(errorException) && 'message' in errorException && !isNill(errorException.message)) {
+          if (!isNill(errorException) && 'message' in errorException && errorException.message !== undefined) {
             throw errorException.message;
           }
           if (!isNill(stderr)) {

@@ -6,9 +6,9 @@ import { pluck } from 'rxjs/operators';
 
 import { PagesComponent } from './pages.component';
 
+import type { ContactsPageModule } from './contacts-page/contacts-page.module';
 import type { ErrorPageModule } from './error-page/error-page.module';
 import type { MainPageModule } from './main-page/main-page.module';
-import type { ContactsPageModule } from './contacts-page/contacts-page.module';
 
 const routes: Routes = [
   {
