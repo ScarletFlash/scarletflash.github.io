@@ -1,0 +1,87 @@
+@use 'colors';
+@use 'fonts';
+@import 'styles.scss';
+
+:host {
+  display: block;
+}
+
+.button {
+  all: unset;
+  position: relative;
+  z-index: 0;
+
+  overflow: visible;
+  cursor: pointer;
+
+  &__content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(0.25rem, -0.25rem);
+    padding: 0.5rem 1.5rem;
+    z-index: 1;
+
+    transition: all 0.125s ease-out;
+    border-radius: 0.125rem;
+    border: 0.075rem solid colors.$color_white;
+    background: colors.$color_white;
+    color: colors.$color_grey-dark;
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-family: fonts.$font-family_baloo-chettan-2;
+    font-size: 1rem;
+    font-weight: 500;
+
+    pointer-events: none;
+  }
+
+  &__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+
+    border: 0.075rem solid colors.$color_white;
+    border-radius: 0.125rem;
+  }
+
+  &_hovered {
+    .button__content {
+      transform: translate(0);
+    }
+  }
+
+  &_active {
+    .button__content {
+      background-color: colors.$color_red;
+      border-color: colors.$color_red;
+      transform: translate(0);
+
+      color: colors.$color_white;
+    }
+  }
+
+  &_disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+
+    .button__background {
+      border: 0.075rem solid darken($color: colors.$color_white, $amount: 30);
+    }
+
+    .button__content {
+      background-color: darken($color: colors.$color_white, $amount: 30);
+      border-color: darken($color: colors.$color_white, $amount: 30);
+
+      color: darken($color: colors.$color_grey-dark, $amount: 30);
+    }
+
+    .button_active .button__content {
+      background-color: darken($color: colors.$color_red, $amount: 30);
+      border-color: darken($color: colors.$color_red, $amount: 30);
+
+      color: darken($color: colors.$color_white, $amount: 30);
+    }
+  }
+}
