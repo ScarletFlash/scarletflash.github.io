@@ -1,4 +1,4 @@
-import { enableProdMode, ViewEncapsulation } from '@angular/core';
+import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { environment } from '@_environment';
 
@@ -9,8 +9,8 @@ if (environment.production) {
 }
 
 platformBrowserDynamic()
-  .bootstrapModule(AppModule, {
-    defaultEncapsulation: ViewEncapsulation.ShadowDom
-  })
-  // tslint:disable-next-line: no-console
-  .catch((error: Error) => console.error(error));
+  .bootstrapModule(AppModule)
+  .catch((error: Error) => {
+    // tslint:disable-next-line: no-console
+    console.error(error);
+  });
