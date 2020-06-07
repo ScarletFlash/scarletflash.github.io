@@ -1,18 +1,13 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { delay, distinctUntilChanged, map, shareReplay, tap } from 'rxjs/operators';
+import { state, style, trigger } from '@angular/animations';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { filterNotNill } from '@_utils/rxjs-operators/filter-not-nill.operator';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { delay, map, shareReplay, take } from 'rxjs/operators';
 
 import type { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import type { AssetsRequestsService } from '@_app/services';
+type PlaceHolderState = 'true' | 'false';
+
 @Component({
   selector: 'app-background',
   templateUrl: './background.component.html',
@@ -20,31 +15,31 @@ import type { AssetsRequestsService } from '@_app/services';
   encapsulation: ViewEncapsulation.ShadowDom,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
-    trigger('placeholderVisibility', [
-      state(
-        'hidden',
-        style({
-          opacity: 0
-        })
-      ),
+    trigger('placeHolderIsVisible', [
       state(
         'void',
         style({
           opacity: 1
         })
       ),
-      transition('void => hidden', animate(1000))
+      state(
+        'false',
+        style({
+          opacity: 0
+        })
+      ),
+      state(
+        'true',
+        style({
+          opacity: 1
+        })
+      )
     ])
   ]
 })
-export class BackgroundComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly subscription: Subscription = new Subscription();
-
-  private readonly placeholderIsVisible$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  public readonly placeholderVisibilityState$: Observable<'hidden' | 'void'> = this.placeholderIsVisible$.pipe(
-    distinctUntilChanged(),
-    map((isVisible: boolean) => (isVisible ? 'void' : 'hidden')),
-    shareReplay(1)
+export class BackgroundComponent implements AfterViewInit {
+  public readonly placeHolderIsVisible$: BehaviorSubject<PlaceHolderState> = new BehaviorSubject<PlaceHolderState>(
+    'true'
   );
 
   private readonly image$: Observable<Blob> = this.assetsRequestsService
@@ -58,28 +53,21 @@ export class BackgroundComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public readonly backgroundImageSafeStyle$: Observable<SafeStyle> = this.imageUrl$.pipe(
     map((imageUrl: string) => this.domSanitizer.bypassSecurityTrustStyle(`url(${imageUrl})`)),
-    delay(1000),
-    tap(() => this.placeholderIsVisible$.next(false)),
     shareReplay(1)
   );
 
   constructor(
     private readonly assetsRequestsService: AssetsRequestsService,
-    private readonly domSanitizer: DomSanitizer,
-    private readonly changeDetectorRef: ChangeDetectorRef
-  ) {
-    this.subscription.add(this.backgroundImageSafeStyle$.subscribe(() => this.changeDetectorRef.detectChanges()));
-  }
-
-  public ngOnInit(): void {
-    this.changeDetectorRef.detach();
-  }
+    private readonly domSanitizer: DomSanitizer
+  ) {}
 
   public ngAfterViewInit(): void {
-    this.changeDetectorRef.detectChanges();
+    this.hidePlaceholderOnBackgroundImageIsReady();
   }
 
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  private hidePlaceholderOnBackgroundImageIsReady(): void {
+    this.placeHolderIsVisible$
+      .pipe(filterNotNill(), take(1), delay(1000))
+      .subscribe(() => this.placeHolderIsVisible$.next('false'));
   }
 }
