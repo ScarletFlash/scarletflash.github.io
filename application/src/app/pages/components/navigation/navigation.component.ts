@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Input, ViewEncapsulation } from '@angular/core';
 import { NavigationPosition } from '@src/declarations/enums/navigation-position.enum';
 
+import type { Router } from '@angular/router';
 import type { Nullable } from '@src/declarations/types/nullable.type';
 
 interface Link {
   title: string;
   url: string;
   disabled: boolean;
+  keyboardKey: string;
 }
 
 @Component({
@@ -22,24 +24,47 @@ export class NavigationComponent {
 
   public readonly links: Link[] = [
     {
-      title: 'Start',
+      title: 'Main',
       url: '/',
-      disabled: false
+      disabled: false,
+      keyboardKey: 'M'
     },
     {
       title: 'Skills',
       url: '/skills',
-      disabled: true
+      disabled: true,
+      keyboardKey: 'S'
     },
     {
       title: 'Contacts',
       url: '/contacts',
-      disabled: true
+      disabled: true,
+      keyboardKey: 'C'
     },
     {
       title: 'Home projects',
       url: '/home-projects',
-      disabled: true
+      disabled: true,
+      keyboardKey: 'H'
     }
   ];
+
+  private readonly usedKeyboardKeys: Set<string> = new Set<string>(
+    this.links.map((link: Link) => link.keyboardKey.toLowerCase())
+  );
+
+  constructor(private readonly router: Router) {}
+
+  @HostListener('window:keypress', ['$event'])
+  public processKeyPress(event: KeyboardEvent): void {
+    const pressedKey: string = event.key.toLowerCase();
+    if (!this.usedKeyboardKeys.has(pressedKey)) {
+      return;
+    }
+    const targetLink: Link | undefined = this.links.find((link: Link) => link.keyboardKey.toLowerCase() === pressedKey);
+    if (targetLink === undefined || targetLink.disabled) {
+      return;
+    }
+    this.router.navigateByUrl(targetLink.url);
+  }
 }
