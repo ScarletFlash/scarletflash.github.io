@@ -8,10 +8,15 @@ import { PagesComponent } from './pages.component';
 
 import type { ErrorPageModule } from './error-page/error-page.module';
 import type { MainPageModule } from './main-page/main-page.module';
+import type { ContactsPageModule } from './contacts-page/contacts-page.module';
+
 const routes: Routes = [
   {
     path: '',
     component: PagesComponent,
+    data: {
+      navigationPosition: NavigationPosition.Bottom
+    },
     children: [
       {
         path: '',
@@ -21,6 +26,15 @@ const routes: Routes = [
         },
         loadChildren: (): Observable<Type<MainPageModule>> =>
           from(import('./main-page/main-page.module')).pipe(pluck('MainPageModule'))
+      },
+      {
+        path: 'contacts',
+        pathMatch: 'full',
+        data: {
+          navigationPosition: NavigationPosition.Bottom
+        },
+        loadChildren: (): Observable<Type<ContactsPageModule>> =>
+          from(import('./contacts-page/contacts-page.module')).pipe(pluck('ContactsPageModule'))
       },
       {
         path: '**',

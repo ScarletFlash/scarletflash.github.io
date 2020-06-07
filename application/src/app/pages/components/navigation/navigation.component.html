@@ -8,7 +8,6 @@
     #routerLinkActiveRef="routerLinkActive"
   >
     <app-button [isActive]="routerLinkActiveRef.isActive" [disabled]="link.disabled">
-      [{{ link.keyboardKey | uppercase }}]
       {{ link.title }}
     </app-button>
   </a>

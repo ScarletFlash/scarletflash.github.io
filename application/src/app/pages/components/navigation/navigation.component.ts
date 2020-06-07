@@ -8,7 +8,7 @@ interface Link {
   title: string;
   url: string;
   disabled: boolean;
-  keyboardKey: string;
+  keyboardCode: string;
 }
 
 @Component({
@@ -24,44 +24,42 @@ export class NavigationComponent {
 
   public readonly links: Link[] = [
     {
-      title: 'Main',
+      title: '[M] Main',
       url: '/',
       disabled: false,
-      keyboardKey: 'M'
+      keyboardCode: 'KeyM'
     },
     {
-      title: 'Skills',
+      title: '[S] Skills',
       url: '/skills',
       disabled: true,
-      keyboardKey: 'S'
+      keyboardCode: 'KeyS'
     },
     {
-      title: 'Contacts',
+      title: '[C] Contacts',
       url: '/contacts',
-      disabled: true,
-      keyboardKey: 'C'
+      disabled: false,
+      keyboardCode: 'KeyC'
     },
     {
-      title: 'Home projects',
+      title: '[H] Home projects',
       url: '/home-projects',
       disabled: true,
-      keyboardKey: 'H'
+      keyboardCode: 'KeyH'
     }
   ];
 
-  private readonly usedKeyboardKeys: Set<string> = new Set<string>(
-    this.links.map((link: Link) => link.keyboardKey.toLowerCase())
-  );
+  private readonly usedKeyboardCodes: Set<string> = new Set<string>(this.links.map((link: Link) => link.keyboardCode));
 
   constructor(private readonly router: Router) {}
 
   @HostListener('window:keypress', ['$event'])
   public processKeyPress(event: KeyboardEvent): void {
-    const pressedKey: string = event.key.toLowerCase();
-    if (!this.usedKeyboardKeys.has(pressedKey)) {
+    const pressedKeyCode: string = event.code;
+    if (!this.usedKeyboardCodes.has(pressedKeyCode)) {
       return;
     }
-    const targetLink: Link | undefined = this.links.find((link: Link) => link.keyboardKey.toLowerCase() === pressedKey);
+    const targetLink: Link | undefined = this.links.find((link: Link) => link.keyboardCode === pressedKeyCode);
     if (targetLink === undefined || targetLink.disabled) {
       return;
     }
