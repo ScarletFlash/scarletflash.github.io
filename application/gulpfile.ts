@@ -4,9 +4,12 @@ import { copyFile } from 'fs';
 import { parallel, series, task, TaskFunction } from 'gulp';
 import { argv } from 'process';
 
-import { copyFolderWithFiles, deleteFolderWithFiles, isNill } from './src/utils';
+import { copyFolderWithFiles } from './src/utils/filesystem/copy-folder-with-files.util';
+import { deleteFolderWithFiles } from './src/utils/filesystem/delete-folder-with-files.util.ts';
+import { isNill } from './src/utils/is-nill.util';
 
-import type { Nullable } from './src/declarations/types';
+import type { Nullable } from './src/declarations/types/nullable.type';
+
 const BEFORE_DELETE_START_MESSAGE: string = '\x1b[0m' + 'These files are removed:' + '\x1b[31m';
 
 const PASSED_ARGUMENT: string = argv[3];
