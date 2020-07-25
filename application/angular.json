@@ -56,9 +56,15 @@
             "vendorChunk": false,
             "watch": false,
             "aot": true,
-            "assets": ["src/assets", { "glob": "**/*", "input": "src/assets", "output": "/assets" }],
+            "assets": [
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "/assets"
+              }
+            ],
             "deleteOutputPath": true,
-            "es5BrowserSupport": false,
             "forkTypeChecker": true,
             "index": "src/index.html",
             "main": "src/main.ts",

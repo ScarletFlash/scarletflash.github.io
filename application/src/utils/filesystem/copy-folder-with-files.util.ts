@@ -4,7 +4,7 @@ import path from 'path';
 import { isFunction } from '../is-function.util';
 import { isNill } from '../is-nill.util';
 
-import type { Nullable } from '@src/declarations/types/nullable.type';
+import type { Nullable } from './../../declarations/types/nullable.type';
 
 interface Options {
   onCopy?: Nullable<(sourcePath?: string, targetPath?: string) => void>;

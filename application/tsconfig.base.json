@@ -1,9 +1,3 @@
-/*
-  This is a "Solution Style" tsconfig.json file, and is used by editors and TypeScript’s language server to improve development experience.
-  It is not intended to be used to perform a compilation.
-
-  To learn more about this file see: https://angular.io/config/solution-tsconfig.
-*/
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -35,6 +29,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./dist/out-tsc",
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
+    "plugins": [
+      {
+        "name": "@angular/language-service"
+      }
+    ],
     "preserveSymlinks": true,
     "pretty": true,
     "removeComments": true,
@@ -50,10 +52,5 @@
     "typeRoots": ["node_modules/@types"],
     "useDefineForClassFields": true
   },
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+  "exclude": ["node_modules"]
 }

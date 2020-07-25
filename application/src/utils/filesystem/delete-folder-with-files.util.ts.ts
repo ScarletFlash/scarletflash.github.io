@@ -6,7 +6,7 @@ import { isFunction } from '../is-function.util';
 import { isNill } from '../is-nill.util';
 import { isRegExp } from '../is-reg-exp.unit';
 
-import type { Nullable } from '@src/declarations/types/nullable.type';
+import type { Nullable } from './../../declarations/types/nullable.type';
 
 interface Options {
   fileMatchPattern?: Nullable<RegExp>;
