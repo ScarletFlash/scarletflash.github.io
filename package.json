@@ -11,11 +11,19 @@
   },
   "homepage": "https://scarletflash.github.io",
   "author": {
-      "name" : "Fedor Usakov",
-      "email" : "scarletflash.dev@gmail.com",
-      "url" : "https://scarletflash.github.io"
+    "name": "Fedor Usakov",
+    "email": "scarletflash.dev@gmail.com",
+    "url": "https://scarletflash.github.io"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "🪄": "One liners",
+    "lint": "npm run formatter:lint",
+    "autofix": "npm run formatter:fix",
+    "🖼️": "Code style",
+    "formatter:lint": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{ts,js,html,scss,yaml,yml,json}",
+    "formatter:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{ts,js,html,scss,yaml,yml,json}"
+  },
+  "devDependencies": {
+    "prettier": "latest"
   }
 }
