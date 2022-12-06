@@ -1,0 +1,21 @@
+{
+  "name": "scarletflash.github.io",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScarletFlash/scarletflash.github.io.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ScarletFlash/scarletflash.github.io/issues"
+  },
+  "homepage": "https://scarletflash.github.io",
+  "author": {
+      "name" : "Fedor Usakov",
+      "email" : "scarletflash.dev@gmail.com",
+      "url" : "https://scarletflash.github.io"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
