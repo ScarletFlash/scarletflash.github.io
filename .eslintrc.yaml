@@ -10,7 +10,6 @@ env:
   worker: true
 extends:
   - eslint:recommended
-  - plugin:n/recommended
   - plugin:@typescript-eslint/recommended
 overrides:
   - files:
@@ -83,7 +82,7 @@ overrides:
       '@typescript-eslint/explicit-function-return-type':
         - error
         - allowExpressions: true
-      '@typescript-eslint/no-namespace': error
+      '@typescript-eslint/no-namespace': off
       '@typescript-eslint/dot-notation': error
       '@typescript-eslint/no-dynamic-delete': error
       '@typescript-eslint/unified-signatures': error
