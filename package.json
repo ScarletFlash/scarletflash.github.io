@@ -17,7 +17,7 @@
   },
   "scripts": {
     "🪄": "One-liners",
-    "build": "npm run compiler:run",
+    "build": "ts-node --project ./tsconfig.build.json --esm ./do-build.ts",
     "lint": "npm run formatter:lint && npm run compiler:check && npm run spell:check && npm run linter:check",
     "autofix": "npm run formatter:fix",
     "🏭": "Compilation",
@@ -33,9 +33,13 @@
     "linter:fix": "eslint --config ./.eslintrc.yaml --fix src"
   },
   "devDependencies": {
+    "@types/jsdom": "latest",
+    "@types/node": "latest",
+    "@types/prettier": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "cspell": "latest",
+    "esbuild": "latest",
     "eslint": "latest",
     "eslint-config-prettier": "latest",
     "eslint-plugin-ban": "latest",
@@ -47,7 +51,9 @@
     "eslint-plugin-prefer-arrow": "latest",
     "eslint-plugin-prettier": "latest",
     "eslint-plugin-promise": "latest",
+    "jsdom": "latest",
     "prettier": "latest",
+    "ts-node": "latest",
     "typescript": "latest"
   }
 }
