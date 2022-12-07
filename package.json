@@ -18,16 +18,19 @@
   "scripts": {
     "🪄": "One-liners",
     "build": "npm run compiler:run",
-    "lint": "npm run formatter:lint && npm run compiler:check",
+    "lint": "npm run formatter:lint && npm run compiler:check && npm run spell:check",
     "autofix": "npm run formatter:fix",
     "🏭": "Compilation",
     "compiler:run": "tsc --project tsconfig.app.json",
     "compiler:check": "tsc --project tsconfig.app.json --noEmit",
     "🖼️": "Code style",
     "formatter:lint": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{ts,js,html,scss,yaml,yml,json}",
-    "formatter:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{ts,js,html,scss,yaml,yml,json}"
+    "formatter:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{ts,js,html,scss,yaml,yml,json}",
+    "🎙️": "Spelling",
+    "spell:check": "cspell lint ** --config cspell.config.yaml"
   },
   "devDependencies": {
+    "cspell": "latest",
     "prettier": "latest",
     "typescript": "latest"
   }
