@@ -6,5 +6,5 @@
     "allowSyntheticDefaultImports": true,
     "strict": true
   },
-  "include": ["./do-build.ts"]
+  "include": ["scripts"]
 }

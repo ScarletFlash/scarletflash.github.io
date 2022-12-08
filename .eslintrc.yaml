@@ -29,6 +29,7 @@ overrides:
       - editorconfig
       - ban
       - import
+      - unused-imports
     extends:
       - prettier
     rules:
@@ -231,3 +232,4 @@ overrides:
         - error
       deprecation/deprecation: warn
       editorconfig/charset: error
+      unused-imports/no-unused-imports: error

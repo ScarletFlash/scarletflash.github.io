@@ -17,7 +17,8 @@
   },
   "scripts": {
     "🪄": "One-liners",
-    "build": "ts-node --project ./tsconfig.build.json --esm ./do-build.ts",
+    "build": "ts-node --project ./tsconfig.scripts.json --esm ./scripts/build.script.ts",
+    "serve": "ts-node --project ./tsconfig.scripts.json --esm ./scripts/serve.script.ts",
     "lint": "npm run formatter:lint && npm run compiler:check && npm run spell:check && npm run linter:check",
     "autofix": "npm run formatter:fix",
     "🏭": "Compilation",
@@ -51,6 +52,7 @@
     "eslint-plugin-prefer-arrow": "latest",
     "eslint-plugin-prettier": "latest",
     "eslint-plugin-promise": "latest",
+    "eslint-plugin-unused-imports": "latest",
     "jsdom": "latest",
     "prettier": "latest",
     "ts-node": "latest",
