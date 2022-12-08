@@ -1,0 +1,19 @@
+{
+  "name": "scripts",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "ts-node --project ./tsconfig.json --esm ./src/build.script.ts",
+    "serve": "ts-node --project ./tsconfig.json --esm ./src/serve.script.ts"
+  },
+  "dependencies": {
+    "@types/jsdom": "*",
+    "@types/node": "*",
+    "@types/prettier": "*",
+    "esbuild": "*",
+    "jsdom": "*",
+    "prettier": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}

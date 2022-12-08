@@ -5,7 +5,7 @@ import { format } from 'prettier';
 import { Path } from '../constants/path.const';
 
 export async function buildIndexHtml(targetDirPath: string = Path.Dist.directory): Promise<void> {
-  const rawIndexHtmlContent: string = await readFile(Path.Source.indexHtml, {
+  const rawIndexHtmlContent: string = await readFile(Path.Application.Source.indexHtml, {
     encoding: 'utf-8',
   });
 

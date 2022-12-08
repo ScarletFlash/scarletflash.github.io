@@ -2,6 +2,7 @@
   "name": "scarletflash.github.io",
   "version": "1.0.0",
   "license": "MIT",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ScarletFlash/scarletflash.github.io.git"
@@ -17,8 +18,8 @@
   },
   "scripts": {
     "🪄": "One-liners",
-    "build": "ts-node --project ./tsconfig.scripts.json --esm ./scripts/build.script.ts",
-    "serve": "ts-node --project ./tsconfig.scripts.json --esm ./scripts/serve.script.ts",
+    "build": "npm run build --workspace=scripts",
+    "serve": "npm run serve --workspace=scripts",
     "lint": "npm run formatter:lint && npm run compiler:check && npm run spell:check && npm run linter:check",
     "autofix": "npm run formatter:fix",
     "🏭": "Compilation",
@@ -57,5 +58,8 @@
     "prettier": "latest",
     "ts-node": "latest",
     "typescript": "latest"
-  }
+  },
+  "workspaces": [
+    "./projects/*"
+  ]
 }

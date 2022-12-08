@@ -6,5 +6,5 @@
     "allowSyntheticDefaultImports": true,
     "strict": true
   },
-  "include": ["scripts"]
+  "include": ["src"]
 }
