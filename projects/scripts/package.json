@@ -10,9 +10,11 @@
     "@types/jsdom": "*",
     "@types/node": "*",
     "@types/prettier": "*",
+    "@types/sass": "*",
     "esbuild": "*",
     "jsdom": "*",
     "prettier": "*",
+    "sass": "*",
     "ts-node": "*",
     "typescript": "*"
   }

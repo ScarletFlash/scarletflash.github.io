@@ -12,6 +12,11 @@ export async function buildIndexHtml(targetDirPath: string = Path.Dist.directory
   const indexHtmlJsDom: JSDOM = new JSDOM(rawIndexHtmlContent);
   const indexHtmlDocument: Document = indexHtmlJsDom.window.document;
 
+  const stylesNodeToSet: HTMLLinkElement = indexHtmlDocument.createElement('link');
+  stylesNodeToSet.setAttribute('href', './index.css');
+  stylesNodeToSet.setAttribute('rel', 'stylesheet');
+  indexHtmlDocument.head.appendChild(stylesNodeToSet);
+
   const scriptNodeToSet: HTMLScriptElement = indexHtmlDocument.createElement('script');
   scriptNodeToSet.setAttribute('src', './index.js');
   scriptNodeToSet.setAttribute('type', 'module');

@@ -1,4 +1,5 @@
 import { BuildOptions, ServeOptions } from 'esbuild';
+import { Options } from 'sass';
 import { Path } from './path.const';
 
 export namespace Config {
@@ -18,5 +19,11 @@ export namespace Config {
     charset: 'utf8',
     platform: 'browser',
     target: 'esnext',
+    resolveExtensions: ['.ts'],
+  };
+
+  export const stylesCompilationOptions: Options<'async'> = {
+    charset: true,
+    style: 'compressed',
   };
 }
