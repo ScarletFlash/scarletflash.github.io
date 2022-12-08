@@ -1,3 +1,23 @@
+@use 'styles/colors';
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 html {
-  background: black;
+  background: colors.$background;
+}
+
+.background-animation {
+  width: 100%;
+  height: 100%;
+
+  opacity: 1;
+  transition: opacity 1s ease-in;
+
+  &_hidden {
+    opacity: 0;
+  }
 }
