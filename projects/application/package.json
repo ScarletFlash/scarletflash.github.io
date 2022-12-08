@@ -2,6 +2,10 @@
   "name": "application",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "compiler:run": "tsc --project tsconfig.json",
+    "compiler:check": "tsc --project tsconfig.json --noEmit"
+  },
   "devDependencies": {
     "typescript": "*"
   }
