@@ -40,6 +40,7 @@
     "@typescript-eslint/parser": "latest",
     "cspell": "latest",
     "esbuild": "latest",
+    "esbuild-plugin-glsl": "latest",
     "eslint": "latest",
     "eslint-config-prettier": "latest",
     "eslint-plugin-ban": "latest",

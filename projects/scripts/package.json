@@ -12,6 +12,7 @@
     "@types/prettier": "*",
     "@types/sass": "*",
     "esbuild": "*",
+    "esbuild-plugin-glsl": "*",
     "jsdom": "*",
     "prettier": "*",
     "sass": "*",
