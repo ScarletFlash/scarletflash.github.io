@@ -22,10 +22,14 @@ export async function buildIndexHtml(targetDirPath: string = Path.Dist.directory
   scriptNodeToSet.setAttribute('type', 'module');
   indexHtmlDocument.body.appendChild(scriptNodeToSet);
 
-  const modifiedIndexHtmlContent: string = indexHtmlDocument.documentElement.innerHTML;
-  const formattedIndexHtmlContent: string = format(modifiedIndexHtmlContent, {
-    parser: 'html',
-  });
+  const docTypeMark: string = '<!DOCTYPE html>';
+
+  const formattedIndexHtmlContent: string = format(
+    `${docTypeMark}<html lang="en">${indexHtmlDocument.documentElement.innerHTML}</html>`,
+    {
+      parser: 'html',
+    }
+  );
 
   const targetIndexHtmlFilePath: string = join(targetDirPath, 'index.html');
   return writeFile(targetIndexHtmlFilePath, formattedIndexHtmlContent);

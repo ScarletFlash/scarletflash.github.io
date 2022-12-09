@@ -1,4 +1,4 @@
-import { mkdir } from 'fs/promises';
+import { cp, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { serve, ServeResult } from 'esbuild';
 import { Config } from './constants/config.const';
@@ -21,4 +21,9 @@ Promise.resolve()
   .then(() => mkdir(temporaryServeDirectoryPath, { recursive: true }))
   .then(() => buildIndexHtml(temporaryServeDirectoryPath))
   .then(() => buildIndexCss(temporaryServeDirectoryPath))
+  .then(() =>
+    cp(Path.Application.Source.assetsDirectory, join(temporaryServeDirectoryPath, 'assets'), {
+      recursive: true,
+    })
+  )
   .then(() => runServer());
