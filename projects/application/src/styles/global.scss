@@ -25,8 +25,9 @@ h1 {
 }
 
 i {
-  font-family: 'Noto Color Emoji', sans-serif;
+  font-family: 'Noto Color Emoji';
   font-style: normal;
+  text-rendering: optimizeLegibility;
 }
 
 html,
