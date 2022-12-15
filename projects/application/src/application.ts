@@ -21,7 +21,9 @@ export class Application {
   public start(): void {
     this.#backgroundAnimation.run();
 
-    this.#makeTextContentVisible();
+    setTimeout(() => {
+      this.#makeTextContentVisible();
+    }, 1000);
   }
 
   #makeTextContentVisible(): void {
