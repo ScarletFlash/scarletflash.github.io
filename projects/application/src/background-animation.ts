@@ -42,8 +42,8 @@ export class BackgroundAnimation {
     context.linkProgram(shaderProgram);
     context.useProgram(shaderProgram);
 
-    // eslint-disable-next-line no-console
-    console.log(vertexShaderSourceCode, fragmentShaderSourceCode);
+    // // eslint-disable-next-line no-console
+    // console.log(vertexShaderSourceCode, fragmentShaderSourceCode);
   }
 
   static #getShader(
