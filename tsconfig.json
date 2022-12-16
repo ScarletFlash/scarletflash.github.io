@@ -9,6 +9,9 @@
     },
     {
       "path": "./projects/scripts"
+    },
+    {
+      "path": "./projects/scene"
     }
   ]
 }
