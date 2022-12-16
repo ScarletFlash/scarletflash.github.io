@@ -1,4 +1,4 @@
-import { BackgroundAnimation } from './background-animation';
+import { BackgroundAnimation } from 'scene';
 
 export class Application {
   readonly #backgroundAnimation: BackgroundAnimation;

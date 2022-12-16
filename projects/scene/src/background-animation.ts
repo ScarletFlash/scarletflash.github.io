@@ -1,6 +1,12 @@
 import fragmentShaderSourceCode from './shaders/fragment.glsl';
 import vertexShaderSourceCode from './shaders/vertex.glsl';
 
+interface ShaderProgramInput {
+  context: WebGL2RenderingContext;
+  fragmentShader: WebGLShader;
+  vertexShader: WebGLShader;
+}
+
 export class BackgroundAnimation {
   readonly #canvas: HTMLCanvasElement;
   readonly #renderingContext: WebGL2RenderingContext | null;
@@ -32,14 +38,11 @@ export class BackgroundAnimation {
       fragmentShaderSourceCode
     );
 
-    const shaderProgram: WebGLProgram | null = context.createProgram();
-    if (shaderProgram === null) {
-      throw new Error('WebGL program creation failed');
-    }
-
-    context.attachShader(shaderProgram, vertexShader);
-    context.attachShader(shaderProgram, fragmentShader);
-    context.linkProgram(shaderProgram);
+    const shaderProgram: WebGLProgram = BackgroundAnimation.#getShaderProgram({
+      context,
+      vertexShader,
+      fragmentShader,
+    });
     context.useProgram(shaderProgram);
 
     // // eslint-disable-next-line no-console
@@ -57,7 +60,34 @@ export class BackgroundAnimation {
     }
     context.shaderSource(shader, sourceCode);
     context.compileShader(shader);
+    const isCompiledSuccessfully: unknown = context.getShaderParameter(shader, context.COMPILE_STATUS);
+
+    if (typeof isCompiledSuccessfully !== 'boolean' || !isCompiledSuccessfully) {
+      context.deleteShader(shader);
+      throw new Error('WebGL shader compilation failed');
+    }
+
     return shader;
+  }
+
+  static #getShaderProgram({ fragmentShader, vertexShader, context }: ShaderProgramInput): WebGLProgram {
+    const program: WebGLProgram | null = context.createProgram();
+    if (program === null) {
+      throw new Error('WebGL program creation failed');
+    }
+
+    context.attachShader(program, fragmentShader);
+    context.attachShader(program, vertexShader);
+
+    context.linkProgram(program);
+
+    const isLinkedSuccessfully: unknown = context.getProgramParameter(program, context.LINK_STATUS);
+    if (typeof isLinkedSuccessfully !== 'boolean' || !isLinkedSuccessfully) {
+      context.deleteProgram(program);
+      throw new Error('WebGL program linking failed');
+    }
+
+    return program;
   }
 
   public run(): void {
