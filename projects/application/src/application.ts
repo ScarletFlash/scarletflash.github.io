@@ -1,7 +1,7 @@
-import { BackgroundAnimation } from 'scene';
+import { Scene } from 'scene';
 
 export class Application {
-  readonly #backgroundAnimation: BackgroundAnimation;
+  readonly #scene: Scene;
   readonly #contentElement: HTMLElement;
 
   constructor() {
@@ -9,7 +9,7 @@ export class Application {
     if (canvas === null) {
       throw new Error('Canvas element is missing');
     }
-    this.#backgroundAnimation = new BackgroundAnimation(canvas);
+    this.#scene = new Scene(canvas);
 
     const contentElement: HTMLElement | null = document.querySelector('main.content');
     if (contentElement === null) {
@@ -19,7 +19,7 @@ export class Application {
   }
 
   public start(): void {
-    this.#backgroundAnimation.run();
+    this.#scene.run();
 
     setTimeout(() => {
       this.#makeTextContentVisible();
