@@ -11,7 +11,7 @@ const temporaryServeDirectoryPath: string = join(Path.Dist.directory, `.serve-di
 async function runServer(): Promise<void> {
   const { port, host }: ServeResult = await serve(
     { ...Config.serveOptions, servedir: temporaryServeDirectoryPath },
-    { ...Config.buildOptions, outdir: temporaryServeDirectoryPath }
+    { ...Config.buildOptions, outdir: temporaryServeDirectoryPath, minify: false }
   );
   // eslint-disable-next-line no-console
   console.log(`🚀 http://${host}:${port}/`);
