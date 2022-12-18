@@ -1,4 +1,4 @@
-import type { ShaderProgramInput } from './declarations/shader-program-input';
+import type { ShaderProgramInput } from './declarations/shader-program-input.interface';
 import type { WebGlView } from './declarations/web-gl-view.interface';
 
 export class ShaderProgram implements WebGlView<WebGLProgram> {
