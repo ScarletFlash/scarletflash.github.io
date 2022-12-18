@@ -8,6 +8,9 @@
       "path": "./projects/application"
     },
     {
+      "path": "./projects/framework"
+    },
+    {
       "path": "./projects/scripts"
     },
     {
