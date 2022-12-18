@@ -1,39 +1,68 @@
 import { Context } from './context';
-import { FragmentShader } from './fragment-shader';
-import { ShaderProgram } from './shader-program';
-import fragmentShaderSourceCode from './shaders/fragment.glsl';
-import vertexShaderSourceCode from './shaders/vertex.glsl';
-import { VertexShader } from './vertex-shader';
 
 export class Scene {
   readonly #canvas: HTMLCanvasElement;
-  readonly #renderingContext: WebGL2RenderingContext;
+  readonly #canvasResizeObserver: ResizeObserver;
+
+  readonly #renderingContext: Context;
 
   constructor(canvas: HTMLCanvasElement) {
     this.#canvas = canvas;
-    this.#renderingContext = new Context(canvas).view;
+    this.#renderingContext = new Context(canvas);
+
+    this.#canvasResizeObserver = new ResizeObserver(() => {
+      Scene.#syncWebGlCanvasDimensionsWithCSS(canvas);
+
+      this.#renderingContext.updateSize({
+        widthPx: canvas.width,
+        heightPx: canvas.height,
+      });
+    });
   }
 
-  static #applyShaders(context: WebGL2RenderingContext): void {
-    const vertexShader: VertexShader = new VertexShader(context, vertexShaderSourceCode);
-    const fragmentShader: FragmentShader = new FragmentShader(context, fragmentShaderSourceCode);
+  static #applyShaders(_context: WebGL2RenderingContext): void {
+    // const vertexShader: VertexShader = new VertexShader(context, vertexShaderSourceCode);
+    // const fragmentShader: FragmentShader = new FragmentShader(context, fragmentShaderSourceCode);
+    // const shaderProgram: ShaderProgram = new ShaderProgram({
+    //   context,
+    //   vertexShader,
+    //   fragmentShader,
+    // });
+    // shaderProgram.run();
+  }
 
-    const shaderProgram: ShaderProgram = new ShaderProgram({
-      context,
-      vertexShader,
-      fragmentShader,
-    });
+  static #syncWebGlCanvasDimensionsWithCSS(canvas: HTMLCanvasElement): void {
+    const displayWidthPx: number = canvas.clientWidth;
+    const displayHeightPx: number = canvas.clientHeight;
 
-    shaderProgram.run();
+    const dimensionsAreValid: boolean = canvas.width === displayWidthPx && canvas.height === displayHeightPx;
+
+    if (dimensionsAreValid) {
+      return;
+    }
+
+    // // eslint-disable-next-line no-console
+    // console.log('need resize');
+
+    // canvas.width = displayWidthPx;
+    // canvas.height = displayHeightPx;
   }
 
   public run(): void {
+    this.#canvasResizeObserver.observe(this.#canvas, {
+      box: 'border-box',
+    });
+
     if (this.#renderingContext === null) {
       throw new Error('WebGL is unavailable');
     }
 
-    Scene.#applyShaders(this.#renderingContext);
+    Scene.#applyShaders(this.#renderingContext.view);
     this.#makeCanvasVisible();
+  }
+
+  public destroy(): void {
+    this.#canvasResizeObserver.unobserve(this.#canvas);
   }
 
   #makeCanvasVisible(): void {

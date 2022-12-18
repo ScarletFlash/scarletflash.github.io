@@ -13,7 +13,7 @@ export class Application {
 
     const contentElement: HTMLElement | null = document.querySelector('main.content');
     if (contentElement === null) {
-      throw new Error('Contnet element is missing');
+      throw new Error('Content element is missing');
     }
     this.#contentElement = contentElement;
   }
