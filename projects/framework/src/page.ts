@@ -8,11 +8,16 @@ export abstract class Page {
     document.title = newTitle;
   }
 
-  public init(): void {
+  public init(root: HTMLElement): void {
     Page.#setTitle(this.title);
+
+   const contentElement: HTMLElement = this.getContent();
+   root.replaceChildren(contentElement)
   }
 
   public destroy(): void {
     Page.#setTitle();
   }
+
+  protected abstract getContent(): HTMLElement;
 }

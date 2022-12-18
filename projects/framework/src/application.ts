@@ -1,31 +1,54 @@
-import type { ApplicationParams } from './application-params';
+import type { ApplicationParams } from './declarations/application-params.interface';
+import type { PageConstructor } from './declarations/page-constructor.type';
+import { NavigationHandler } from './navigation-handler';
 import type { Page } from './page';
 
 export class Application {
   readonly #contentElement: HTMLElement;
+  readonly #pageByPath: Map<string, Page> = new Map<string, Page>();
+  readonly #navigationHandler: NavigationHandler = new NavigationHandler();
 
-  readonly #pages: Set<Page> = new Set<Page>();
-
-  constructor({ contentElement }: ApplicationParams) {
+  constructor({ contentElement, pages }: ApplicationParams) {
     this.#contentElement = contentElement;
+
+    new Set<PageConstructor>(pages).forEach((uniquePageConstructor: PageConstructor) => {
+      const pageInstance: Page = new uniquePageConstructor();
+
+      this.#pageByPath.set(pageInstance.path, pageInstance);
+    });
   }
 
   public start(): void {
-    this.#registerPages();
-
     setTimeout(() => {
       this.#makeTextContentVisible();
     }, 1000);
+
+    this.#renderTargetPageOnPathChanges();
+    this.#navigationHandler.connect();
+  }
+
+  public stop(): void {
+    this.#navigationHandler.disconnect();
+  }
+
+  #renderTargetPageOnPathChanges(): void {
+    this.#navigationHandler.onPathChanges((currentPath: string, previousPath: string) => {
+      const targetPage: Page | undefined = this.#pageByPath.get(currentPath);
+      if (targetPage === undefined) {
+        throw new Error(`No page with desired path: ${currentPath}`);
+      }
+
+      const currentPage: Page | undefined = this.#pageByPath.get(previousPath);
+      if (currentPage === undefined) {
+        throw new Error(`No page with previous path ${previousPath}`);
+      }
+
+      currentPage.destroy();
+      targetPage.init(this.#contentElement);
+    });
   }
 
   #makeTextContentVisible(): void {
     this.#contentElement.classList.remove('content_hidden');
-  }
-
-  #registerPages(): void {
-    this.#pages.forEach((page: Page) => {
-      // eslint-disable-next-line no-console
-      console.log(page);
-    });
   }
 }

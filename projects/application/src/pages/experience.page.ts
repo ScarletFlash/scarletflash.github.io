@@ -1,8 +1,8 @@
 import { Page } from 'framework';
 
-export class MainPage extends Page {
-  public readonly path: string = '/';
-  public readonly title: string = '';
+export class ExperiencePage extends Page {
+  public readonly path: string = '/experience';
+  public readonly title: string = 'Experience';
 
   protected getContent(): HTMLElement {
     const paragraphElement: HTMLElement = document.createElement('p');
