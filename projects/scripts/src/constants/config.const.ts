@@ -6,7 +6,7 @@ import { Path } from './path.const';
 export namespace Config {
   export const serveOptions: ServeOptions = {
     host: '0.0.0.0',
-    port: 4200,
+    port: 4201,
   };
 
   export const buildOptions: BuildOptions = {
