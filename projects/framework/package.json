@@ -6,6 +6,9 @@
     "compiler:run": "tsc --project tsconfig.json",
     "compiler:check": "tsc --project tsconfig.json --noEmit"
   },
+  "dependencies": {
+    "@scarletflash/declarative-element": "*"
+  },
   "devDependencies": {
     "typescript": "*"
   },
