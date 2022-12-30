@@ -32,6 +32,7 @@
     "linter:fix": "eslint --config ./.eslintrc.yaml --fix projects"
   },
   "devDependencies": {
+    "@scarletflash/declarative-element": "npm:declarative-element@latest",
     "@types/jsdom": "latest",
     "@types/node": "latest",
     "@types/prettier": "latest",

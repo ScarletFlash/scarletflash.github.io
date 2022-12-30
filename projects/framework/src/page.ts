@@ -1,3 +1,5 @@
+import { getElement, Node } from '@scarletflash/declarative-element';
+
 export abstract class Page {
   public abstract readonly path: string;
   public abstract readonly title: string;
@@ -11,13 +13,16 @@ export abstract class Page {
   public init(root: HTMLElement): void {
     Page.#setTitle(this.title);
 
-   const contentElement: HTMLElement = this.getContent();
-   root.replaceChildren(contentElement)
+    const contentNode: Node.Any = this.getContent();
+    const contentElement: HTMLElement | Text = getElement(contentNode);
+    // eslint-disable-next-line no-console
+    console.log({ contentElement });
+    root.replaceChildren(contentElement);
   }
 
   public destroy(): void {
     Page.#setTitle();
   }
 
-  protected abstract getContent(): HTMLElement;
+  protected abstract getContent(): Node.Any;
 }
