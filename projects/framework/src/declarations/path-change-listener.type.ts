@@ -1,1 +1,1 @@
-export type PathChangeListener = (currentPath: string, previousPath: string) => void;
+export type PathChangeListener = (currentPath: string, previousPath: string | undefined) => void;
