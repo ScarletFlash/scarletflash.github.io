@@ -5,9 +5,6 @@ export class MainPage extends Page {
   public readonly title: string = '';
 
   protected getContent(): Node.Any {
-    // eslint-disable-next-line no-console
-    console.log(this);
-
     return {
       tagName: 'section',
       attributes: {

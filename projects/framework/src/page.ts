@@ -4,6 +4,10 @@ export abstract class Page {
   public abstract readonly path: string;
   public abstract readonly title: string;
 
+  protected get self(): Page {
+    return this;
+  }
+
   static #setTitle(pageTitle: string = ''): void {
     const prefix: string = 'Fedor Usakov';
     const newTitle: string = pageTitle.length === 0 ? prefix : `${prefix} — ${pageTitle}`;
@@ -13,10 +17,18 @@ export abstract class Page {
   public init(root: HTMLElement): void {
     Page.#setTitle(this.title);
 
-    const contentNode: Node.Any = this.getContent();
-    const contentElement: HTMLElement | Text = getElement(contentNode);
-    // eslint-disable-next-line no-console
-    console.log({ contentElement });
+    let contentElement: HTMLElement | Text | undefined;
+    let page: Page = this.self;
+
+    while (contentElement === undefined) {
+      const content: Node.Any | Page = page.getContent();
+      if (content instanceof Page) {
+        page = content.self;
+        continue;
+      }
+      contentElement = getElement(content);
+    }
+
     root.replaceChildren(contentElement);
   }
 
@@ -24,5 +36,5 @@ export abstract class Page {
     Page.#setTitle();
   }
 
-  protected abstract getContent(): Node.Any;
+  protected abstract getContent(): Node.Any | Page;
 }

@@ -32,18 +32,17 @@ export class Application {
   }
 
   #renderTargetPageOnPathChanges(): void {
-    this.#navigationHandler.onPathChanges((currentPath: string, previousPath: string) => {
+    this.#navigationHandler.onPathChanges((currentPath: string, previousPath: string | undefined) => {
       const targetPage: Page | undefined = this.#pageByPath.get(currentPath);
       if (targetPage === undefined) {
         throw new Error(`No page with desired path: ${currentPath}`);
       }
 
-      const currentPage: Page | undefined = this.#pageByPath.get(previousPath);
-      if (currentPage === undefined) {
-        throw new Error(`No page with previous path ${previousPath}`);
+      const currentPage: Page | undefined = previousPath === undefined ? undefined : this.#pageByPath.get(previousPath);
+      if (currentPage !== undefined) {
+        currentPage.destroy();
       }
 
-      currentPage.destroy();
       targetPage.init(this.#contentElement);
     });
   }

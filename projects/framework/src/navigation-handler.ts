@@ -1,7 +1,7 @@
 import type { PathChangeListener } from './declarations/path-change-listener.type';
 
 export class NavigationHandler {
-  #latestPath: string = this.#currentPath;
+  #latestPath: string | undefined;
 
   readonly #pathChangeListeners: Set<PathChangeListener> = new Set<PathChangeListener>();
 
@@ -10,10 +10,13 @@ export class NavigationHandler {
   }
 
   public static goTo(path: string): void {
+    // eslint-disable-next-line no-console
+    console.log(JSON.stringify({ path }));
+
     history.pushState(null, '', path);
-    history.forward();
     history.back();
     history.forward();
+    // history.forward();
   }
 
   public onPathChanges(pathChangeListener: PathChangeListener): void {
@@ -30,9 +33,21 @@ export class NavigationHandler {
     this.#pathChangeListeners.clear();
   }
 
-  readonly #eventListener: (event: PopStateEvent) => void = (): void => {
+  readonly #eventListener: (_event: PopStateEvent) => void = (): void => {
+    if (this.#currentPath === this.#latestPath) {
+      return;
+    }
+
     this.#pathChangeListeners.forEach((listenerCallback: PathChangeListener) =>
       listenerCallback(this.#currentPath, this.#latestPath)
+    );
+
+    // eslint-disable-next-line no-console
+    console.log(
+      JSON.stringify({
+        prv: this.#currentPath,
+        new: this.#latestPath,
+      })
     );
 
     this.#latestPath = this.#currentPath;
