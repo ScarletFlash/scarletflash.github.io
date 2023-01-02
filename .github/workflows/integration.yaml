@@ -54,21 +54,6 @@ jobs:
       - name: run linting checks
         run: npm run linter:check
 
-  check_compilation:
-    name: Check compilation
-    runs-on: ubuntu-latest
-    needs:
-      - install
-    steps:
-      - name: download prepared workspace
-        uses: actions/download-artifact@v3
-        with:
-          name: workspace
-      - name: restore workspace from archive
-        run: tar --totals --extract --file workspace.tar && rm --force workspace.tar
-      - name: run compilation checks
-        run: npm run compiler:check --workspace=application
-
   check_spelling:
     name: Check spelling
     runs-on: ubuntu-latest

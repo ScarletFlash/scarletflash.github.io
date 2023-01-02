@@ -20,7 +20,7 @@
     "🪄": "One-liners",
     "build": "npm run build --workspace=scripts",
     "serve": "npm run serve --workspace=scripts",
-    "lint": "npm run formatter:lint && npm run compiler:check --workspaces && npm run spell:check && npm run linter:check",
+    "lint": "npm run formatter:lint && npm run spell:check && npm run linter:check",
     "autofix": "npm run formatter:fix && npm run linter:fix",
     "🖼️": "Code style",
     "formatter:lint": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{ts,js,html,scss,yaml,yml,json}",

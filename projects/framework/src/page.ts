@@ -1,4 +1,5 @@
 import { getElement, Node } from '@scarletflash/declarative-element';
+import { VOID } from './constants/void.constant';
 import type { PageConstructor } from './declarations/page-constructor.type';
 import { isPageConstructor } from './type-guards/is-page-constructor.type-guard';
 
@@ -20,14 +21,21 @@ export abstract class Page {
         page = new content();
         continue;
       }
+
       contentElement = getElement(content);
     } while (contentElement === undefined);
 
     root.replaceChildren(contentElement);
+
+    this.onInit();
   }
 
   public destroy(root: HTMLElement): void {
     Array.from(root.children).forEach((child: Element) => child.remove());
+  }
+
+  protected onInit(): void {
+    return VOID;
   }
 
   protected abstract getContent(): Node.Any | PageConstructor;
