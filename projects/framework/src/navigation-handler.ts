@@ -28,7 +28,7 @@ export class NavigationHandler {
   }
 
   public updatePath(newPath: string): void {
-    // eslint-disable-next-line no-console
-    console.log(newPath);
+    history.pushState(null, '', newPath);
+    history.forward();
   }
 }
