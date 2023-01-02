@@ -1,40 +1,34 @@
 import { getElement, Node } from '@scarletflash/declarative-element';
+import type { PageConstructor } from './declarations/page-constructor.type';
+import { isPageConstructor } from './type-guards/is-page-constructor.type-guard';
 
 export abstract class Page {
   public abstract readonly path: string;
   public abstract readonly title: string;
 
-  protected get self(): Page {
+  private get self(): Page {
     return this;
   }
 
-  static #setTitle(pageTitle: string = ''): void {
-    const prefix: string = 'Fedor Usakov';
-    const newTitle: string = pageTitle.length === 0 ? prefix : `${prefix} — ${pageTitle}`;
-    document.title = newTitle;
-  }
-
   public init(root: HTMLElement): void {
-    Page.#setTitle(this.title);
-
     let contentElement: HTMLElement | Text | undefined;
     let page: Page = this.self;
 
-    while (contentElement === undefined) {
-      const content: Node.Any | Page = page.getContent();
-      if (content instanceof Page) {
-        page = content.self;
+    do {
+      const content: Node.Any | PageConstructor = page.getContent();
+      if (isPageConstructor(content)) {
+        page = new content();
         continue;
       }
       contentElement = getElement(content);
-    }
+    } while (contentElement === undefined);
 
     root.replaceChildren(contentElement);
   }
 
-  public destroy(): void {
-    Page.#setTitle();
+  public destroy(root: HTMLElement): void {
+    Array.from(root.children).forEach((child: Element) => child.remove());
   }
 
-  protected abstract getContent(): Node.Any | Page;
+  protected abstract getContent(): Node.Any | PageConstructor;
 }

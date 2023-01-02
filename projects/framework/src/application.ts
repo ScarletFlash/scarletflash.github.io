@@ -2,11 +2,16 @@ import type { ApplicationParams } from './declarations/application-params.interf
 import type { PageConstructor } from './declarations/page-constructor.type';
 import { NavigationHandler } from './navigation-handler';
 import type { Page } from './page';
+import { TitleHandler } from './title-handler';
 
 export class Application {
   readonly #contentElement: HTMLElement;
   readonly #pageByPath: Map<string, Page> = new Map<string, Page>();
+
   readonly #navigationHandler: NavigationHandler = new NavigationHandler();
+  readonly #titleHandler: TitleHandler = new TitleHandler();
+
+  #currentPath?: string;
 
   constructor({ contentElement, pages }: ApplicationParams) {
     this.#contentElement = contentElement;
@@ -32,16 +37,28 @@ export class Application {
   }
 
   #renderTargetPageOnPathChanges(): void {
-    this.#navigationHandler.onPathChanges((currentPath: string, previousPath: string | undefined) => {
-      const targetPage: Page | undefined = this.#pageByPath.get(currentPath);
-      if (targetPage === undefined) {
-        throw new Error(`No page with desired path: ${currentPath}`);
+    this.#navigationHandler.onNewPathRequest((targetPath: string) => {
+      if (this.#currentPath === targetPath) {
+        return;
       }
 
-      const currentPage: Page | undefined = previousPath === undefined ? undefined : this.#pageByPath.get(previousPath);
-      if (currentPage !== undefined) {
-        currentPage.destroy();
+      const targetPage: Page | undefined = this.#pageByPath.get(targetPath);
+      if (targetPage === undefined) {
+        this.#titleHandler.resetTitle();
+        throw new Error(`No page with desired path: ${targetPath}`);
       }
+
+      const currentPage: Page | undefined =
+        this.#currentPath === undefined ? undefined : this.#pageByPath.get(this.#currentPath);
+      if (currentPage !== undefined) {
+        currentPage.destroy(this.#contentElement);
+      }
+      this.#currentPath = targetPath;
+
+      const { title, path }: Page = targetPage;
+
+      this.#navigationHandler.updatePath(path);
+      this.#titleHandler.setTitle(title);
 
       targetPage.init(this.#contentElement);
     });

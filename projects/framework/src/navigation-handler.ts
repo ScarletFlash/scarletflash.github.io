@@ -1,55 +1,34 @@
-import type { PathChangeListener } from './declarations/path-change-listener.type';
+import type { RouteChangeRequestListener } from './declarations/route-change-request-listener.type';
 
 export class NavigationHandler {
-  #latestPath: string | undefined;
+  static readonly #routeChangeRequestListener: Set<RouteChangeRequestListener> = new Set<RouteChangeRequestListener>();
 
-  readonly #pathChangeListeners: Set<PathChangeListener> = new Set<PathChangeListener>();
-
-  get #currentPath(): string {
+  static get #currentPath(): string {
     return new URL(window.location.href).pathname;
   }
 
   public static goTo(path: string): void {
-    // eslint-disable-next-line no-console
-    console.log(JSON.stringify({ path }));
+    const normalizedPath: string = path.trim().toLowerCase();
 
-    history.pushState(null, '', path);
-    history.back();
-    history.forward();
-    // history.forward();
+    NavigationHandler.#routeChangeRequestListener.forEach((listenerCallback: RouteChangeRequestListener) =>
+      listenerCallback(normalizedPath)
+    );
   }
 
-  public onPathChanges(pathChangeListener: PathChangeListener): void {
-    this.#pathChangeListeners.add(pathChangeListener);
+  public onNewPathRequest(pathChangeListener: RouteChangeRequestListener): void {
+    NavigationHandler.#routeChangeRequestListener.add(pathChangeListener);
   }
 
   public connect(): void {
-    addEventListener('popstate', this.#eventListener);
-    NavigationHandler.goTo(this.#currentPath);
+    NavigationHandler.goTo(NavigationHandler.#currentPath);
   }
 
   public disconnect(): void {
-    removeEventListener('popstate', this.#eventListener);
-    this.#pathChangeListeners.clear();
+    NavigationHandler.#routeChangeRequestListener.clear();
   }
 
-  readonly #eventListener: (_event: PopStateEvent) => void = (): void => {
-    if (this.#currentPath === this.#latestPath) {
-      return;
-    }
-
-    this.#pathChangeListeners.forEach((listenerCallback: PathChangeListener) =>
-      listenerCallback(this.#currentPath, this.#latestPath)
-    );
-
+  public updatePath(newPath: string): void {
     // eslint-disable-next-line no-console
-    console.log(
-      JSON.stringify({
-        prv: this.#currentPath,
-        new: this.#latestPath,
-      })
-    );
-
-    this.#latestPath = this.#currentPath;
-  };
+    console.log(newPath);
+  }
 }
