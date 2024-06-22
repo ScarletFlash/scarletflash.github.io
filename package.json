@@ -7,7 +7,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "formatter:check": "prettier --check .",
+    "formatter:fix": "prettier --write ."
   },
   "private": true,
   "dependencies": {
@@ -34,6 +36,7 @@
     "@types/node": "^18.18.0",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
+    "prettier": "^3.3.2",
     "tailwindcss": "^3.4.4",
     "typescript": "~5.4.2"
   }
