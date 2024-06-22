@@ -111,6 +111,8 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
+            "quiet": true,
+            "eslintConfig": "eslint.config.js",
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }

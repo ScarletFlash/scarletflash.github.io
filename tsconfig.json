@@ -17,6 +17,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "useDefineForClassFields": false,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
     "lib": ["ESNext", "dom"]
   },
   "angularCompilerOptions": {

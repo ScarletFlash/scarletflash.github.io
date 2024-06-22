@@ -10,7 +10,9 @@
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
     "formatter:check": "prettier --check .",
     "formatter:fix": "prettier --write .",
-    "lint": "ng lint"
+    "linter:check": "ng lint",
+    "linter:fix": "ng lint --fix",
+    "compiler:check": "tsc --project tsconfig.app.json --noEmit"
   },
   "private": true,
   "dependencies": {
