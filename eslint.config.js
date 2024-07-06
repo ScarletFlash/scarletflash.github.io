@@ -22,6 +22,9 @@ module.exports = TypeScriptESLint.config(
     ],
     processor: AngularESLint.processInlineTemplates,
     rules: {
+      '@angular-eslint/use-component-view-encapsulation': 'off',
+      '@angular-eslint/use-injectable-provided-in': 'off',
+      '@angular-eslint/no-host-metadata-property': 'off',
       curly: 'error',
       'max-depth': [
         'error',
@@ -234,7 +237,8 @@ module.exports = TypeScriptESLint.config(
     files: ['**/*.html'],
     extends: [...AngularESLint.configs.templateAll],
     rules: {
-      '@angular-eslint/template/i18n': 'off'
+      '@angular-eslint/template/i18n': 'off',
+      '@angular-eslint/template/prefer-self-closing-tags': 'off'
     }
   }
 );

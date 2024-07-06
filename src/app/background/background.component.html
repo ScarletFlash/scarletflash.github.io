@@ -1,0 +1,15 @@
+<section class="size-full relative">
+  <section
+    #canvas_container
+    class="size-full bg-black absolute top-0 left-0 right-0 bottom-0 after:block after:absolute after:top-0 after:left-0 after:right-0 after:bottom-0 after:size-full after:bg-[radial-gradient(circle,rgba(0,0,0,0)_50%,rgba(0,0,0,9)_75%,rgba(0,0,0,1)_100%)]"
+  >
+    <canvas
+      #canvas
+      class="size-full"
+    ></canvas>
+  </section>
+
+  <section class="size-full absolute z-10">
+    <ng-content></ng-content>
+  </section>
+</section>
