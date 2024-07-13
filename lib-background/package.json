@@ -1,0 +1,30 @@
+{
+  "name": "@repo_/lib-background",
+  "private": true,
+  "version": "1.0.0",
+  "types": "./src/api.ts",
+  "scripts": {
+    "build": "esbuild ./src/api.ts --bundle --platform=browser --minify --splitting --outdir=dist --format=esm --tree-shaking=true --legal-comments=external --sourcemap=external",
+    "build_watch": "esbuild ./src/api.ts --bundle --platform=browser --minify --splitting --outdir=dist-watch --format=esm --tree-shaking=true --legal-comments=none --sourcemap=external --watch",
+    "compiler_check": "tsc --project tsconfig.json --noEmit",
+    "formatter_check": "prettier --config ./prettier/base.yaml --check .",
+    "formatter_fix": "prettier --config ./prettier/base.yaml --write ."
+  },
+  "dependencies": {
+    "three": "^0.165.0"
+  },
+  "devDependencies": {
+    "@repo_/lib-configurations": "*",
+    "esbuild": "^0.23.0",
+    "@types/node": "*",
+    "eslint": "*",
+    "prettier": "*",
+    "typescript": "*",
+    "typescript-eslint": "*"
+  },
+  "exports": [
+    "./dist-watch/api.js",
+    "./dist/api.js",
+    "./src/api.ts"
+  ]
+}

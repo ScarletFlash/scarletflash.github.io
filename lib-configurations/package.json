@@ -1,0 +1,20 @@
+{
+  "name": "@repo_/lib-configurations",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "formatter_check": "prettier --config ./prettier/base.yaml --check .",
+    "formatter_fix": "prettier --config ./prettier/base.yaml --write ."
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "eslint": "*",
+    "prettier": "*",
+    "typescript": "*",
+    "typescript-eslint": "*"
+  },
+  "files": [
+    "./prettier/base.yaml",
+    "./typescript/base.json"
+  ]
+}

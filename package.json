@@ -1,66 +1,32 @@
 {
-  "name": "scarletflash.github.io",
-  "version": "1.0.0",
-  "license": "MIT",
+  "name": "@repo_/root",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ScarletFlash/scarletflash.github.io.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ScarletFlash/scarletflash.github.io/issues"
-  },
-  "homepage": "https://scarletflash.github.io",
-  "author": {
-    "name": "Fedor Usakov",
-    "email": "scarletflash.dev@gmail.com",
-    "url": "https://scarletflash.github.io"
-  },
+  "version": "1.0.0",
   "scripts": {
-    "🪄": "One-liners",
-    "build": "npm run build --workspace=scripts",
-    "serve": "npm run serve --workspace=scripts",
-    "lint": "npm run formatter:lint && npm run spell:check && npm run linter:check",
-    "autofix": "npm run formatter:fix && npm run linter:fix",
-    "🖼️": "Code style",
-    "formatter:lint": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --check ./**/*.{ts,js,html,scss,yaml,yml,json}",
-    "formatter:fix": "prettier --config ./.prettierrc --ignore-path ./.prettierignore --write ./**/*.{ts,js,html,scss,yaml,yml,json}",
-    "🎙️": "Spelling",
-    "spell:check": "cspell '**/*' --config cspell.config.yaml",
-    "☠️": "Code quality",
-    "linter:check": "eslint --config ./.eslintrc.yaml projects",
-    "linter:fix": "eslint --config ./.eslintrc.yaml --fix projects"
+    "🏗️": "Building",
+    "build": "npm run turbo build",
+    "build_watch": "npm run turbo build_watch",
+    "🤖": "Static Analysis",
+    "compiler_check": "npm run turbo compiler_check",
+    "💅": "Formatting",
+    "formatter_check": "npm run turbo formatter_check",
+    "formatter_check:root": "prettier --config ./lib-configurations/prettier/base.yaml --check ./*.*",
+    "formatter_fix": "npm run turbo run formatter_fix",
+    "formatter_fix:root": "prettier --config ./lib-configurations/prettier/base.yaml --write ./*.*",
+    "🥷": "Stuff",
+    "turbo": "turbo --parallel --env-mode=strict"
   },
   "devDependencies": {
-    "@scarletflash/declarative-element": "npm:declarative-element@latest",
-    "@types/jsdom": "latest",
-    "@types/node": "latest",
-    "@types/prettier": "latest",
-    "@types/sass": "latest",
-    "@typescript-eslint/eslint-plugin": "latest",
-    "@typescript-eslint/parser": "latest",
-    "cspell": "latest",
-    "esbuild": "latest",
-    "esbuild-plugin-glsl": "latest",
-    "eslint": "latest",
-    "eslint-config-prettier": "latest",
-    "eslint-plugin-ban": "latest",
-    "eslint-plugin-deprecation": "latest",
-    "eslint-plugin-editorconfig": "latest",
-    "eslint-plugin-import": "latest",
-    "eslint-plugin-jsdoc": "latest",
-    "eslint-plugin-n": "latest",
-    "eslint-plugin-prefer-arrow": "latest",
-    "eslint-plugin-prettier": "latest",
-    "eslint-plugin-promise": "latest",
-    "eslint-plugin-unused-imports": "latest",
-    "jsdom": "latest",
-    "prettier": "latest",
-    "sass": "latest",
-    "ts-node": "latest",
-    "typescript": "latest"
+    "turbo": "^2.0.0",
+    "typescript": "~5.4.0",
+    "typescript-eslint": "8.0.0-alpha.20",
+    "prettier": "^3.0.0",
+    "eslint": "^9.0.0",
+    "@types/node": "^20.0.0"
   },
   "workspaces": [
-    "./projects/*"
-  ]
+    "application/",
+    "lib-*/"
+  ],
+  "packageManager": "npm@10.0.0"
 }
