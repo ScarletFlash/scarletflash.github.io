@@ -3,8 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "formatter:check": "prettier --config ./prettier/base.yaml --check .",
-    "formatter:fix": "prettier --config ./prettier/base.yaml --write ."
+    "formatter_check": "prettier --config ./prettier/base.yaml --check .",
+    "formatter_fix": "prettier --config ./prettier/base.yaml --write ."
   },
   "devDependencies": {
     "@types/node": "*",

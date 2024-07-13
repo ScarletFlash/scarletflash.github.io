@@ -3,8 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "formatter:check": "prettier --config ./lib-configurations/prettier/base.yaml --check .",
-    "formatter:fix": "prettier --config ./lib-configurations/prettier/base.yaml --write ."
+    "💅": "Formatting",
+    "formatter_check": "npm run turbo formatter_check",
+    "formatter_check:root": "prettier --config ./lib-configurations/prettier/base.yaml --check ./*.*",
+    "formatter_fix": "npm run turbo run formatter_fix",
+    "formatter_fix:root": "prettier --config ./lib-configurations/prettier/base.yaml --write ./*.*",
+    "🥷": "Stuff",
+    "turbo": "turbo --parallel --env-mode=strict"
   },
   "devDependencies": {
     "turbo": "^2.0.0",
@@ -17,5 +22,6 @@
   "workspaces": [
     "application/",
     "lib-*/"
-  ]
+  ],
+  "packageManager": "npm@10.0.0"
 }

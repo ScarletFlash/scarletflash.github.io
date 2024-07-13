@@ -1,0 +1,25 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["!.turbo/**", "!node_modules/**"],
+  "tasks": {
+    "formatter_check": {
+      "dependsOn": ["//#formatter_check:root"],
+      "inputs": ["./**"],
+      "outputs": [],
+      "outputLogs": "errors-only"
+    },
+    "//#formatter_check:root": {
+      "inputs": ["./*"]
+    },
+    "formatter_fix": {
+      "dependsOn": ["//#formatter_fix:root"],
+      "inputs": ["./**"],
+      "outputs": ["./**"],
+      "outputLogs": "errors-only"
+    },
+    "//#formatter_fix:root": {
+      "inputs": ["./*"],
+      "outputs": ["./*"]
+    }
+  }
+}

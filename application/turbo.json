@@ -1,0 +1,13 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "formatter_check": {
+      "inputs": ["./**", "!.angular/**", "!./dist/**"]
+    },
+    "formatter_fix": {
+      "inputs": ["./**", "!.angular/**", "!./dist/**"],
+      "outputs": ["./**", "!.angular/**", "!./dist/**"]
+    }
+  }
+}
