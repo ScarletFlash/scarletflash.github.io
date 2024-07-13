@@ -3,11 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "formatter:check": "prettier --check .",
-    "formatter:fix": "prettier --write .",
-    "linter:check": "eslint lint",
-    "linter:fix": "eslint lint --fix",
-    "compiler:check": "tsc --project tsconfig.app.json --noEmit"
+    "formatter:check": "prettier --config ./prettier/base.yaml --check .",
+    "formatter:fix": "prettier --config ./prettier/base.yaml --write ."
   },
   "devDependencies": {
     "@types/node": "*",
@@ -17,6 +14,7 @@
     "typescript-eslint": "*"
   },
   "files": [
+    "./prettier/base.yaml",
     "./typescript/base.json"
   ]
 }
