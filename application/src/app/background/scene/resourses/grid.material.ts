@@ -58,8 +58,8 @@ export class GridMaterial extends ShaderMaterial {
   }
 
   public nextFrame(): void {
-    const targetUniform: IUniform<number> = this.uniforms['shift'];
-    if (typeof targetUniform.value !== 'number') {
+    const targetUniform: IUniform<number> | undefined = this.uniforms['shift'];
+    if (typeof targetUniform?.value !== 'number') {
       throw new Error('Invalid uniform value');
     }
     targetUniform.value += 0.000075;

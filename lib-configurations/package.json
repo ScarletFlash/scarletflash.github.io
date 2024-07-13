@@ -1,0 +1,22 @@
+{
+  "name": "@repo_/lib-configurations",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "formatter:check": "prettier --check .",
+    "formatter:fix": "prettier --write .",
+    "linter:check": "eslint lint",
+    "linter:fix": "eslint lint --fix",
+    "compiler:check": "tsc --project tsconfig.app.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "eslint": "*",
+    "prettier": "*",
+    "typescript": "*",
+    "typescript-eslint": "*"
+  },
+  "files": [
+    "./typescript/base.json"
+  ]
+}
