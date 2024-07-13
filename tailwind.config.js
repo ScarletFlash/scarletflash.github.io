@@ -1,6 +1,30 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{html,ts}'],
+  content: {
+    files: ['./src/**/*.{html,ts}'],
+    relative: true
+  },
+  /**
+   * @todo
+   * Make this work without safelisting (source - XGlitchDirective)
+   */
+  safelist: [
+    'animate-x-glitch',
+    'before:left-0',
+    'after:left-0',
+    'before:absolute',
+    'after:absolute',
+    `before:content-[attr(data-XGlitchDirective-text-content-copy)]`,
+    `after:content-[attr(data-XGlitchDirective-text-content-copy)]`,
+    'before:[clip-path:polygon(0_0,100%_0,100%_33%,0_33%)]',
+    'after:[clip-path:polygon(0_67%,100%_67%,100%_100%,0_100%)]',
+    'before:animate-x-glitch-top',
+    'after:animate-x-glitch-bottom',
+    'before:pointer-events-none',
+    'after:pointer-events-none',
+    'before:select-none',
+    'after:select-none'
+  ],
   theme: {
     extend: {
       keyframes: {

@@ -31,38 +31,33 @@ export class XGlitchDirective implements OnDestroy {
   private readonly onHostElementMutation: VoidFunction = getWithAuditedCallTime(() => {
     this.renderer.setAttribute(
       this.hostElement,
-      'data-XGlitchDirective-text-content-copy',
+      XGlitchDirective.textContentCopyAttributeName,
       this.hostElement.textContent ?? ''
     );
   }, HOST_ELEMENT_MUTATION_AUDIT_TIME_MS);
 
-  private readonly hostClassNames: Set<string> = new Set<string>([
+  private static readonly textContentCopyAttributeName: string = 'data-XGlitchDirective-text-content-copy';
+
+  private static readonly hostClassNames: string[] = [
+    'relative',
     'animate-x-glitch',
-
-    'before:left-0',
-    'after:left-0',
-
-    'before:absolute',
-    'after:absolute',
-
-    `before:content-[attr(data-XGlitchDirective-text-content-copy)]`,
-    `after:content-[attr(data-XGlitchDirective-text-content-copy)]`,
-
-    `before:content-[attr(title)]`,
-    `after:content-[attr(title)]`,
-
     'before:[clip-path:polygon(0_0,100%_0,100%_33%,0_33%)]',
     'after:[clip-path:polygon(0_67%,100%_67%,100%_100%,0_100%)]',
-
     'before:animate-x-glitch-top',
-    'after:animate-x-glitch-bottom',
-
-    'before:pointer-events-none',
-    'after:pointer-events-none',
-
-    'before:select-none',
-    'after:select-none'
-  ]);
+    'after:animate-x-glitch-bottom'
+  ].concat(
+    [
+      'left-0',
+      'top-0',
+      'absolute',
+      `content-[attr(${XGlitchDirective.textContentCopyAttributeName})]`,
+      'pointer-events-none',
+      'select-none'
+    ].flatMap((commonPseudoElementClassName: string) => [
+      `before:${commonPseudoElementClassName}`,
+      `after:${commonPseudoElementClassName}`
+    ])
+  );
 
   private get hostElement(): HTMLElement {
     const element: unknown = this.elementRef.nativeElement;
@@ -86,7 +81,7 @@ export class XGlitchDirective implements OnDestroy {
       });
       this.mutationObserver$.set(mutationObserver);
 
-      this.hostClassNames.forEach((className: string) => {
+      XGlitchDirective.hostClassNames.forEach((className: string) => {
         this.renderer.addClass(this.hostElement, className);
       });
 
@@ -95,11 +90,11 @@ export class XGlitchDirective implements OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.hostClassNames.forEach((className: string) => {
+    XGlitchDirective.hostClassNames.forEach((className: string) => {
       this.renderer.removeClass(this.hostElement, className);
     });
 
-    this.renderer.removeAttribute(this.hostElement, 'data-XGlitchDirective-text-content-copy');
+    this.renderer.removeAttribute(this.hostElement, XGlitchDirective.textContentCopyAttributeName);
 
     const mutationObserver: MutationObserver | null = this.mutationObserver$();
     if (mutationObserver === null) {

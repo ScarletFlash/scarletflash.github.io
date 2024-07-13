@@ -1,4 +1,4 @@
 export interface Dimensions {
-  widthPx: number;
-  heightPx: number;
+  readonly widthPx: number;
+  readonly heightPx: number;
 }
