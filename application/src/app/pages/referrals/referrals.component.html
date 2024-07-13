@@ -1,26 +1,33 @@
 <section class="p-4 flex flex-col items-start justify-start size-full gap-6">
-  <h2
-    class="self-end block font-['Bungee'] text-6xl italic"
-    appXGlitch
-  >
+  <h2 class="self-end block font-['Bungee'] text-6xl italic" appXGlitch>
     Sharing is caring
   </h2>
 
   <p>
-    Here is a list of wonderful tools that I rely on daily, both for work and beyond. I highly recommend them to you.
+    Here is a list of wonderful tools that I rely on daily, both for work and
+    beyond. I highly recommend them to you.
   </p>
 
   <section class="flex flex-row flex-wrap gap-4">
     @for (referral of referrals; track referral.name) {
       <a
         class="bg-white/10 p-6 rounded backdrop-blur-sm flex flex-col items-center justify-between gap-1 border-2 border-black grow"
-        [href]="referral.url"
       >
+        <!-- <a
+      class="bg-white/10 p-6 rounded backdrop-blur-sm flex flex-col items-center justify-between gap-1 border-2 border-black grow"
+      [href]="referral.url"
+    > -->
+        <!-- <img
+    width="100"
+    height="100"
+    class="pointer-events-none select-none"
+    [ngSrc]="referral.logoUrl"
+    [alt]="referral.name + ' logo'"
+  />    -->
         <img
           width="100"
           height="100"
           class="pointer-events-none select-none"
-          [ngSrc]="referral.logoUrl"
           [alt]="referral.name + ' logo'"
         />
 

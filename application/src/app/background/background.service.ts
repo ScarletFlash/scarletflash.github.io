@@ -1,10 +1,11 @@
 import { Injectable, type OnDestroy } from '@angular/core';
+import { SceneContentManager } from '@repo_/lib-background';
 import type { Dimensions } from '../declarations/dimensions.interface';
-import { SceneContentManager } from './scene/scene-content-manager';
 
 @Injectable()
 export class BackgroundService implements OnDestroy {
-  private readonly sceneContentManager: SceneContentManager = new SceneContentManager();
+  private readonly sceneContentManager: SceneContentManager =
+    new SceneContentManager();
 
   public attachCanvas(canvas: HTMLCanvasElement): void {
     if (typeof window === 'undefined') {

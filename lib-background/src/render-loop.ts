@@ -1,5 +1,5 @@
 import { type Camera, Color, type Scene, WebGLRenderer } from 'three';
-import type { Dimensions } from '../../declarations/dimensions.interface';
+import type { Dimensions } from './dimensions.interface';
 
 class NotInitializedError extends Error {
   constructor() {
@@ -18,7 +18,7 @@ export class RenderLoop {
 
   constructor(
     private readonly scene: Scene,
-    private readonly camera: Camera
+    private readonly camera: Camera,
   ) {}
 
   public initialize(canvas: HTMLCanvasElement): void {
@@ -28,7 +28,7 @@ export class RenderLoop {
 
     const webGLRenderer: WebGLRenderer = new WebGLRenderer({
       canvas,
-      antialias: true
+      antialias: true,
     });
     webGLRenderer.setClearColor(new Color(0x000000), 0);
     this.webGLRenderer = webGLRenderer;
@@ -51,20 +51,24 @@ export class RenderLoop {
     this.webGLRenderer.setSize(widthPx, heightPx);
   }
 
-  public start(onRender?: (timeSinceLastFrameMs?: DOMHighResTimeStamp) => void): void {
+  public start(
+    onRender?: (timeSinceLastFrameMs?: DOMHighResTimeStamp) => void,
+  ): void {
     if (this.webGLRenderer === null) {
       throw new NotInitializedError();
     }
 
     const webGLRenderer: WebGLRenderer = this.webGLRenderer;
-    webGLRenderer.setAnimationLoop((timeSinceLastFrameMs: DOMHighResTimeStamp) => {
-      webGLRenderer.render(this.scene, this.camera);
+    webGLRenderer.setAnimationLoop(
+      (timeSinceLastFrameMs: DOMHighResTimeStamp) => {
+        webGLRenderer.render(this.scene, this.camera);
 
-      if (typeof onRender !== 'function') {
-        return;
-      }
-      onRender(timeSinceLastFrameMs);
-    });
+        if (typeof onRender !== 'function') {
+          return;
+        }
+        onRender(timeSinceLastFrameMs);
+      },
+    );
   }
 
   public stop(): void {

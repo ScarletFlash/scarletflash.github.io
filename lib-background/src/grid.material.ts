@@ -1,5 +1,5 @@
 import { Color, ShaderMaterial, Vector2, type IUniform } from 'three';
-import type { Dimensions } from '../../../declarations/dimensions.interface';
+import type { Dimensions } from './dimensions.interface';
 
 const vertexShader: string = `
 varying vec2 vUv;
@@ -48,12 +48,12 @@ export class GridMaterial extends ShaderMaterial {
       uniforms: {
         shift: { value: 0.0 },
         dimensions: {
-          value: new Vector2(widthPx, heightPx)
+          value: new Vector2(widthPx, heightPx),
         },
         cellSize: { value: 50.0 },
         lineThickness: { value: 0.01 },
-        lineColor: { value: new Color(0xff5050) }
-      }
+        lineColor: { value: new Color(0xff5050) },
+      },
     });
   }
 

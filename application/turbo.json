@@ -2,6 +2,21 @@
   "$schema": "https://turbo.build/schema.json",
   "extends": ["//"],
   "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["./**/*.ts", "./**/*.html"],
+      "outputs": ["./dist/**"],
+      "outputLogs": "errors-only",
+      "cache": true
+    },
+    "build_watch": {
+      "dependsOn": ["^build_watch"],
+      "inputs": ["./**/*.ts", "./**/*.html"],
+      "outputs": ["./dist-watch/**"],
+      "outputLogs": "errors-only",
+      "cache": false,
+      "persistent": true
+    },
     "formatter_check": {
       "inputs": ["./**", "!.angular/**", "!./dist/**"]
     },

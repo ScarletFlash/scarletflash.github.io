@@ -1,6 +1,6 @@
 import { AmbientLight, PerspectiveCamera, Scene } from 'three';
-import type { Dimensions } from '../../declarations/dimensions.interface';
-import { GridPlane } from './grid-plane';
+import type { Dimensions } from './dimensions.interface';
+import { GridPlane } from './grid-plane.object';
 import { RenderLoop } from './render-loop';
 
 export class SceneContentManager {
@@ -8,7 +8,10 @@ export class SceneContentManager {
   private readonly scene: Scene = new Scene();
   private gridPlane: GridPlane | null = null;
 
-  private readonly renderLoop: RenderLoop = new RenderLoop(this.scene, this.camera);
+  private readonly renderLoop: RenderLoop = new RenderLoop(
+    this.scene,
+    this.camera,
+  );
 
   private isInitialized: boolean = false;
 
@@ -36,7 +39,7 @@ export class SceneContentManager {
     this.renderLoop.initialize(canvas);
     const canvasDimensions: Dimensions = {
       widthPx: canvas.clientWidth,
-      heightPx: canvas.clientHeight
+      heightPx: canvas.clientHeight,
     };
     this.setContainerSize(canvasDimensions);
 

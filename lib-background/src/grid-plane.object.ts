@@ -1,6 +1,6 @@
 import { Mesh, PlaneGeometry } from 'three';
-import type { Dimensions } from '../../declarations/dimensions.interface';
-import { GridMaterial } from './resourses/grid.material';
+import type { Dimensions } from './dimensions.interface';
+import { GridMaterial } from './grid.material';
 
 export class GridPlane extends Mesh<PlaneGeometry, GridMaterial> {
   constructor(dimensions: Dimensions) {

@@ -3,6 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "🏗️": "Building",
+    "build": "npm run turbo build",
+    "build_watch": "npm run turbo build_watch",
+    "🤖": "Static Analysis",
+    "compiler_check": "npm run turbo compiler_check",
     "💅": "Formatting",
     "formatter_check": "npm run turbo formatter_check",
     "formatter_check:root": "prettier --config ./lib-configurations/prettier/base.yaml --check ./*.*",
