@@ -1,0 +1,11 @@
+<section class="border rounded-md relative min-w-32">
+  <header>
+    <h3>{{ name() }}</h3>
+  </header>
+
+  <img [ngSrc]="imageSrc()" [fill]="true" [priority]="true" />
+
+  <footer>
+    <p>{{ description() }}</p>
+  </footer>
+</section>

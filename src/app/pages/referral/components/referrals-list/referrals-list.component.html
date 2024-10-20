@@ -1,0 +1,12 @@
+<section
+  class="w-full flex flex-nowrap flex-row items-start overflow-y-hidden overflow-x-auto"
+>
+  @for (referral of referrals; track referral.name) {
+  <app-referrals-list-item
+    [name]="referral.name"
+    [imageSrc]="referral.imageSrc"
+    [description]="referral.description"
+    [url]="referral.url"
+  ></app-referrals-list-item>
+  }
+</section>
