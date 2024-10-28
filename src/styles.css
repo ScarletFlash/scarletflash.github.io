@@ -1,3 +1,5 @@
+@import "../node_modules/@fontsource-variable/catamaran/index.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,5 +7,9 @@
 @layer base {
   :root {
     --accent-color: #ff5050;
+  }
+
+  html {
+    font-family: "Catamaran Variable", sans-serif;
   }
 }

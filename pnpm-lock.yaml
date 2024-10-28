@@ -63,6 +63,9 @@ importers:
       '@angular/compiler-cli':
         specifier: ^18.0.0
         version: 18.2.8(@angular/compiler@18.2.8(@angular/core@18.2.8(rxjs@7.8.1)(zone.js@0.14.10)))(typescript@5.4.5)
+      '@fontsource-variable/catamaran':
+        specifier: ^5.0.0
+        version: 5.1.0
       '@types/express':
         specifier: <=6.0.0
         version: 4.17.21
@@ -1157,6 +1160,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource-variable/catamaran@5.1.0':
+    resolution: {integrity: sha512-J/SHgA7RGue0k2tbScJaO2D4NL/57TM8JoTg97TjEbF2g9p11oPVaIgnBeiRagVeDLcBQBp2hCc7vdQ7YWxzeg==}
 
   '@inquirer/checkbox@2.5.0':
     resolution: {integrity: sha512-sMgdETOfi2dUHT8r7TT1BTKOwNvdDGFDXYWtQ2J69SvlYNntk9I/gJe7r5yvMwwsuKnYbuRs3pNhx4tgNck5aA==}
@@ -5365,6 +5371,8 @@ snapshots:
 
   '@esbuild/win32-x64@0.23.0':
     optional: true
+
+  '@fontsource-variable/catamaran@5.1.0': {}
 
   '@inquirer/checkbox@2.5.0':
     dependencies:
