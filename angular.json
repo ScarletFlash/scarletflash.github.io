@@ -56,6 +56,11 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
+                "glob": "*.svg",
+                "input": "node_modules/feather-icons/dist/icons",
+                "output": "icons"
+              },
+              {
                 "glob": "**/*",
                 "input": "public"
               }

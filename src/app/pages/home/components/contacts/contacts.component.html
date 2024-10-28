@@ -1,0 +1,9 @@
+<section class="flex flex-row items-center justify-center gap-4">
+  @for (contact of contacts(); track contact.href) {
+  <app-contacts-item
+    [href]="contact.href"
+    [iconSrc]="contact.iconSrc"
+    [title]="contact.title"
+  ></app-contacts-item>
+  }
+</section>

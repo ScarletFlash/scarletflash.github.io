@@ -1,5 +1,5 @@
-<section class="flex flex-row items-center justify-center w-full py-5">
-  <section class="flex flex-row items-center justify-center gap-5 w-10/12">
+<section class="flex flex-col items-center justify-center size-full py-5">
+  <section class="flex flex-row items-center justify-center gap-5 w-10/12 grow">
     <app-avatar class="w-[25vw] h-[25vw] saturate-50 contrast-125"></app-avatar>
 
     <section class="flex flex-col min-w-80">
@@ -32,4 +32,24 @@
       </app-current-job-button>
     </section>
   </section>
+
+  <app-contacts
+    [contacts]="[
+      {
+        title: 'Email',
+        iconSrc: '/icons/mail.svg',
+        href: 'mailto:f@usakov.dev'
+      },
+      {
+        title: 'LinkedIn',
+        iconSrc: '/icons/linkedin.svg',
+        href: 'https://linkedin.com/in/usakov/'
+      },
+      {
+        title: 'Instagram',
+        iconSrc: '/icons/instagram.svg',
+        href: 'https://instagram.com/f.usakov/'
+      }
+    ]"
+  ></app-contacts>
 </section>
