@@ -1,10 +1,8 @@
 <a [href]="href()" target="_blank">
   <button
-    class="text-sm text-nowrap border relative group p-2 rounded-md hover:shadow-[0_0_24px_var(--accent-color)] transition-shadow"
+    class="text-sm border relative group p-2 rounded-md hover:shadow-[0_0_24px_var(--accent-color)] transition-shadow"
   >
-    <span>
-      <ng-content></ng-content>
-    </span>
+    <ng-content></ng-content>
 
     <section
       class="rounded-md size-full absolute bg-accent top-0 left-0 -z-10 transition-transform translate-x-1.5 translate-y-1.5 group-hover:translate-x-0 group-hover:translate-y-0"

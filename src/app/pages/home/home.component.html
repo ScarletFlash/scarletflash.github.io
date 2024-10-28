@@ -1,6 +1,10 @@
 <section class="flex flex-col items-center justify-center size-full py-5">
-  <section class="flex flex-row items-center justify-center gap-5 w-10/12 grow">
-    <app-avatar class="w-[25vw] h-[25vw] saturate-50 contrast-125"></app-avatar>
+  <section
+    class="flex flex-col md:flex-row items-center justify-center gap-5 w-10/12 grow"
+  >
+    <app-avatar
+      class="saturate-50 contrast-125 min-w-36 w-[25vw] max-w-80"
+    ></app-avatar>
 
     <section class="flex flex-col min-w-80">
       <span>Hello and welcome! 👋</span>
@@ -25,7 +29,7 @@
       </span>
 
       <app-current-job-button
-        class="mt-7"
+        class="mt-7 md:text-nowrap"
         href="https://sibe.io/?utm_source=usakov.dev&utm_medium=header-button"
       >
         Currently building the future of 3D collab with the epic Sibe squad 🚀
