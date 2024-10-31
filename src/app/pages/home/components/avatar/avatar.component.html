@@ -1,11 +1,13 @@
 <figure
-  class="rounded-full overflow-hidden relative w-full aspect-square select-none"
+  class="rounded-full overflow-hidden relative aspect-square select-none min-w-36 w-[25vw] max-w-80"
 >
   <img
-    ngSrc="/assets/avatar.jpg"
+    ngSrc="/assets/avatar.webp"
+    ngSrcset="144w, 188w, 232w, 276w, 320w"
     alt=""
     fill
     priority
-    class="pointer-events-none"
+    placeholder="/assets/avatar.placeholder.webp"
+    class="pointer-events-none saturate-50 contrast-125"
   />
 </figure>

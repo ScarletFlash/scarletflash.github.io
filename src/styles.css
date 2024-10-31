@@ -12,4 +12,9 @@
   html {
     font-family: "Catamaran Variable", sans-serif;
   }
+
+  img {
+    max-inline-size: 100%;
+    block-size: auto;
+  }
 }
