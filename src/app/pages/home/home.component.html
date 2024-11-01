@@ -1,6 +1,13 @@
-<section class="flex flex-col items-center justify-center size-full py-5">
+<section
+  class="relative flex flex-col items-center justify-center size-full py-5"
+>
+  <app-background
+    class="size-full absolute pointer-events-none"
+    movement-step-duration="200000"
+  ></app-background>
+
   <section
-    class="flex flex-col min-[830px]:flex-row items-center justify-center gap-5 w-10/12 grow"
+    class="flex flex-col min-[830px]:flex-row items-center justify-center gap-5 w-10/12 grow z-10"
   >
     <app-avatar></app-avatar>
 

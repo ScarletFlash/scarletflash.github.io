@@ -1,4 +1,4 @@
-export function getDebounced<F extends (...params: unknown[]) => void>(
+export function getDebounced<F extends (...params: any[]) => void>(
   originalFunction: F,
   delayMs: number
 ): (...params: Parameters<F>) => void {
