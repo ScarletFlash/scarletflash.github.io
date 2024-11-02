@@ -36,8 +36,8 @@ uniform float ${UniformName.PassedTimeMs};
 
 varying vec2 vUv;
 
-vec2 applyPerspective(vec2 uv) {
-    const float PERSPECTIVE_STRENGTH = 0.9;
+vec2 getPerspectiveUv(vec2 uv) {
+    const float PERSPECTIVE_STRENGTH = 0.65;
     const float CENTER_OFFSET = 0.5;
     const float X_DISTORTION_FACTOR = 0.5;
 
@@ -54,56 +54,41 @@ vec2 applyPerspective(vec2 uv) {
     return vec2(x, y);
 }
 
-float getGridFactor(vec2 canvasUv) {
-    const float MIN_PERSPECTIVE_SCALE = 0.1;
-    const float MAX_PERSPECTIVE_SCALE = 1.0;
+float getGridFactor(vec2 uv, float strokeWidth, float cellSize, float yOffset) {
     const float STROKE_WIDTH_SCALE = 0.1;
     const float VERTICAL_SMOOTHNESS_FACTOR = 0.5;
     const float HORIZONTAL_SMOOTHNESS_FACTOR = 0.7;
 
-    vec2 normalizedUv = canvasUv / ${UniformName.CanvasSize};
-    vec2 perspectiveUv = applyPerspective(normalizedUv);
-
-    vec2 cellOffset = mod(${UniformName.CanvasSize}, ${UniformName.CellSize}) * 0.5;
-
-    vec2 gridUv = perspectiveUv * ${UniformName.CanvasSize} - cellOffset;
-    float yOffset = ${UniformName.MovementStepDurationMs} > 0.0
-        ? (${UniformName.PassedTimeMs} / ${UniformName.MovementStepDurationMs}) * ${UniformName.CellSize}
-        : 0.0;
+    vec2 cellOffset = mod(${UniformName.CanvasSize}, cellSize) * 0.5;
+    vec2 gridUv = uv - cellOffset;
     gridUv.y += yOffset;
-    vec2 normalizedCellUv = gridUv / ${UniformName.CellSize};
+
+    vec2 normalizedCellUv = gridUv / cellSize;
     vec2 cellPosition = fract(normalizedCellUv);
 
-    float depthFactor = 1.0 - perspectiveUv.y;
-    float perspectiveScale = mix(
-        MIN_PERSPECTIVE_SCALE,
-        MAX_PERSPECTIVE_SCALE,
-        smoothstep(0.0, 1.0, depthFactor)
-    );
-
-    float baseStrokeWidth = ${UniformName.StrokeWidth} * STROKE_WIDTH_SCALE;
-    float scaledStrokeWidth = (baseStrokeWidth / ${UniformName.CellSize}) * perspectiveScale;
+    float baseStrokeWidth = strokeWidth * STROKE_WIDTH_SCALE;
+    float scaledStrokeWidth = baseStrokeWidth / cellSize;
 
     float horizontalSmoothWidth = scaledStrokeWidth * HORIZONTAL_SMOOTHNESS_FACTOR;
     float horizontalLine = smoothstep(
-      1.0 -scaledStrokeWidth - horizontalSmoothWidth,
-      1.0 - scaledStrokeWidth + horizontalSmoothWidth,
-      cellPosition.y
+        1.0 - scaledStrokeWidth - horizontalSmoothWidth,
+        1.0 - scaledStrokeWidth + horizontalSmoothWidth,
+        cellPosition.y
     ) + smoothstep(
-      scaledStrokeWidth + horizontalSmoothWidth,
-      scaledStrokeWidth - horizontalSmoothWidth,
-      cellPosition.y
+        scaledStrokeWidth + horizontalSmoothWidth,
+        scaledStrokeWidth - horizontalSmoothWidth,
+        cellPosition.y
     );
 
     float verticalSmoothWidth = scaledStrokeWidth * VERTICAL_SMOOTHNESS_FACTOR;
     float verticalLine = smoothstep(
-      1.0 - scaledStrokeWidth - verticalSmoothWidth,
-      1.0 - scaledStrokeWidth + verticalSmoothWidth,
-      cellPosition.x
+        1.0 - scaledStrokeWidth - verticalSmoothWidth,
+        1.0 - scaledStrokeWidth + verticalSmoothWidth,
+        cellPosition.x
     ) + smoothstep(
-      scaledStrokeWidth + verticalSmoothWidth,
-      scaledStrokeWidth - verticalSmoothWidth,
-      cellPosition.x
+        scaledStrokeWidth + verticalSmoothWidth,
+        scaledStrokeWidth - verticalSmoothWidth,
+        cellPosition.x
     );
 
     return min(1.0, horizontalLine + verticalLine);
@@ -111,11 +96,30 @@ float getGridFactor(vec2 canvasUv) {
 
 void main() {
     vec2 canvasUv = vUv * ${UniformName.CanvasSize};
-    float gridFactor = getGridFactor(canvasUv);
+    vec2 normalizedUv = canvasUv / ${UniformName.CanvasSize};
+    vec2 perspectiveUv = getPerspectiveUv(normalizedUv);
 
-    vec2 perspectiveUv = applyPerspective(vUv);
+    float yOffset = ${UniformName.MovementStepDurationMs} > 0.0
+        ? (${UniformName.PassedTimeMs} / ${UniformName.MovementStepDurationMs}) * ${UniformName.CellSize}
+        : 0.0;
+
+    const float MIN_PERSPECTIVE_SCALE = 0.1;
+    const float MAX_PERSPECTIVE_SCALE = 1.0;
+    float depthFactor = 1.0 - perspectiveUv.y;
+    float perspectiveScale = mix(
+        MIN_PERSPECTIVE_SCALE,
+        MAX_PERSPECTIVE_SCALE,
+        smoothstep(0.0, 1.0, depthFactor)
+    );
+
+    float gridFactor = getGridFactor(
+        perspectiveUv * ${UniformName.CanvasSize},
+        ${UniformName.StrokeWidth} * perspectiveScale,
+        ${UniformName.CellSize},
+        yOffset
+    );
+
     float fadeout = smoothstep(1.0, 0.0, perspectiveUv.y);
-
     gl_FragColor = vec4(${UniformName.StrokeColor}, gridFactor * fadeout);
 }
 `;
@@ -154,8 +158,6 @@ export class BackgroundMaterial extends ShaderMaterial {
       );
     }
     canvasSize.set(width, height);
-
-    console.log("Canvas size set to", width, height);
   }
 
   public setFrameTimeStamp(timeStamp: DOMHighResTimeStamp): void {
