@@ -32,6 +32,7 @@ uniform vec3 ${UniformName.StrokeColor};
 uniform float ${UniformName.MovementStepDurationMs};
 uniform float ${UniformName.CellSize};
 uniform float ${UniformName.StrokeWidth};
+uniform float ${UniformName.PassedTimeMs};
 
 varying vec2 vUv;
 
@@ -66,6 +67,10 @@ float getGridFactor(vec2 canvasUv) {
     vec2 cellOffset = mod(${UniformName.CanvasSize}, ${UniformName.CellSize}) * 0.5;
 
     vec2 gridUv = perspectiveUv * ${UniformName.CanvasSize} - cellOffset;
+    float yOffset = ${UniformName.MovementStepDurationMs} > 0.0
+        ? (${UniformName.PassedTimeMs} / ${UniformName.MovementStepDurationMs}) * ${UniformName.CellSize}
+        : 0.0;
+    gridUv.y += yOffset;
     vec2 normalizedCellUv = gridUv / ${UniformName.CellSize};
     vec2 cellPosition = fract(normalizedCellUv);
 
@@ -113,7 +118,6 @@ void main() {
 
     gl_FragColor = vec4(${UniformName.StrokeColor}, gridFactor * fadeout);
 }
-
 `;
 
 export class BackgroundMaterial extends ShaderMaterial {
@@ -136,6 +140,7 @@ export class BackgroundMaterial extends ShaderMaterial {
         [UniformName.StrokeWidth]: new Uniform(strokeWidth),
         [UniformName.StrokeColor]: new Uniform(strokeColor),
         [UniformName.CellSize]: new Uniform(cellSize),
+        [UniformName.PassedTimeMs]: new Uniform(0),
       },
       transparent: true,
     });
@@ -154,6 +159,20 @@ export class BackgroundMaterial extends ShaderMaterial {
   }
 
   public setFrameTimeStamp(timeStamp: DOMHighResTimeStamp): void {
+    const movementStepDurationMs: unknown =
+      this.uniforms[UniformName.MovementStepDurationMs].value;
+    if (typeof movementStepDurationMs !== "number") {
+      throw new Error(
+        `Expected [${UniformName.MovementStepDurationMs}] to be a number, but got [${movementStepDurationMs}]`
+      );
+    }
+
+    if (movementStepDurationMs <= 0) {
+      return;
+    }
+
     this.timer.update(timeStamp);
+    this.uniforms[UniformName.PassedTimeMs].value =
+      this.timer.getElapsed() * 1000;
   }
 }

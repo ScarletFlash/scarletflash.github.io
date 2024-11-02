@@ -49,10 +49,10 @@ export class BackgroundComponent {
     const movementStepDurationMs: number = Number(rawMovementStepDurationMs);
     if (
       !Number.isInteger(movementStepDurationMs) ||
-      movementStepDurationMs <= 0
+      movementStepDurationMs < 0
     ) {
       throw new Error(
-        `Expected grid-movement-speed to be a positive integer, but got [${rawMovementStepDurationMs}]`
+        `Expected grid-movement-speed to be a non-negative integer, but got [${rawMovementStepDurationMs}]`
       );
     }
 
