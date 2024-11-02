@@ -1,4 +1,4 @@
-import { isPlatformBrowser } from "@angular/common";
+import { DOCUMENT, isPlatformBrowser } from "@angular/common";
 import {
   afterRender,
   ChangeDetectionStrategy,
@@ -57,6 +57,7 @@ export class BackgroundComponent {
     }
 
     const platformId: Object = inject(PLATFORM_ID);
+    const documentRef: Document = inject(DOCUMENT);
     const destroyRef: DestroyRef = inject(DestroyRef);
 
     const isInitialized: WritableSignal<boolean> = signal(false);
@@ -77,9 +78,15 @@ export class BackgroundComponent {
         alpha: true,
       });
 
+      const accentColorValue: string = getComputedStyle(
+        documentRef.documentElement
+      )
+        .getPropertyValue("--accent-color")
+        .trim();
+
       const fullScreenMaterial: BackgroundMaterial = new BackgroundMaterial({
         movementStepDurationMs,
-        strokeColor: new Color(0xff0000),
+        strokeColor: new Color(accentColorValue),
         strokeWidth: 10,
         cellSize: 100,
       });
