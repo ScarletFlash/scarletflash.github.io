@@ -36,7 +36,10 @@ uniform float ${UniformName.StrokeWidth};
 varying vec2 vUv;
 
 float getGridFactor(vec2 canvasUv) {
-  vec2 normalizedCellUv = canvasUv / ${UniformName.CellSize};
+  vec2 offset = mod(${UniformName.CanvasSize}, ${UniformName.CellSize}) * 0.5;
+  vec2 centeredUv = canvasUv - offset;
+
+  vec2 normalizedCellUv = centeredUv / ${UniformName.CellSize};
   vec2 cellPosition = fract(normalizedCellUv);
   float normalizedStrokeWidth = ${UniformName.StrokeWidth} / ${UniformName.CellSize};
   vec2 linePresenceFactor = step(1.0 - normalizedStrokeWidth, cellPosition) + step(cellPosition, vec2(normalizedStrokeWidth));
