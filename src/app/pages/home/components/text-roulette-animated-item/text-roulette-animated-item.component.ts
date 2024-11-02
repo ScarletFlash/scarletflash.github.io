@@ -24,7 +24,6 @@ import {
         style({
           position: "absolute",
           left: "0",
-          transformOrigin: "right",
         })
       ),
       transition(":enter", [

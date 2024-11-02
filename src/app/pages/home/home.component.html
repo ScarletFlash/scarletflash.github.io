@@ -6,39 +6,45 @@
     movement-step-duration="2000"
   ></app-background>
 
-  <section
-    class="flex flex-col min-[830px]:flex-row items-center justify-center gap-5 w-10/12 grow z-10"
-  >
-    <app-avatar></app-avatar>
+  <section class="grow flex flex-col items-center justify-center">
+    <section
+      class="flex flex-col min-[830px]:flex-row items-center justify-center gap-24 h-fit z-10 backdrop-blur-sm bg-gray-300/10 border border-gray-300/10 min-[830px]:ml-[clamp(calc(72px/2),calc(12.5vw/2),calc(160px/2))] rounded-sm"
+    >
+      <section class="min-w-[72px] w-[12.5vw] max-w-[160px] relative">
+        <app-avatar
+          class="absolute w-[200%] -translate-x-1/4 -translate-y-1/2 left-0"
+        ></app-avatar>
+      </section>
 
-    <section class="flex flex-col min-w-80 text-lg">
-      <span>Hello and welcome! 👋</span>
+      <section class="flex flex-col min-w-80 text-lg px-6 py-5">
+        <span>Hello and welcome! 👋</span>
 
-      <span>
-        I'm
-        <h1 class="inline">Fedor Usakov</h1>
-        ―&nbsp;
-        <app-text-roulette
-          swap-frequency="1750"
-          [values]="[
-            'software developer',
-            'metalhead',
-            'innovation seeker',
-            'spell-caster',
-            'experienced mentor',
-            'seasoned manager',
-            'coffee nerd',
-            'system architect'
-          ]"
-        ></app-text-roulette>
-      </span>
+        <span>
+          I'm
+          <h1 class="inline">Fedor Usakov</h1>
+          ―&nbsp;
+          <app-text-roulette
+            swap-frequency="1750"
+            [values]="[
+              'software developer',
+              'metalhead',
+              'innovation seeker',
+              'spell-caster',
+              'experienced mentor',
+              'seasoned manager',
+              'coffee nerd',
+              'system architect'
+            ]"
+          ></app-text-roulette>
+        </span>
 
-      <app-current-job-button
-        class="mt-7 md:text-nowrap"
-        href="https://sibe.io/?utm_source=usakov.dev&utm_medium=header-button"
-      >
-        Currently building the future of 3D collab with the epic Sibe squad 🚀
-      </app-current-job-button>
+        <app-current-job-button
+          class="mt-7 md:text-nowrap"
+          href="https://sibe.io/?utm_source=usakov.dev&utm_medium=header-button"
+        >
+          Currently building the future of 3D collab with the epic Sibe squad 🚀
+        </app-current-job-button>
+      </section>
     </section>
   </section>
 
