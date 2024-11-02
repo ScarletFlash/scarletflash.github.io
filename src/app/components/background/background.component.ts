@@ -80,7 +80,7 @@ export class BackgroundComponent {
       const fullScreenMaterial: BackgroundMaterial = new BackgroundMaterial({
         movementStepDurationMs,
         strokeColor: new Color(0xff0000),
-        strokeWidth: 1,
+        strokeWidth: 10,
         cellSize: 100,
       });
       const fullScreenQuad: FullScreenQuad = new FullScreenQuad(
