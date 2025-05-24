@@ -21,13 +21,14 @@
     "@angular/platform-server": "^19.2.13",
     "@angular/router": "^19.2.13",
     "@angular/ssr": "^19.2.13",
+    "@tailwindcss/postcss": "^4.1.7",
+    "@types/three": "^0.169.0",
     "express": "^4.0.0",
     "feather-icons": "^4.0.0",
     "rxjs": "^7.0.0",
-    "tslib": "^2.0.0",
-    "zone.js": "^0.15.1",
     "three": "^0.169.0",
-    "@types/three": "^0.169.0"
+    "tslib": "^2.0.0",
+    "zone.js": "^0.15.1"
   },
   "devDependencies": {
     "@angular/build": "^19.2.13",
@@ -37,8 +38,8 @@
     "@types/express": "<=6.0.0",
     "@types/node": "^22.0.0",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.0.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3"
   },
   "engines": {

@@ -1,20 +1,22 @@
 @import "../node_modules/@fontsource-variable/catamaran/index.css";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
-  :root {
-    --accent-color: #ff5050;
-  }
+    :root {
+        --accent-color: #ff5050;
+    }
 
-  html {
-    font-family: "Catamaran Variable", sans-serif;
-  }
+    html {
+        font-family: "Catamaran Variable", sans-serif;
+    }
 
-  img {
-    max-inline-size: 100%;
-    block-size: auto;
-  }
+    img {
+        max-inline-size: 100%;
+        block-size: auto;
+    }
+}
+
+@theme {
+    --color-accent: var(--accent-color);
 }
