@@ -7,12 +7,11 @@ import { ReferralCard } from "../../../../../declarations/interfaces/referral-ca
 import { ReferralsListItemComponent } from "../referrals-list-item/referrals-list-item.component";
 
 @Component({
-  selector: "app-referrals-list",
-  standalone: true,
-  imports: [ReferralsListItemComponent],
-  templateUrl: "./referrals-list.component.html",
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "app-referrals-list",
+    imports: [ReferralsListItemComponent],
+    templateUrl: "./referrals-list.component.html",
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferralsListComponent {
   public readonly referrals: ReferralCard[] = [

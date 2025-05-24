@@ -10,12 +10,11 @@ import { ContactButton } from "../../../../../declarations/interfaces/contact-bu
 import { DataComponent } from "../../../../../declarations/types/data-component.type";
 
 @Component({
-  selector: "app-contacts-item",
-  standalone: true,
-  imports: [NgOptimizedImage],
-  templateUrl: "./contacts-item.component.html",
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "app-contacts-item",
+    imports: [NgOptimizedImage],
+    templateUrl: "./contacts-item.component.html",
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactsItemComponent implements DataComponent<ContactButton> {
   public readonly iconSrc: InputSignal<string> = input.required<string>();

@@ -10,17 +10,16 @@ import { CurrentJobButtonComponent } from "./components/current-job-button/curre
 import { TextRouletteComponent } from "./components/text-roulette/text-roulette.component";
 
 @Component({
-  selector: "app-home",
-  standalone: true,
-  imports: [
-    AvatarComponent,
-    TextRouletteComponent,
-    CurrentJobButtonComponent,
-    ContactsComponent,
-    BackgroundComponent,
-  ],
-  templateUrl: "./home.component.html",
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "app-home",
+    imports: [
+        AvatarComponent,
+        TextRouletteComponent,
+        CurrentJobButtonComponent,
+        ContactsComponent,
+        BackgroundComponent,
+    ],
+    templateUrl: "./home.component.html",
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {}
