@@ -1,12 +1,12 @@
-<a [href]="href()" target="_blank" class="outline-none group">
-  <button
-    class="border relative py-3 px-4 rounded-md group-hover:shadow-[0_0_24px_var(--accent-color)] group-focus:shadow-[0_0_24px_var(--accent-color)] transition-shadow group-focus:outline outline-1 outline-offset-8 outline-accent select-none"
-    tabindex="-1"
-  >
-    <ng-content></ng-content>
+<a [href]="href()" target="_blank" class="outline-hidden group">
+    <button
+        class="border relative py-3 px-4 rounded-md group-hover:shadow-[0_0_24px_var(--accent-color)] group-focus:shadow-[0_0_24px_var(--accent-color)] transition-shadow group-focus:outline focus:outline-1 outline-offset-8 outline-accent select-none"
+        tabindex="-1"
+    >
+        <ng-content></ng-content>
 
-    <section
-      class="rounded-md size-full absolute bg-accent top-0 left-0 -z-10 transition-transform translate-x-1.5 translate-y-1.5 group-hover:translate-x-0 group-hover:translate-y-0 group-focus:translate-x-0 group-focus:translate-y-0"
-    ></section>
-  </button>
+        <section
+            class="rounded-md size-full absolute bg-accent top-0 left-0 -z-10 transition-transform translate-x-1.5 translate-y-1.5 group-hover:translate-x-0 group-hover:translate-y-0 group-focus:translate-x-0 group-focus:translate-y-0"
+        ></section>
+    </button>
 </a>
