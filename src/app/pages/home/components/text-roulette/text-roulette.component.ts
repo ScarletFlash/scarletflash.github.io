@@ -36,8 +36,6 @@ interface GetSanitizedIndexParams {
 
 @Component({
   selector: "app-text-roulette",
-  standalone: true,
-  imports: [TextRouletteAnimatedItemComponent],
   templateUrl: "./text-roulette.component.html",
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +51,7 @@ export class TextRouletteComponent {
     TextRouletteComponent.getValueByIndex({
       source: this.values,
       rawIndex: this.currentValueIndex() + 1,
-    })
+    }),
   );
 
   private readonly dynamicValuesContainer: Signal<ElementRef<HTMLElement>> =
@@ -63,7 +61,7 @@ export class TextRouletteComponent {
     "insertPoint",
     {
       read: ViewContainerRef,
-    }
+    },
   );
 
   private readonly isSelectionTarget: WritableSignal<boolean> = signal(false);
@@ -72,13 +70,13 @@ export class TextRouletteComponent {
 
   constructor() {
     const rawSwapFrequencyMs: string = inject(
-      new HostAttributeToken("swap-frequency")
+      new HostAttributeToken("swap-frequency"),
     );
 
     const swapFrequencyMs: number = Number(rawSwapFrequencyMs);
     if (!Number.isInteger(swapFrequencyMs) || swapFrequencyMs <= 0) {
       throw new Error(
-        `Expected swap-frequency to be a positive integer, but got [${rawSwapFrequencyMs}]`
+        `Expected swap-frequency to be a positive integer, but got [${rawSwapFrequencyMs}]`,
       );
     }
 
@@ -96,7 +94,7 @@ export class TextRouletteComponent {
       const unlistenFromSelectionChanges: VoidFunction = this.renderer.listen(
         "document",
         "selectionchange",
-        this.debouncedSelectionEventHandler
+        this.debouncedSelectionEventHandler,
       );
 
       this.rotateValues();
@@ -128,9 +126,9 @@ export class TextRouletteComponent {
 
       const isContainerSelected: boolean = Array.from(
         { length: currentSelection.rangeCount },
-        (_: unknown, index: number) => currentSelection.getRangeAt(index)
+        (_: unknown, index: number) => currentSelection.getRangeAt(index),
       ).some((range: Range) =>
-        range.intersectsNode(dynamicValuesContainer.nativeElement)
+        range.intersectsNode(dynamicValuesContainer.nativeElement),
       );
 
       this.isSelectionTarget.set(isContainerSelected);
@@ -148,7 +146,7 @@ export class TextRouletteComponent {
       TextRouletteComponent.getSanitizedIndex({
         sourceLength: currentValues.length,
         rawIndex: currentValueIndex + 1,
-      })
+      }),
     );
 
     const viewContainerRef: ViewContainerRef = this.insertPoint();
@@ -185,7 +183,7 @@ export class TextRouletteComponent {
   }: GetSanitizedIndexParams): number {
     if (!Number.isInteger(rawIndex) || !Number.isInteger(sourceLength)) {
       throw new Error(
-        `Expected rawIndex and sourceLength to be integers, but got rawIndex: [${rawIndex}] and sourceLength: [${sourceLength}]`
+        `Expected rawIndex and sourceLength to be integers, but got rawIndex: [${rawIndex}] and sourceLength: [${sourceLength}]`,
       );
     }
 

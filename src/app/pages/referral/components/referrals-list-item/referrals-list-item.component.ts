@@ -10,12 +10,11 @@ import { ReferralCard } from "../../../../../declarations/interfaces/referral-ca
 import { DataComponent } from "../../../../../declarations/types/data-component.type";
 
 @Component({
-  selector: "app-referrals-list-item",
-  standalone: true,
-  imports: [NgOptimizedImage],
-  templateUrl: "./referrals-list-item.component.html",
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "app-referrals-list-item",
+    imports: [NgOptimizedImage],
+    templateUrl: "./referrals-list-item.component.html",
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReferralsListItemComponent implements DataComponent<ReferralCard> {
   public name: InputSignal<string> = input.required();

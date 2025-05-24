@@ -25,12 +25,11 @@ const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT: 1 = 1;
 const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MS: number = 250;
 
 @Component({
-  selector: "app-background",
-  standalone: true,
-  imports: [],
-  templateUrl: "./background.component.html",
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: "app-background",
+    imports: [],
+    templateUrl: "./background.component.html",
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackgroundComponent {
   private readonly canvas: Signal<ElementRef<HTMLCanvasElement>> =
