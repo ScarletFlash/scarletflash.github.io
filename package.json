@@ -20,7 +20,7 @@
     "@angular/platform-browser-dynamic": "^19.2.13",
     "@angular/platform-server": "^19.2.13",
     "@angular/router": "^19.2.13",
-    "@angular/ssr": "^19.2.13",
+    "@angular/ssr": "^19.2.16",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/three": "^0.169.0",
     "express": "^4.0.0",
