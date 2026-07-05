@@ -69,6 +69,9 @@ importers:
       '@fontsource-variable/catamaran':
         specifier: ^5.2.8
         version: 5.2.8
+      '@posthog/cli':
+        specifier: ^0.7.34
+        version: 0.7.34
       '@types/express':
         specifier: ^5.0.1
         version: 5.0.6
@@ -1221,6 +1224,11 @@ packages:
   '@parcel/watcher@2.5.1':
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
+
+  '@posthog/cli@0.7.34':
+    resolution: {integrity: sha512-wrRwj0FhbypW01TLpFRo1HkPBrwZHKP2tFE9xI4NTb84yMKZnXy49ibBdbImktJ5NbW7ndeWidOCZx+2Lkk7/Q==}
+    engines: {node: '>=14.14', npm: '>=6'}
+    hasBin: true
 
   '@posthog/core@1.39.6':
     resolution: {integrity: sha512-o6ajIwN5zXoNP0D4H/QPmOyibNTUkSyOR6ya7AG5U2ywXx4awo72L2KnCoiZPQM5x/bXv6jPBdimH8M18Ax0aw==}
@@ -3951,6 +3959,10 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.5.1
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
+
+  '@posthog/cli@0.7.34':
+    dependencies:
+      detect-libc: 2.1.2
 
   '@posthog/core@1.39.6':
     dependencies:

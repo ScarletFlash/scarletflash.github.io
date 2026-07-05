@@ -6,9 +6,9 @@ export function initializePosthogAnalytics(): void {
     return;
   }
 
-  const apiKey = process.env["POSTHOG_API_KEY"];
-  if (apiKey === undefined || apiKey.length === 0) {
-    throw new Error("POSTHOG_API_KEY is not configured at build time.");
+  const projectToken = process.env["POSTHOG_PROJECT_TOKEN"];
+  if (projectToken === undefined || projectToken.length === 0) {
+    throw new Error("POSTHOG_PROJECT_TOKEN is not configured at build time.");
   }
 
   const apiHost = process.env["POSTHOG_API_HOST"];
@@ -25,7 +25,7 @@ export function initializePosthogAnalytics(): void {
   zone.runOutsideAngular(() => {
     import("posthog-js")
       .then(({ default: posthog }) =>
-        posthog.init(apiKey, {
+        posthog.init(projectToken, {
           api_host: apiHost,
           defaults: "2026-05-30",
         }),
