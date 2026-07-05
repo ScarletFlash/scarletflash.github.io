@@ -1,6 +1,6 @@
-import { DOCUMENT, isPlatformBrowser } from "@angular/common";
+import { isPlatformBrowser } from "@angular/common";
 import {
-  afterRender,
+  afterEveryRender,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
@@ -13,6 +13,7 @@ import {
   viewChild,
   ViewEncapsulation,
   WritableSignal,
+  DOCUMENT
 } from "@angular/core";
 import { Color, WebGLRenderer } from "three";
 import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
@@ -62,7 +63,7 @@ export class BackgroundComponent {
     const isInitialized: WritableSignal<boolean> = signal(false);
     const resizeObserver: WritableSignal<ResizeObserver | null> = signal(null);
 
-    afterRender(() => {
+    afterEveryRender(() => {
       if (!isPlatformBrowser(platformId) || isInitialized()) {
         return;
       }
