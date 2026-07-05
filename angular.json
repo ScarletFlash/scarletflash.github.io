@@ -79,7 +79,7 @@
               "entry": "server.ts"
             },
             "define": {
-              "process.env.POSTHOG_API_KEY": "\"\"",
+              "process.env.POSTHOG_PROJECT_TOKEN": "\"\"",
               "process.env.POSTHOG_API_HOST": "\"\""
             }
           },
@@ -97,7 +97,8 @@
                   "maximumError": "4kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "sourceMap": { "scripts": true, "hidden": true }
             },
             "development": {
               "optimization": false,

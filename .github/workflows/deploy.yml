@@ -46,12 +46,20 @@ jobs:
 
       - name: Build application
         env:
-          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_PROJECT_TOKEN: ${{ vars.POSTHOG_PROJECT_TOKEN }}
           POSTHOG_API_HOST: ${{ vars.POSTHOG_API_HOST }}
         run: >-
           pnpm run build:prod
-          --define "process.env.POSTHOG_API_KEY='$POSTHOG_API_KEY'"
+          --define "process.env.POSTHOG_PROJECT_TOKEN='$POSTHOG_PROJECT_TOKEN'"
           --define "process.env.POSTHOG_API_HOST='$POSTHOG_API_HOST'"
+
+      - name: Upload source maps to PostHog
+        env:
+          POSTHOG_CLI_PROJECT_ID: ${{ secrets.POSTHOG_PROJECT_ID }}
+          POSTHOG_CLI_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+        run: |
+          pnpm run sourcemap:inject
+          pnpm run sourcemap:upload
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5

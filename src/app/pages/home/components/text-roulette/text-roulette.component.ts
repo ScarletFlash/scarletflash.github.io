@@ -57,7 +57,7 @@ export class TextRouletteComponent {
   public readonly nextValue: Signal<string> = computed(() =>
     TextRouletteComponent.getValueByIndex({
       source: this.values,
-      rawIndex: this.currentValueIndex() + 1,
+      rawIndex: this.currentValueIndex(),
     }),
   );
 
