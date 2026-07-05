@@ -1,6 +1,6 @@
 import { isPlatformBrowser } from "@angular/common";
 import {
-  afterRender,
+  afterEveryRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -85,7 +85,7 @@ export class TextRouletteComponent {
 
     const isInitialized: WritableSignal<boolean> = signal(false);
 
-    afterRender(() => {
+    afterEveryRender(() => {
       if (!isPlatformBrowser(platformId) || isInitialized()) {
         return;
       }
