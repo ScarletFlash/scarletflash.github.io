@@ -19,7 +19,7 @@
     "@angular/platform-server": "^22.0.5",
     "@angular/router": "^22.0.5",
     "@angular/ssr": "^22.0.5",
-    "@tailwindcss/postcss": "^4.1.7",
+    "@tailwindcss/postcss": "^4.3.2",
     "@types/three": "^0.169.0",
     "express": "^5.1.0",
     "feather-icons": "^4.0.0",
@@ -36,8 +36,8 @@
     "@types/express": "^5.0.1",
     "@types/node": "^26.0.0",
     "autoprefixer": "^10.4.20",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.7",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2",
     "typescript": "~6.0.2"
   },
   "engines": {
