@@ -67,8 +67,8 @@ importers:
         specifier: ^22.0.5
         version: 22.0.5(@angular/compiler@22.0.5)(typescript@6.0.3)
       '@fontsource-variable/catamaran':
-        specifier: ^5.0.0
-        version: 5.1.0
+        specifier: ^5.2.8
+        version: 5.2.8
       '@types/express':
         specifier: ^5.0.1
         version: 5.0.6
@@ -709,8 +709,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource-variable/catamaran@5.1.0':
-    resolution: {integrity: sha512-J/SHgA7RGue0k2tbScJaO2D4NL/57TM8JoTg97TjEbF2g9p11oPVaIgnBeiRagVeDLcBQBp2hCc7vdQ7YWxzeg==}
+  '@fontsource-variable/catamaran@5.2.8':
+    resolution: {integrity: sha512-0BZPMGaAXVSKZbJR7SC1WRw1uH+zgRu/TZkQUcHaYPIIRTutgo0cA37gJDuR617q4dzFVxYRctt/1G2N8VP9EQ==}
 
   '@gar/promise-retry@1.0.3':
     resolution: {integrity: sha512-GmzA9ckNokPypTg10pgpeHNQe7ph+iIKKmhKu3Ob9ANkswreCx7R3cKmY781K8QK3AqVL3xVh9A42JvIAbkkSA==}
@@ -3502,7 +3502,7 @@ snapshots:
   '@esbuild/win32-x64@0.28.1':
     optional: true
 
-  '@fontsource-variable/catamaran@5.1.0': {}
+  '@fontsource-variable/catamaran@5.2.8': {}
 
   '@gar/promise-retry@1.0.3': {}
 
