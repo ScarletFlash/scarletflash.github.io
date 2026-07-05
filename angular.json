@@ -71,8 +71,9 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": {
-              "discoverRoutes": true
+            "outputMode": "server",
+            "security": {
+              "allowedHosts": ["localhost"]
             },
             "ssr": {
               "entry": "server.ts"

@@ -21,24 +21,24 @@
     "@angular/ssr": "^22.0.5",
     "@tailwindcss/postcss": "^4.1.7",
     "@types/three": "^0.169.0",
-    "express": "^4.0.0",
+    "express": "^5.1.0",
     "feather-icons": "^4.0.0",
-    "rxjs": "^7.0.0",
+    "rxjs": "~7.8.0",
     "three": "^0.169.0",
-    "tslib": "^2.0.0",
-    "zone.js": "^0.15.1"
+    "tslib": "^2.3.0",
+    "zone.js": "~0.16.0"
   },
   "devDependencies": {
     "@angular/build": "^22.0.5",
     "@angular/cli": "^22.0.5",
     "@angular/compiler-cli": "^22.0.5",
     "@fontsource-variable/catamaran": "^5.0.0",
-    "@types/express": "<=6.0.0",
+    "@types/express": "^5.0.1",
     "@types/node": "^26.0.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7",
-    "typescript": "^6.0.3"
+    "typescript": "~6.0.2"
   },
   "engines": {
     "pnpm": "9.12.2",
