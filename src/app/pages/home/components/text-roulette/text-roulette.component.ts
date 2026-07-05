@@ -15,7 +15,6 @@ import {
   signal,
   Signal,
   viewChild,
-  ViewContainerRef,
   ViewEncapsulation,
   WritableSignal,
 } from "@angular/core";
@@ -34,14 +33,22 @@ interface GetSanitizedIndexParams {
   rawIndex: number;
 }
 
+interface TextRouletteItem {
+  readonly id: number;
+  readonly text: string;
+}
+
 @Component({
   selector: "app-text-roulette",
   templateUrl: "./text-roulette.component.html",
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [TextRouletteAnimatedItemComponent],
 })
 export class TextRouletteComponent {
   private valueUpdateIntervalId: number = NaN;
+
+  private rotationCount: number = 0;
 
   public readonly values: InputSignal<string[]> = input.required<string[]>();
 
@@ -57,11 +64,8 @@ export class TextRouletteComponent {
   private readonly dynamicValuesContainer: Signal<ElementRef<HTMLElement>> =
     viewChild.required("dynamicValuesContainer");
 
-  private readonly insertPoint: Signal<ViewContainerRef> = viewChild.required(
-    "insertPoint",
-    {
-      read: ViewContainerRef,
-    },
+  protected readonly currentItem: WritableSignal<TextRouletteItem[]> = signal(
+    [],
   );
 
   private readonly isSelectionTarget: WritableSignal<boolean> = signal(false);
@@ -149,12 +153,13 @@ export class TextRouletteComponent {
       }),
     );
 
-    const viewContainerRef: ViewContainerRef = this.insertPoint();
-    viewContainerRef.clear();
-
-    viewContainerRef.createComponent(TextRouletteAnimatedItemComponent, {
-      projectableNodes: [[this.renderer.createText(this.nextValue())]],
-    });
+    this.rotationCount += 1;
+    this.currentItem.set([
+      {
+        id: this.rotationCount,
+        text: this.nextValue(),
+      },
+    ]);
   }
 
   private cleanUpIntervals(): void {
