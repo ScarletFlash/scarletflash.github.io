@@ -22,6 +22,7 @@
     "@tailwindcss/postcss": "^4.3.2",
     "express": "^5.1.0",
     "feather-icons": "^4.0.0",
+    "posthog-js": "^1.396.6",
     "rxjs": "~7.8.0",
     "three": "^0.185.1",
     "tslib": "^2.3.0",

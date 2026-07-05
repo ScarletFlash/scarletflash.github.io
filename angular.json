@@ -77,6 +77,10 @@
             },
             "ssr": {
               "entry": "server.ts"
+            },
+            "define": {
+              "process.env.POSTHOG_API_KEY": "\"\"",
+              "process.env.POSTHOG_API_HOST": "\"\""
             }
           },
           "configurations": {

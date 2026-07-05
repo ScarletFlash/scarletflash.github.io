@@ -45,7 +45,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: pnpm run build:prod
+        env:
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_API_HOST: ${{ vars.POSTHOG_API_HOST }}
+        run: >-
+          pnpm run build:prod
+          --define "process.env.POSTHOG_API_KEY='$POSTHOG_API_KEY'"
+          --define "process.env.POSTHOG_API_HOST='$POSTHOG_API_HOST'"
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
