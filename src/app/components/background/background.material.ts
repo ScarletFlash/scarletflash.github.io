@@ -1,6 +1,5 @@
-import { Color, ShaderMaterial, Uniform, Vector2 } from "three";
+import { Color, ShaderMaterial, Timer, Uniform, Vector2 } from "three";
 import { RectSize } from "../../../declarations/types/rect-size.type";
-import { Timer } from "three/examples/jsm/misc/Timer.js";
 
 const enum UniformName {
   CanvasSize = "canvasSize",
