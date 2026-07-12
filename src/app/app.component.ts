@@ -1,9 +1,12 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
+  inject,
   ViewEncapsulation,
 } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
+import { UrlTagCaptureService } from "./services/url-tag-capture.service";
 
 @Component({
     selector: "app-root",
@@ -13,5 +16,9 @@ import { RouterOutlet } from "@angular/router";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  title = "application";
+  private readonly urlTagCaptureService = inject(UrlTagCaptureService);
+
+  constructor() {
+    afterNextRender(() => this.urlTagCaptureService.captureAndClearTag());
+  }
 }
