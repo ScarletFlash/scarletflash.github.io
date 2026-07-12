@@ -16,6 +16,11 @@ export function initializePosthogAnalytics(): void {
     throw new Error("POSTHOG_API_HOST is not configured at build time.");
   }
 
+  const uiHost = process.env["POSTHOG_UI_HOST"];
+  if (uiHost === undefined || uiHost.length === 0) {
+    throw new Error("POSTHOG_UI_HOST is not configured at build time.");
+  }
+
   const platformIdentifier = inject(PLATFORM_ID);
   if (!isPlatformBrowser(platformIdentifier)) {
     return;
@@ -27,6 +32,7 @@ export function initializePosthogAnalytics(): void {
       .then(({ default: posthog }) =>
         posthog.init(projectToken, {
           api_host: apiHost,
+          ui_host: uiHost,
           defaults: "2026-05-30",
         }),
       )

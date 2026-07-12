@@ -48,10 +48,12 @@ jobs:
         env:
           POSTHOG_PROJECT_TOKEN: ${{ vars.POSTHOG_PROJECT_TOKEN }}
           POSTHOG_API_HOST: ${{ vars.POSTHOG_API_HOST }}
+          POSTHOG_UI_HOST: ${{ vars.POSTHOG_UI_HOST }}
         run: >-
           pnpm run build:prod
           --define "process.env.POSTHOG_PROJECT_TOKEN='$POSTHOG_PROJECT_TOKEN'"
           --define "process.env.POSTHOG_API_HOST='$POSTHOG_API_HOST'"
+          --define "process.env.POSTHOG_UI_HOST='$POSTHOG_UI_HOST'"
 
       - name: Upload source maps to PostHog
         env:
