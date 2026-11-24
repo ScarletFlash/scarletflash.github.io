@@ -36,7 +36,7 @@
     "@posthog/cli": "^0.20.1",
     "@types/node": "^26.0.0",
     "@types/three": "^0.187.0",
-    "postcss": "^8.5.16",
+    "postcss": "^8.5.33",
     "tailwindcss": "^4.3.5",
     "typescript": "~6.0.2"
   },
