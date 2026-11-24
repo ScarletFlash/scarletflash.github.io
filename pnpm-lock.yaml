@@ -42,8 +42,8 @@ importers:
         specifier: ^4.0.0
         version: 4.29.2
       posthog-js:
-        specifier: ^1.396.6
-        version: 1.396.6
+        specifier: ^1.454.2
+        version: 1.454.2
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -1225,16 +1225,19 @@ packages:
     resolution: {integrity: sha512-dfUnCxiN9H4ap84DvD2ubjw+3vUNpstxa0TneY/Paat8a3R4uQZDLSvWjmznAY/DoahqTHl9V46HF/Zs3F29pg==}
     engines: {node: '>= 10.0.0'}
 
+  '@posthog/browser-common@0.13.1':
+    resolution: {integrity: sha512-2e7AVKc8F1mDGnqvEE6Mu/5wcojDXeK4ddeq0B2o1X5iwDVJ7XSH+7Rf3qNHkqwUZLCT9aoUe2mkgfM9vIo5kA==}
+
   '@posthog/cli@0.7.34':
     resolution: {integrity: sha512-wrRwj0FhbypW01TLpFRo1HkPBrwZHKP2tFE9xI4NTb84yMKZnXy49ibBdbImktJ5NbW7ndeWidOCZx+2Lkk7/Q==}
     engines: {node: '>=14.14', npm: '>=6'}
     hasBin: true
 
-  '@posthog/core@1.39.6':
-    resolution: {integrity: sha512-o6ajIwN5zXoNP0D4H/QPmOyibNTUkSyOR6ya7AG5U2ywXx4awo72L2KnCoiZPQM5x/bXv6jPBdimH8M18Ax0aw==}
+  '@posthog/core@1.69.2':
+    resolution: {integrity: sha512-toMfPKklwLW+a4ZY3/EzM3GNMVXmk2ylGb8NPJXRH4igXMoI8wgNL2jqXOiglWAXqFBLZGYFN1oQx6LVmUTxTg==}
 
-  '@posthog/types@1.392.1':
-    resolution: {integrity: sha512-Qg6Gl7/1vlr8+gPtBi5gwnLgAgiyFoKOVmTvTtDcvya9cpTwZfna7rQmkGQ4B63CunUYNNbOlqcwiUwUDyTK6w==}
+  '@posthog/types@1.427.1':
+    resolution: {integrity: sha512-Kx9hWf6Au64CrBLafscANAeswkRFUMs4zlU9/gwB2Hf/9ggU9YNjbw/MQA5tt7cbzTCkh+4fNIPjQeJz7/j63w==}
 
   '@rollup/rollup-android-arm-eabi@4.60.2':
     resolution: {integrity: sha512-dnlp69efPPg6Uaw2dVqzWRfAWRnYVb1XJ8CyyhIbZeaq4CA5/mLeZ1IEt9QqQxmbdvagjLIm2ZL8BxXv5lH4Yw==}
@@ -1738,6 +1741,9 @@ packages:
   core-js@3.38.1:
     resolution: {integrity: sha512-OP35aUorbU3Zvlx7pjsFdu1rGNnD4pgw/CWoYzRY3t2EzoVT7shKHY1dlAy3f41cGIO7ZDPQimhGFTlEYkG/Hw==}
 
+  core-js@3.51.0:
+    resolution: {integrity: sha512-7bDKx/5jm5MxzsXxc93g6Z2+4ZsuT/MddrfRmTDJNAkWsYWHU8EVNEsBiIEWnMAMCHMmRfUEjkuo3jeNBOIHRw==}
+
   cors@2.8.6:
     resolution: {integrity: sha512-tJtZBBHA6vjIAaF6EnIaq6laBBP9aq/Y3ouVJjEfoHbRBcHBAHYcMh/w8LDrk2PvIMMq8gmopa5D4V8RmbrxGw==}
     engines: {node: '>= 0.10'}
@@ -1789,8 +1795,8 @@ packages:
     resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
     engines: {node: '>= 4'}
 
-  dompurify@3.4.11:
-    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+  dompurify@3.5.0:
+    resolution: {integrity: sha512-LYC0ZkE8P1V42JsRYTwMdme/2ET8SpOc5AA2eOFjP/IadvRd2fwiT4TVz5vkfy0XUx12aS2UaRkTnfVPNOv9vw==}
 
   domutils@3.2.2:
     resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
@@ -2532,8 +2538,16 @@ packages:
     resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  posthog-js@1.396.6:
-    resolution: {integrity: sha512-ARI5k7sXak74lmSWGQ4Wwk+uEkpM0Za+KTc/1E6EVk6BIo916VS9tzVAQ6IinDPuPu+ODFlFb9/5gVHnOaY4Uw==}
+  posthog-js@1.454.2:
+    resolution: {integrity: sha512-zInBAdAqt0R9h2gydLHxrgBeyfvHbAz6tEOK4WCggJZeGk9YVccA9PMXAiO8c9j4RXNFr5914xNLN1xhBwCEqQ==}
+    peerDependencies:
+      '@types/react': '>=16.8.0'
+      react: '>=16.8.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   preact@10.29.4:
     resolution: {integrity: sha512-GMpwh9+NJ8tSmqwIaVyFRQkiKfBEzQ+k7r7tle4W+kaJ+7wJiB9hFz9BixAomMtenPPSBfM4bZhXozGxhf0uFQ==}
@@ -2865,8 +2879,11 @@ packages:
   weak-lru-cache@1.2.2:
     resolution: {integrity: sha512-DEAoo25RfSYMuTGc9vPJzZcZullwIqRDSI9LOy+fkCJPi6hykCnfKaXTuPBDuXAUcqHXyOgFtHNp/kB2FjYHbw==}
 
-  web-vitals@5.3.0:
-    resolution: {integrity: sha512-q6LWsLatGYZp5VGBIOvbTj6JBV2nOmC8KvWztXBmwJcfFAzhwKwbOxhUH306XY3CcaZDUlSmSuNPBsCn0bFu+g==}
+  web-vitals@6.2.1:
+    resolution: {integrity: sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw==}
+
+  web-vitals@6.2.3:
+    resolution: {integrity: sha512-Dmy+vdO1UPMqXiAtZSNayhl4f794Bxfd94W4HIj2HlYtczEQfEOon969memlcpcHrTuOKLa5baFjX7WbgmOq+A==}
 
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
@@ -3961,15 +3978,22 @@ snapshots:
       '@parcel/watcher-win32-x64': 2.5.1
     optional: true
 
+  '@posthog/browser-common@0.13.1':
+    dependencies:
+      '@posthog/core': 1.69.2
+      '@posthog/types': 1.427.1
+      dompurify: 3.5.0
+      preact: 10.29.4
+
   '@posthog/cli@0.7.34':
     dependencies:
       detect-libc: 2.1.2
 
-  '@posthog/core@1.39.6':
+  '@posthog/core@1.69.2':
     dependencies:
-      '@posthog/types': 1.392.1
+      '@posthog/types': 1.427.1
 
-  '@posthog/types@1.392.1': {}
+  '@posthog/types@1.427.1': {}
 
   '@rollup/rollup-android-arm-eabi@4.60.2':
     optional: true
@@ -4442,6 +4466,8 @@ snapshots:
 
   core-js@3.38.1: {}
 
+  core-js@3.51.0: {}
+
   cors@2.8.6:
     dependencies:
       object-assign: 4.1.1
@@ -4489,7 +4515,7 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
-  dompurify@3.4.11:
+  dompurify@3.5.0:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -5314,16 +5340,18 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  posthog-js@1.396.6:
+  posthog-js@1.454.2:
     dependencies:
-      '@posthog/core': 1.39.6
-      '@posthog/types': 1.392.1
-      core-js: 3.38.1
-      dompurify: 3.4.11
+      '@posthog/browser-common': 0.13.1
+      '@posthog/core': 1.69.2
+      '@posthog/types': 1.427.1
+      core-js: 3.51.0
+      dompurify: 3.5.0
       fflate: 0.4.8
       preact: 10.29.4
       query-selector-shadow-dom: 1.0.1
-      web-vitals: 5.3.0
+      web-vitals: 6.2.3
+      web-vitals-soft-navs: web-vitals@6.2.1
 
   preact@10.29.4: {}
 
@@ -5679,7 +5707,9 @@ snapshots:
   weak-lru-cache@1.2.2:
     optional: true
 
-  web-vitals@5.3.0: {}
+  web-vitals@6.2.1: {}
+
+  web-vitals@6.2.3: {}
 
   which@2.0.2:
     dependencies:

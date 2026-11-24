@@ -33,7 +33,7 @@ export function initializePosthogAnalytics(): void {
         posthog.init(projectToken, {
           api_host: apiHost,
           ui_host: uiHost,
-          defaults: "2026-05-30",
+          defaults: "2026-08-30",
         }),
       )
       .catch((reason: unknown) => console.error(reason));
