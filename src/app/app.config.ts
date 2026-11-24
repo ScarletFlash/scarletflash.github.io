@@ -1,4 +1,4 @@
-import { ApplicationConfig, ErrorHandler, provideAppInitializer, provideZoneChangeDetection } from "@angular/core";
+import { ApplicationConfig, ErrorHandler, provideAppInitializer } from "@angular/core";
 import { provideRouter } from "@angular/router";
 
 import { provideClientHydration, withNoIncrementalHydration } from "@angular/platform-browser";
@@ -8,7 +8,6 @@ import { initializePosthogAnalytics } from "./initializers/posthog-analytics.ini
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withNoIncrementalHydration()),
     provideAppInitializer(initializePosthogAnalytics),

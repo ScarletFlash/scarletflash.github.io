@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from "@angular/common";
-import { inject, isDevMode, NgZone, PLATFORM_ID } from "@angular/core";
+import { inject, isDevMode, PLATFORM_ID } from "@angular/core";
 
 export function initializePosthogAnalytics(): void {
   if (isDevMode()) {
@@ -26,16 +26,13 @@ export function initializePosthogAnalytics(): void {
     return;
   }
 
-  const zone = inject(NgZone);
-  zone.runOutsideAngular(() => {
-    import("posthog-js")
-      .then(({ default: posthog }) =>
-        posthog.init(projectToken, {
-          api_host: apiHost,
-          ui_host: uiHost,
-          defaults: "2026-08-30",
-        }),
-      )
-      .catch((reason: unknown) => console.error(reason));
-  });
+  import("posthog-js")
+    .then(({ default: posthog }) =>
+      posthog.init(projectToken, {
+        api_host: apiHost,
+        ui_host: uiHost,
+        defaults: "2026-08-30",
+      }),
+    )
+    .catch((reason: unknown) => console.error(reason));
 }
