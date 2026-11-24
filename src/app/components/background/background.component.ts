@@ -1,157 +1,77 @@
-import { isPlatformBrowser } from "@angular/common";
 import {
-  afterEveryRender,
-  ChangeDetectionStrategy,
+  afterNextRender,
   Component,
   DestroyRef,
   ElementRef,
   HostAttributeToken,
   inject,
-  PLATFORM_ID,
+  input,
+  InputSignal,
   Signal,
-  signal,
   viewChild,
   ViewEncapsulation,
-  WritableSignal,
-  DOCUMENT
 } from "@angular/core";
-import { Color, WebGLRenderer } from "three";
-import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
-import { RectSize } from "../../../declarations/types/rect-size.type";
-import { getDebounced } from "../../../utilities/get-debounced.utility";
-import { isArrayOfLength } from "../../../utilities/is-array-of-length.utility";
-import { BackgroundMaterial } from "./background.material";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { animationFrames } from "rxjs";
+import { BackgroundScene } from "./background-scene";
 
-const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT: 1 = 1;
-const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MS: number = 250;
+const MOVEMENT_STEP_DURATION_ATTRIBUTE_NAME: string = "movement-step-duration";
+
+interface AnimationFrame {
+  readonly timestamp: DOMHighResTimeStamp;
+}
 
 @Component({
-    selector: "app-background",
-    imports: [],
-    templateUrl: "./background.component.html",
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: "app-background",
+  templateUrl: "./background.component.html",
+  encapsulation: ViewEncapsulation.None,
 })
 export class BackgroundComponent {
-  private readonly canvas: Signal<ElementRef<HTMLCanvasElement>> =
-    viewChild.required("canvas");
+  public readonly tilt: InputSignal<Signal<number>> = input.required<Signal<number>>();
 
-  private readonly animationFrameId: WritableSignal<number> = signal(NaN);
+  public readonly autoMovementSpeedFactor: InputSignal<Signal<number>> =
+    input.required<Signal<number>>();
 
-  private readonly componentElementRef: ElementRef<HTMLElement> =
-    inject(ElementRef);
+  public readonly contentScrollDistance: InputSignal<Signal<number>> =
+    input.required<Signal<number>>();
+
+  private readonly canvas: Signal<ElementRef<HTMLCanvasElement>> = viewChild.required("canvas");
+
+  private readonly componentElementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
   constructor() {
-    const rawMovementStepDurationMs: string = inject(
-      new HostAttributeToken("movement-step-duration")
+    const rawMovementStepDurationMilliseconds: string = inject(
+      new HostAttributeToken(MOVEMENT_STEP_DURATION_ATTRIBUTE_NAME),
     );
 
-    const movementStepDurationMs: number = Number(rawMovementStepDurationMs);
-    if (
-      !Number.isInteger(movementStepDurationMs) ||
-      movementStepDurationMs < 0
-    ) {
+    const movementStepDurationMilliseconds: number = Number(rawMovementStepDurationMilliseconds);
+    if (!Number.isInteger(movementStepDurationMilliseconds) || movementStepDurationMilliseconds < 0) {
       throw new Error(
-        `Expected grid-movement-speed to be a non-negative integer, but got [${rawMovementStepDurationMs}]`
+        `Expected ${MOVEMENT_STEP_DURATION_ATTRIBUTE_NAME} to be a non-negative integer, but got [${rawMovementStepDurationMilliseconds}]`,
       );
     }
 
-    const platformId: Object = inject(PLATFORM_ID);
-    const documentRef: Document = inject(DOCUMENT);
     const destroyRef: DestroyRef = inject(DestroyRef);
 
-    const isInitialized: WritableSignal<boolean> = signal(false);
-    const resizeObserver: WritableSignal<ResizeObserver | null> = signal(null);
-
-    afterEveryRender(() => {
-      if (!isPlatformBrowser(platformId) || isInitialized()) {
-        return;
-      }
-      isInitialized.set(true);
-
-      const renderer = new WebGLRenderer({
-        powerPreference: "low-power",
-        antialias: false,
-        stencil: false,
-        depth: true,
+    afterNextRender(() => {
+      const backgroundScene: BackgroundScene = new BackgroundScene({
         canvas: this.canvas().nativeElement,
-        alpha: true,
+        host: this.componentElementRef.nativeElement,
+        movementStepDurationMilliseconds,
       });
 
-      const accentColorValue: string = getComputedStyle(
-        documentRef.documentElement
-      )
-        .getPropertyValue("--accent-color")
-        .trim();
-
-      const fullScreenMaterial: BackgroundMaterial = new BackgroundMaterial({
-        movementStepDurationMs,
-        strokeColor: new Color(accentColorValue),
-        strokeWidth: 10,
-        cellSize: 100,
-      });
-      const fullScreenQuad: FullScreenQuad = new FullScreenQuad(
-        fullScreenMaterial
-      );
-
-      if (resizeObserver() === null) {
-        const resizeObserverInstance: ResizeObserver = new ResizeObserver(
-          getDebounced<ResizeObserverCallback>(
-            (entries: ResizeObserverEntry[]) => {
-              BackgroundComponent.failOnInvalidResizeObserverEntries(entries);
-              const [canvasResizeEntry]: [ResizeObserverEntry] = entries;
-              const { width, height }: RectSize = canvasResizeEntry.contentRect;
-              renderer.setSize(width, height);
-              fullScreenMaterial.setSize({ width, height });
-            },
-            RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MS
-          )
+      animationFrames()
+        .pipe(takeUntilDestroyed(destroyRef))
+        .subscribe((animationFrame: AnimationFrame) =>
+          backgroundScene.renderFrame({
+            timeStamp: animationFrame.timestamp,
+            tilt: this.tilt()(),
+            autoMovementSpeedFactor: this.autoMovementSpeedFactor()(),
+            contentScrollDistance: this.contentScrollDistance()(),
+          }),
         );
-        resizeObserver.set(resizeObserverInstance);
 
-        const canvas: HTMLElement = this.componentElementRef.nativeElement;
-        resizeObserverInstance.observe(canvas, {
-          box: "border-box",
-        });
-
-        const { width, height }: RectSize = canvas.getBoundingClientRect();
-        renderer.setSize(width, height);
-        fullScreenMaterial.setSize({ width, height });
-      }
-
-      const animate: FrameRequestCallback = (
-        frameTimeStamp: DOMHighResTimeStamp
-      ) => {
-        fullScreenMaterial.setFrameTimeStamp(frameTimeStamp);
-        const animationFrameId: number = requestAnimationFrame(animate);
-        this.animationFrameId.set(animationFrameId);
-        fullScreenQuad.render(renderer);
-      };
-      animate(0);
-
-      destroyRef.onDestroy(() => {
-        cancelAnimationFrame(this.animationFrameId());
-        this.animationFrameId.set(NaN);
-
-        renderer.dispose();
-
-        const resizeObserverInstance: ResizeObserver | null = resizeObserver();
-        if (resizeObserverInstance !== null) {
-          resizeObserverInstance.disconnect();
-          resizeObserver.set(null);
-        }
-      });
+      destroyRef.onDestroy(() => backgroundScene.dispose());
     });
-  }
-
-  private static failOnInvalidResizeObserverEntries(
-    entries: ResizeObserverEntry[]
-  ): asserts entries is [ResizeObserverEntry] {
-    if (isArrayOfLength(entries, EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT)) {
-      return;
-    }
-    throw new Error(
-      `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`
-    );
   }
 }

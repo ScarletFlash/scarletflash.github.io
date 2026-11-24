@@ -13,6 +13,8 @@ const LANDING_POINT_TOLERANCE_PIXELS: number = 1;
 const MINIMUM_PROGRESS: number = 0;
 const MAXIMUM_PROGRESS: number = 1;
 const PAGE_START_SCROLL_POSITION: number = 0;
+const FLOOR_TILT: number = 1;
+const FULL_AUTO_MOVEMENT_SPEED_FACTOR: number = 1;
 
 interface ScrollLayout {
   readonly root: HTMLElement;
@@ -63,7 +65,7 @@ export class ScrollStateService {
     return Math.max(PAGE_START_SCROLL_POSITION, scrollHeight - viewportHeight);
   });
 
-  public readonly openingTiltProgress: Signal<number> = computed(() => {
+  private readonly openingTiltProgress: Signal<number> = computed(() => {
     const { scrollPosition, openingStart, openingEnd }: ScrollMeasurement =
       this.observedMeasurement();
 
@@ -74,7 +76,7 @@ export class ScrollStateService {
     });
   });
 
-  public readonly closingTiltProgress: Signal<number> = computed(() => {
+  private readonly closingTiltProgress: Signal<number> = computed(() => {
     const { scrollPosition, closingStart }: ScrollMeasurement = this.observedMeasurement();
 
     return ScrollStateService.getRangeProgress({
@@ -84,7 +86,15 @@ export class ScrollStateService {
     });
   });
 
-  public readonly contentScrollDistanceAfterFlat: Signal<number> = computed(() => {
+  public readonly tilt: Signal<number> = computed(
+    () => FLOOR_TILT - this.openingTiltProgress() - this.closingTiltProgress(),
+  );
+
+  public readonly autoMovementSpeedFactor: Signal<number> = computed(
+    () => FULL_AUTO_MOVEMENT_SPEED_FACTOR - this.openingTiltProgress(),
+  );
+
+  public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(() => {
     const { scrollPosition, openingEnd, closingStart }: ScrollMeasurement =
       this.observedMeasurement();
 
