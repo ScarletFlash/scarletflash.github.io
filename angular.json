@@ -15,28 +15,22 @@
         "@schematics/angular:component": {
           "skipTests": true,
           "style": "none",
-          "changeDetection": "OnPush",
-          "viewEncapsulation": "None",
-          "standalone": true
+          "viewEncapsulation": "None"
         },
         "@schematics/angular:directive": {
-          "skipTests": true,
-          "standalone": true
+          "skipTests": true
         },
         "@schematics/angular:guard": {
           "skipTests": true
         },
         "@schematics/angular:interceptor": {
-          "skipTests": true,
-          "functional": true
+          "skipTests": true
         },
         "@schematics/angular:pipe": {
-          "skipTests": true,
-          "standalone": true
+          "skipTests": true
         },
         "@schematics/angular:resolver": {
-          "skipTests": true,
-          "functional": true
+          "skipTests": true
         },
         "@schematics/angular:service": {
           "skipTests": true
@@ -65,7 +59,6 @@
               }
             ],
             "styles": [
-              "node_modules/@fontsource-variable/catamaran/index.css",
               "src/styles.css"
             ],
             "scripts": [],
