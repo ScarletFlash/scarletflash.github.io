@@ -2,11 +2,10 @@ packages:
   - '.'
 
 allowBuilds:
-  '@parcel/watcher': false
-  '@posthog/cli': false
-  core-js: false
-  esbuild: false
-  lmdb: false
-  msgpackr-extract: false
-
+  '@parcel/watcher': true
+  '@posthog/cli': true
+  core-js: true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
 minimumReleaseAge: 0
