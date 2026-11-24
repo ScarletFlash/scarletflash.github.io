@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from "@angular/common";
-import { ErrorHandler, inject, Injectable, isDevMode, PLATFORM_ID } from "@angular/core";
+import { ErrorHandler, inject, isDevMode, PLATFORM_ID, Service } from "@angular/core";
 
-@Injectable()
+@Service({ autoProvided: false })
 export class PosthogErrorHandler implements ErrorHandler {
   private readonly platformIdentifier = inject(PLATFORM_ID);
 

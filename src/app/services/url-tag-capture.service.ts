@@ -1,8 +1,8 @@
 import { isPlatformBrowser } from "@angular/common";
-import { inject, Injectable, isDevMode, PLATFORM_ID } from "@angular/core";
+import { inject, isDevMode, PLATFORM_ID, Service } from "@angular/core";
 import { Router } from "@angular/router";
 
-@Injectable({ providedIn: "root" })
+@Service()
 export class UrlTagCaptureService {
   private readonly platformIdentifier = inject(PLATFORM_ID);
   private readonly router = inject(Router);
