@@ -31,6 +31,7 @@ export class UrlTagCaptureService {
     this.router.navigate([], {
       queryParams: { [TAG_QUERY_PARAMETER_NAME]: null },
       queryParamsHandling: "merge",
+      preserveFragment: true,
       replaceUrl: true,
     });
   }
