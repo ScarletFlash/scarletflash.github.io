@@ -1,8 +1,25 @@
-<section #root class="flex flex-col gap-[300px]">
+<section
+  #root
+  class="flex flex-col gap-[300px]"
+  [class.opacity-100]="!isContentHidden()"
+  [class.visible]="!isContentHidden()"
+  [class.transition-[opacity,visibility]]="!isContentHidden()"
+  [class.duration-500]="!isContentHidden()"
+  [class.motion-reduce:duration-0]="!isContentHidden()"
+  [class.delay-5000]="isFallbackRevealApplied()"
+  [class.starting:opacity-0]="isFallbackRevealApplied()"
+  [class.starting:invisible]="isFallbackRevealApplied()"
+  [class.opacity-0]="isContentHidden()"
+  [class.invisible]="isContentHidden()"
+  [class.transition-none]="isContentHidden()"
+>
   @defer (on idle) {
     <app-background
       class="fixed inset-x-0 top-0 h-lvh -z-10 pointer-events-none"
       movement-step-duration="2000"
+      [tilt]="scrollStateService.tilt"
+      [autoMovementSpeedFactor]="scrollStateService.autoMovementSpeedFactor"
+      [contentScrollDistance]="scrollStateService.contentScrollDistanceAfterAlignment"
     />
   }
 

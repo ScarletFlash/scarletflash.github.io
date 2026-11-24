@@ -1,149 +1,97 @@
-import { Color, ShaderMaterial, Timer, Uniform, Vector2 } from "three";
+import { Color, ShaderMaterial, Uniform, Vector2 } from "three";
 import { RectSize } from "../../../declarations/types/rect-size.type";
 
 const enum UniformName {
   CanvasSize = "canvasSize",
-  MovementStepDurationMs = "movementStepDurationMs",
   StrokeWidth = "strokeWidth",
   StrokeColor = "strokeColor",
   CellSize = "cellSize",
-  PassedTimeMs = "passedTimeMs",
+  Tilt = "tilt",
+  GridOffset = "gridOffset",
 }
 
-interface BackgroundMaterialParams {
-  strokeWidth: number;
-  strokeColor: Color;
-  [UniformName.MovementStepDurationMs]: number;
-  [UniformName.CellSize]: number;
+interface BackgroundMaterialParameters {
+  readonly strokeWidth: number;
+  readonly strokeColor: Color;
+  readonly cellSize: number;
+}
+
+interface BackgroundMaterialFrameState {
+  readonly tilt: number;
+  readonly gridOffset: number;
 }
 
 const vertexShader: string = `
-varying vec2 vUv;
+varying vec2 normalizedCanvasPosition;
 
 void main() {
-    vUv = uv;
+    normalizedCanvasPosition = uv;
     gl_Position = vec4(position, 1.0);
 }`;
 
 const fragmentShader: string = `
 uniform vec2 ${UniformName.CanvasSize};
 uniform vec3 ${UniformName.StrokeColor};
-uniform float ${UniformName.MovementStepDurationMs};
 uniform float ${UniformName.CellSize};
 uniform float ${UniformName.StrokeWidth};
-uniform float ${UniformName.PassedTimeMs};
+uniform float ${UniformName.Tilt};
+uniform float ${UniformName.GridOffset};
 
-varying vec2 vUv;
+varying vec2 normalizedCanvasPosition;
 
-vec2 getPerspectiveUv(vec2 uv) {
-    const float PERSPECTIVE_STRENGTH = 0.65;
-    const float CENTER_OFFSET = 0.5;
-    const float X_DISTORTION_FACTOR = 0.5;
-
-    float x = uv.x - CENTER_OFFSET;
-    float y = uv.y;
-
-    float yDistorted = pow(1.0 - y, PERSPECTIVE_STRENGTH);
-    y = 1.0 - yDistorted;
-
-    float distortionAmount = (1.0 - y) * X_DISTORTION_FACTOR + CENTER_OFFSET;
-    x = x / distortionAmount;
-    x = x * CENTER_OFFSET + CENTER_OFFSET;
-
-    return vec2(x, y);
-}
-
-float getGridFactor(vec2 uv, float strokeWidth, float cellSize, float yOffset) {
-    const float STROKE_WIDTH_SCALE = 0.1;
-    const float VERTICAL_SMOOTHNESS_FACTOR = 0.5;
-    const float HORIZONTAL_SMOOTHNESS_FACTOR = 0.7;
-
-    vec2 cellOffset = mod(${UniformName.CanvasSize}, cellSize) * 0.5;
-    vec2 gridUv = uv - cellOffset;
-    gridUv.y += yOffset;
-
-    vec2 normalizedCellUv = gridUv / cellSize;
-    vec2 cellPosition = fract(normalizedCellUv);
-
-    float baseStrokeWidth = strokeWidth * STROKE_WIDTH_SCALE;
-    float scaledStrokeWidth = baseStrokeWidth / cellSize;
-
-    float horizontalSmoothWidth = scaledStrokeWidth * HORIZONTAL_SMOOTHNESS_FACTOR;
-    float horizontalLine = smoothstep(
-        1.0 - scaledStrokeWidth - horizontalSmoothWidth,
-        1.0 - scaledStrokeWidth + horizontalSmoothWidth,
-        cellPosition.y
-    ) + smoothstep(
-        scaledStrokeWidth + horizontalSmoothWidth,
-        scaledStrokeWidth - horizontalSmoothWidth,
-        cellPosition.y
-    );
-
-    float verticalSmoothWidth = scaledStrokeWidth * VERTICAL_SMOOTHNESS_FACTOR;
-    float verticalLine = smoothstep(
-        1.0 - scaledStrokeWidth - verticalSmoothWidth,
-        1.0 - scaledStrokeWidth + verticalSmoothWidth,
-        cellPosition.x
-    ) + smoothstep(
-        scaledStrokeWidth + verticalSmoothWidth,
-        scaledStrokeWidth - verticalSmoothWidth,
-        cellPosition.x
-    );
-
-    return min(1.0, horizontalLine + verticalLine);
-}
+const float FLOOR_ANGLE = radians(67.0);
+const float HALF_VERTICAL_FIELD_OF_VIEW = radians(22.5);
+const float FADE_START_DEPTH_RATIO = 1.0;
+const float FADE_END_DEPTH_RATIO = 3.0;
+const float MINIMUM_INVERSE_DEPTH_RATIO = 0.001;
+const float STROKE_WIDTH_SCALE = 0.1;
+const float VERTICAL_SMOOTHNESS_FACTOR = 0.5;
+const float HORIZONTAL_SMOOTHNESS_FACTOR = 0.7;
+const vec2 SMOOTHNESS_FACTOR_BY_AXIS = vec2(VERTICAL_SMOOTHNESS_FACTOR, HORIZONTAL_SMOOTHNESS_FACTOR);
+const float PIXEL_FOOTPRINT_SMOOTHNESS_FACTOR = 0.5;
 
 void main() {
-    vec2 canvasUv = vUv * ${UniformName.CanvasSize};
-    vec2 normalizedUv = canvasUv / ${UniformName.CanvasSize};
-    vec2 perspectiveUv = getPerspectiveUv(normalizedUv);
+    vec2 halfCanvasSize = ${UniformName.CanvasSize} * 0.5;
+    vec2 screenPosition = normalizedCanvasPosition * ${UniformName.CanvasSize} - halfCanvasSize;
+    float angle = ${UniformName.Tilt} * FLOOR_ANGLE;
+    float cameraDistance = halfCanvasSize.y / tan(HALF_VERTICAL_FIELD_OF_VIEW);
 
-    float yOffset = ${UniformName.MovementStepDurationMs} > 0.0
-        ? (${UniformName.PassedTimeMs} / ${UniformName.MovementStepDurationMs}) * ${UniformName.CellSize}
-        : 0.0;
+    float inverseDepthRatio = 1.0 - screenPosition.y * tan(angle) / cameraDistance;
+    float planeHitFactor = step(MINIMUM_INVERSE_DEPTH_RATIO, inverseDepthRatio);
+    float depthRatio = 1.0 / max(inverseDepthRatio, MINIMUM_INVERSE_DEPTH_RATIO);
 
-    const float MIN_PERSPECTIVE_SCALE = 0.1;
-    const float MAX_PERSPECTIVE_SCALE = 1.0;
-    float depthFactor = 1.0 - perspectiveUv.y;
-    float perspectiveScale = mix(
-        MIN_PERSPECTIVE_SCALE,
-        MAX_PERSPECTIVE_SCALE,
-        smoothstep(0.0, 1.0, depthFactor)
-    );
+    vec2 planePosition = vec2(screenPosition.x, screenPosition.y / cos(angle)) * depthRatio;
+    vec2 gridPosition = planePosition + vec2(0.0, ${UniformName.GridOffset});
 
-    float gridFactor = getGridFactor(
-        perspectiveUv * ${UniformName.CanvasSize},
-        ${UniformName.StrokeWidth} * perspectiveScale,
-        ${UniformName.CellSize},
-        yOffset
-    );
+    vec2 antialiasingWidth = fwidth(gridPosition) * PIXEL_FOOTPRINT_SMOOTHNESS_FACTOR;
+    float strokeHalfWidth = ${UniformName.StrokeWidth} * STROKE_WIDTH_SCALE;
+    vec2 drawnHalfWidth = max(antialiasingWidth, strokeHalfWidth);
+    vec2 smoothWidth = max(antialiasingWidth, strokeHalfWidth * SMOOTHNESS_FACTOR_BY_AXIS);
 
-    float fadeout = smoothstep(1.0, 0.0, perspectiveUv.y);
-    gl_FragColor = vec4(${UniformName.StrokeColor}, gridFactor * fadeout);
+    vec2 cellPosition = fract(gridPosition / ${UniformName.CellSize});
+    vec2 lineDistance = min(cellPosition, 1.0 - cellPosition) * ${UniformName.CellSize};
+    vec2 lineFactor = (1.0 - smoothstep(drawnHalfWidth - smoothWidth, drawnHalfWidth + smoothWidth, lineDistance))
+        * strokeHalfWidth / drawnHalfWidth;
+
+    float gridFactor = min(1.0, lineFactor.x + lineFactor.y);
+    float fadeFactor = 1.0 - smoothstep(FADE_START_DEPTH_RATIO, FADE_END_DEPTH_RATIO, depthRatio);
+
+    gl_FragColor = vec4(${UniformName.StrokeColor}, gridFactor * fadeFactor * planeHitFactor);
 }
 `;
 
 export class BackgroundMaterial extends ShaderMaterial {
-  private readonly timer: Timer = new Timer();
-
-  constructor({
-    strokeWidth,
-    strokeColor,
-    movementStepDurationMs,
-    cellSize,
-  }: BackgroundMaterialParams) {
+  constructor({ strokeWidth, strokeColor, cellSize }: BackgroundMaterialParameters) {
     super({
       vertexShader,
       fragmentShader,
       uniforms: {
         [UniformName.CanvasSize]: new Uniform(new Vector2()),
-        [UniformName.MovementStepDurationMs]: new Uniform(
-          movementStepDurationMs
-        ),
         [UniformName.StrokeWidth]: new Uniform(strokeWidth),
         [UniformName.StrokeColor]: new Uniform(strokeColor),
         [UniformName.CellSize]: new Uniform(cellSize),
-        [UniformName.PassedTimeMs]: new Uniform(0),
+        [UniformName.Tilt]: new Uniform(0),
+        [UniformName.GridOffset]: new Uniform(0),
       },
       transparent: true,
     });
@@ -159,21 +107,8 @@ export class BackgroundMaterial extends ShaderMaterial {
     canvasSize.set(width, height);
   }
 
-  public setFrameTimeStamp(timeStamp: DOMHighResTimeStamp): void {
-    const movementStepDurationMs: unknown =
-      this.uniforms[UniformName.MovementStepDurationMs].value;
-    if (typeof movementStepDurationMs !== "number") {
-      throw new Error(
-        `Expected [${UniformName.MovementStepDurationMs}] to be a number, but got [${movementStepDurationMs}]`
-      );
-    }
-
-    if (movementStepDurationMs <= 0) {
-      return;
-    }
-
-    this.timer.update(timeStamp);
-    this.uniforms[UniformName.PassedTimeMs].value =
-      this.timer.getElapsed() * 1000;
+  public setFrameState({ tilt, gridOffset }: BackgroundMaterialFrameState): void {
+    this.uniforms[UniformName.Tilt].value = tilt;
+    this.uniforms[UniformName.GridOffset].value = gridOffset;
   }
 }
