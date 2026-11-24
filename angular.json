@@ -71,13 +71,7 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "outputMode": "server",
-            "security": {
-              "allowedHosts": ["localhost"]
-            },
-            "ssr": {
-              "entry": "server.ts"
-            },
+            "outputMode": "static",
             "define": {
               "process.env.POSTHOG_PROJECT_TOKEN": "\"\"",
               "process.env.POSTHOG_API_HOST": "\"\"",
