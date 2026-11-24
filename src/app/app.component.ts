@@ -1,11 +1,8 @@
-import {
-  afterNextRender,
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  ViewEncapsulation,
-} from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Component, inject, ViewEncapsulation } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Router, RouterOutlet } from "@angular/router";
+import { filter, take } from "rxjs";
+import { isNavigationEnd } from "../utilities/is-navigation-end.utility";
 import { UrlTagCaptureService } from "./services/url-tag-capture.service";
 
 @Component({
@@ -13,12 +10,17 @@ import { UrlTagCaptureService } from "./services/url-tag-capture.service";
     imports: [RouterOutlet],
     templateUrl: "./app.component.html",
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  private readonly urlTagCaptureService = inject(UrlTagCaptureService);
+  private readonly urlTagCaptureService: UrlTagCaptureService = inject(UrlTagCaptureService);
 
   constructor() {
-    afterNextRender(() => this.urlTagCaptureService.captureAndClearTag());
+    inject(Router)
+      .events.pipe(
+        filter(isNavigationEnd),
+        take(1),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.urlTagCaptureService.captureAndClearTag());
   }
 }
