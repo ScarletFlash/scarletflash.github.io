@@ -209,9 +209,6 @@ importers:
       '@angular/ssr':
         specifier: ^22.3.0
         version: 22.3.0(3251d64ae0e8b1ceeb96ae5ca08c0355)
-      '@tailwindcss/postcss':
-        specifier: ^4.3.5
-        version: 4.3.5
       feather-icons:
         specifier: ^4.0.0
         version: 4.29.2
@@ -243,6 +240,9 @@ importers:
       '@posthog/cli':
         specifier: ^0.20.1
         version: 0.20.1
+      '@tailwindcss/postcss':
+        specifier: ^4.3.5
+        version: 4.3.5
       '@types/node':
         specifier: ^26.6.6
         version: 26.6.6
