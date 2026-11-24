@@ -70,8 +70,8 @@ importers:
         specifier: ^5.2.8
         version: 5.2.8
       '@posthog/cli':
-        specifier: ^0.7.34
-        version: 0.7.34
+        specifier: ^0.20.1
+        version: 0.20.1
       '@types/express':
         specifier: ^5.0.1
         version: 5.0.6
@@ -1228,8 +1228,8 @@ packages:
   '@posthog/browser-common@0.13.1':
     resolution: {integrity: sha512-2e7AVKc8F1mDGnqvEE6Mu/5wcojDXeK4ddeq0B2o1X5iwDVJ7XSH+7Rf3qNHkqwUZLCT9aoUe2mkgfM9vIo5kA==}
 
-  '@posthog/cli@0.7.34':
-    resolution: {integrity: sha512-wrRwj0FhbypW01TLpFRo1HkPBrwZHKP2tFE9xI4NTb84yMKZnXy49ibBdbImktJ5NbW7ndeWidOCZx+2Lkk7/Q==}
+  '@posthog/cli@0.20.1':
+    resolution: {integrity: sha512-g6XrVqm9HFZq6v1mMSCjHnJRkLKYS9YXogGPO7fRjSRFLmpr+ECkfWHhTecS+PJIiNffhQ1fm1B9oP1U2QASkw==}
     engines: {node: '>=14.14', npm: '>=6'}
     hasBin: true
 
@@ -1776,10 +1776,6 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
-
-  detect-libc@2.0.4:
-    resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
-    engines: {node: '>=8'}
 
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
@@ -3985,7 +3981,7 @@ snapshots:
       dompurify: 3.5.0
       preact: 10.29.4
 
-  '@posthog/cli@0.7.34':
+  '@posthog/cli@0.20.1':
     dependencies:
       detect-libc: 2.1.2
 
@@ -4496,9 +4492,6 @@ snapshots:
   depd@2.0.0: {}
 
   detect-libc@1.0.3:
-    optional: true
-
-  detect-libc@2.0.4:
     optional: true
 
   detect-libc@2.1.2: {}
@@ -5160,7 +5153,7 @@ snapshots:
 
   node-gyp-build-optional-packages@5.2.2:
     dependencies:
-      detect-libc: 2.0.4
+      detect-libc: 2.1.2
     optional: true
 
   node-gyp@12.4.0:
