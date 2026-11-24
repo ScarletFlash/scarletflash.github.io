@@ -26,7 +26,7 @@
     "feather-icons": "^4.0.0",
     "posthog-js": "^1.396.6",
     "rxjs": "~7.8.0",
-    "three": "^0.185.1",
+    "three": "^0.187.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.16.0"
   },
@@ -38,7 +38,7 @@
     "@posthog/cli": "^0.7.34",
     "@types/express": "^5.0.1",
     "@types/node": "^26.0.0",
-    "@types/three": "^0.185.0",
+    "@types/three": "^0.187.0",
     "autoprefixer": "^10.5.2",
     "postcss": "^8.5.16",
     "tailwindcss": "^4.3.2",
