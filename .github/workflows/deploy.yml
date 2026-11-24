@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 2
 
       - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           package_json_file: package.json
 
