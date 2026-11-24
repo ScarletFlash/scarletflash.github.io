@@ -1,38 +1,6 @@
-import { isPlatformBrowser } from "@angular/common";
-import { inject, isDevMode, PLATFORM_ID } from "@angular/core";
+import { inject } from "@angular/core";
+import { PosthogClientService } from "../services/posthog-client.service";
 
 export function initializePosthogAnalytics(): void {
-  if (isDevMode()) {
-    return;
-  }
-
-  const projectToken = process.env["POSTHOG_PROJECT_TOKEN"];
-  if (projectToken === undefined || projectToken.length === 0) {
-    throw new Error("POSTHOG_PROJECT_TOKEN is not configured at build time.");
-  }
-
-  const apiHost = process.env["POSTHOG_API_HOST"];
-  if (apiHost === undefined || apiHost.length === 0) {
-    throw new Error("POSTHOG_API_HOST is not configured at build time.");
-  }
-
-  const uiHost = process.env["POSTHOG_UI_HOST"];
-  if (uiHost === undefined || uiHost.length === 0) {
-    throw new Error("POSTHOG_UI_HOST is not configured at build time.");
-  }
-
-  const platformIdentifier = inject(PLATFORM_ID);
-  if (!isPlatformBrowser(platformIdentifier)) {
-    return;
-  }
-
-  import("posthog-js")
-    .then(({ default: posthog }) =>
-      posthog.init(projectToken, {
-        api_host: apiHost,
-        ui_host: uiHost,
-        defaults: "2026-08-30",
-      }),
-    )
-    .catch((reason: unknown) => console.error(reason));
+  inject(PosthogClientService).client.catch((reason: unknown) => console.error(reason));
 }
