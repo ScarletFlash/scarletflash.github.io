@@ -1,4 +1,4 @@
-import { ApplicationConfig, ErrorHandler, provideAppInitializer } from "@angular/core";
+import { ApplicationConfig, ErrorHandler, provideAppInitializer, provideBrowserGlobalErrorListeners } from "@angular/core";
 import { provideRouter } from "@angular/router";
 
 import { provideClientHydration, withNoIncrementalHydration } from "@angular/platform-browser";
@@ -8,6 +8,7 @@ import { initializePosthogAnalytics } from "./initializers/posthog-analytics.ini
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideClientHydration(withNoIncrementalHydration()),
     provideAppInitializer(initializePosthogAnalytics),
