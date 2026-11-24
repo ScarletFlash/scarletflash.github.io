@@ -4,10 +4,12 @@ import { Router } from "@angular/router";
 import type { PostHog } from "posthog-js";
 import { PosthogClientService } from "./posthog-client.service";
 
+const TAG_QUERY_PARAMETER_NAME: string = "t";
+
 @Service()
 export class UrlTagCaptureService {
-  private readonly platformIdentifier = inject(PLATFORM_ID);
-  private readonly router = inject(Router);
+  private readonly platformIdentifier: Object = inject(PLATFORM_ID);
+  private readonly router: Router = inject(Router);
   private readonly posthogClientService: PosthogClientService = inject(PosthogClientService);
 
   public captureAndClearTag(): void {
@@ -15,8 +17,9 @@ export class UrlTagCaptureService {
       return;
     }
 
-    const searchParameters = new URLSearchParams(window.location.search);
-    const tag = searchParameters.get("t");
+    const tag: string | null = new URLSearchParams(window.location.search).get(
+      TAG_QUERY_PARAMETER_NAME,
+    );
     if (tag === null || tag.length === 0) {
       return;
     }
@@ -26,7 +29,7 @@ export class UrlTagCaptureService {
       .catch((reason: unknown) => console.error(reason));
 
     this.router.navigate([], {
-      queryParams: { t: null },
+      queryParams: { [TAG_QUERY_PARAMETER_NAME]: null },
       queryParamsHandling: "merge",
       replaceUrl: true,
     });
