@@ -1,0 +1,10 @@
+packages:
+  - '.'
+
+allowBuilds:
+  '@parcel/watcher': false
+  '@posthog/cli': false
+  core-js: false
+  esbuild: false
+  lmdb: false
+  msgpackr-extract: false
