@@ -11,40 +11,72 @@ import { toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
 import { filter, map } from "rxjs";
 import { BackgroundMotion } from "../../declarations/enums/background-motion.enum";
+import { PageDirection } from "../../declarations/enums/page-direction.enum";
 import { PageEdge } from "../../declarations/enums/page-edge.enum";
 import { RouteDataKey } from "../../declarations/enums/route-data-key.enum";
 import { ScrollMeasurement } from "../../declarations/interfaces/scroll-measurement.interface";
 import { getClampedValue } from "../../utilities/get-clamped-value.utility";
+import { getScrollMeasurement } from "../../utilities/get-scroll-measurement.utility";
 import { getScrollingElement } from "../../utilities/get-scrolling-element.utility";
+import { isAtPageEnd } from "../../utilities/is-at-page-end.utility";
 import { isBackgroundMotion } from "../../utilities/is-background-motion.utility";
 import { isNavigationEnd } from "../../utilities/is-navigation-end.utility";
+import { isPageDirection } from "../../utilities/is-page-direction.utility";
+import { PAGE_START_SCROLL_POSITION } from "../../utilities/page-start-scroll-position";
 
 const MINIMUM_PROGRESS: number = 0;
 const MAXIMUM_PROGRESS: number = 1;
 const FLOOR_TILT: number = 1;
 const FULL_AUTO_MOVEMENT_SPEED_FACTOR: number = 1;
 const NO_CONTENT_SCROLL_DISTANCE: number = 0;
-const PAGE_START_SCROLL_POSITION: number = 0;
 
 @Service({ autoProvided: false })
 export class ScrollStateService {
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
+  private readonly router: Router = inject(Router);
 
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
   private readonly measurement: WritableSignal<ScrollMeasurement | null> = signal(null);
 
   private readonly backgroundMotion: Signal<BackgroundMotion> = toSignal(
-    inject(Router).events.pipe(
+    this.router.events.pipe(
       filter(isNavigationEnd),
       map(() => this.getPageBackgroundMotion()),
     ),
     { initialValue: this.getPageBackgroundMotion() },
   );
 
-  public readonly landingEdge: Signal<PageEdge> = computed(() =>
-    this.backgroundMotion() === BackgroundMotion.Closing ? PageEdge.End : PageEdge.Start,
+  private readonly navigationDirection: Signal<PageDirection | null> = toSignal(
+    this.router.events.pipe(
+      filter(isNavigationEnd),
+      map((): PageDirection | null => {
+        const navigationInformation: unknown = this.router.currentNavigation()?.extras.info;
+        if (navigationInformation === undefined) {
+          return null;
+        }
+
+        if (!isPageDirection(navigationInformation)) {
+          throw new Error(
+            `Expected the home page navigation information to be a page direction, but got [${navigationInformation}]`,
+          );
+        }
+
+        return navigationInformation;
+      }),
+    ),
+    { initialValue: null },
   );
+
+  public readonly landingEdge: Signal<PageEdge> = computed(() => {
+    const navigationDirection: PageDirection | null = this.navigationDirection();
+    if (navigationDirection !== null) {
+      return navigationDirection === PageDirection.Previous ? PageEdge.End : PageEdge.Start;
+    }
+
+    return this.backgroundMotion() === BackgroundMotion.Closing ? PageEdge.End : PageEdge.Start;
+  });
 
   private readonly observedMeasurement: Signal<ScrollMeasurement> = computed(() => {
     const measurement: ScrollMeasurement | null = this.measurement();
@@ -58,14 +90,13 @@ export class ScrollStateService {
   });
 
   private readonly pageScrollProgress: Signal<number> = computed(() => {
-    const { scrollPosition, maximumScrollPosition }: ScrollMeasurement =
-      this.observedMeasurement();
-    if (maximumScrollPosition === PAGE_START_SCROLL_POSITION) {
+    const measurement: ScrollMeasurement = this.observedMeasurement();
+    if (isAtPageEnd(measurement)) {
       return MAXIMUM_PROGRESS;
     }
 
     return getClampedValue({
-      value: scrollPosition / maximumScrollPosition,
+      value: measurement.scrollPosition / measurement.maximumScrollPosition,
       minimum: MINIMUM_PROGRESS,
       maximum: MAXIMUM_PROGRESS,
     });
@@ -135,14 +166,8 @@ export class ScrollStateService {
     });
   }
 
-  private measure(): void {
-    this.measurement.set({
-      scrollPosition: window.scrollY,
-      maximumScrollPosition: Math.max(
-        getScrollingElement().scrollHeight - window.innerHeight,
-        PAGE_START_SCROLL_POSITION,
-      ),
-    });
+  public measure(): void {
+    this.measurement.set(getScrollMeasurement());
   }
 
   private getPageBackgroundMotion(): BackgroundMotion {

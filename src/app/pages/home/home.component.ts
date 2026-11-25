@@ -3,25 +3,32 @@ import {
   Component,
   computed,
   DestroyRef,
+  DOCUMENT,
   effect,
   ElementRef,
+  ErrorHandler,
   inject,
   Injector,
+  Renderer2,
   Signal,
   signal,
   viewChild,
   ViewEncapsulation,
   WritableSignal,
 } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { Event, Router, RouterOutlet } from "@angular/router";
-import { animationFrames, filter, take } from "rxjs";
+import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
+import { ActivatedRoute, Event, Route, Router, RouterOutlet } from "@angular/router";
+import { animationFrames, exhaustMap, filter, map, take } from "rxjs";
+import { PageDirection } from "../../../declarations/enums/page-direction.enum";
 import { PageEdge } from "../../../declarations/enums/page-edge.enum";
+import { getNeighbourPageRoute } from "../../../utilities/get-neighbour-page-route.utility";
 import { isNavigationEnd } from "../../../utilities/is-navigation-end.utility";
 import { BackgroundComponent } from "../../components/background/background.component";
+import { PageEdgeGestureService } from "../../services/page-edge-gesture.service";
 import { ScrollStateService } from "../../services/scroll-state.service";
 
 const VISIBLE_VISIBILITY: string = "visible";
+const HOME_OVERSCROLL_CLASS: string = "overscroll-y-none";
 
 const enum RevealPhase {
   Fallback,
@@ -32,18 +39,34 @@ const enum RevealPhase {
 @Component({
   selector: "app-home",
   imports: [RouterOutlet, BackgroundComponent],
-  providers: [ScrollStateService],
+  providers: [ScrollStateService, PageEdgeGestureService],
   templateUrl: "./home.component.html",
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent {
   private readonly root: Signal<ElementRef<HTMLElement>> = viewChild.required("root");
 
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
+  private readonly router: Router = inject(Router);
+
   protected readonly scrollStateService: ScrollStateService = inject(ScrollStateService);
+
+  private readonly pageEdgeGestureService: PageEdgeGestureService = inject(PageEdgeGestureService);
+
+  private readonly errorHandler: ErrorHandler = inject(ErrorHandler);
 
   private readonly injector: Injector = inject(Injector);
 
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
+
+  private readonly pageRoute: Signal<Route> = toSignal(
+    this.router.events.pipe(
+      filter(isNavigationEnd),
+      map(() => this.getPageRoute()),
+    ),
+    { initialValue: this.getPageRoute() },
+  );
 
   private readonly revealPhase: WritableSignal<RevealPhase> = signal(
     this.scrollStateService.landingEdge() === PageEdge.Start
@@ -66,8 +89,13 @@ export class HomeComponent {
   );
 
   constructor() {
-    inject(Router)
-      .events.pipe(
+    const renderer: Renderer2 = inject(Renderer2);
+    const documentElement: HTMLElement = inject(DOCUMENT).documentElement;
+    renderer.addClass(documentElement, HOME_OVERSCROLL_CLASS);
+    this.destroyRef.onDestroy(() => renderer.removeClass(documentElement, HOME_OVERSCROLL_CLASS));
+
+    this.router.events
+      .pipe(
         filter((event: Event) => isNavigationEnd(event) && this.isScrollStateSynchronized()),
         takeUntilDestroyed(),
       )
@@ -76,6 +104,46 @@ export class HomeComponent {
           injector: this.injector,
         }),
       );
+
+    this.pageEdgeGestureService.pushes
+      .pipe(
+        filter(() => this.isScrollStateSynchronized()),
+        exhaustMap(async (direction: PageDirection): Promise<void> => {
+          const pageRoutes: readonly Route[] | undefined =
+            this.activatedRoute.routeConfig?.children;
+          if (pageRoutes === undefined) {
+            throw new Error("Expected the home route to declare its page routes");
+          }
+
+          const neighbourPageRoute: Route | undefined = getNeighbourPageRoute({
+            pageRoutes,
+            pageRoute: this.pageRoute(),
+            direction,
+          });
+          if (neighbourPageRoute === undefined) {
+            return;
+          }
+
+          if (neighbourPageRoute.path === undefined) {
+            throw new Error("Expected every home page route to declare its path");
+          }
+
+          this.scrollStateService.measure();
+          await this.waitForNextRender();
+          await this.router
+            .navigate([neighbourPageRoute.path], {
+              relativeTo: this.activatedRoute,
+              replaceUrl: true,
+              queryParamsHandling: "preserve",
+              preserveFragment: true,
+              info: direction,
+            })
+            .catch((error: unknown) => this.errorHandler.handleError(error));
+          await this.waitForNextRender();
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe();
 
     effect(() => {
       if (this.revealPhase() !== RevealPhase.Hidden) {
@@ -87,6 +155,7 @@ export class HomeComponent {
 
     afterNextRender(() => {
       this.scrollStateService.observe();
+      this.pageEdgeGestureService.observe();
       history.scrollRestoration = "manual";
 
       if (getComputedStyle(this.root().nativeElement).visibility === VISIBLE_VISIBILITY) {
@@ -102,5 +171,20 @@ export class HomeComponent {
           this.isScrollStateSynchronized.set(true);
         });
     });
+  }
+
+  private getPageRoute(): Route {
+    const pageRoute: Route | null | undefined = this.activatedRoute.snapshot.firstChild?.routeConfig;
+    if (pageRoute === null || pageRoute === undefined) {
+      throw new Error("Expected the home route to render one of its page routes");
+    }
+
+    return pageRoute;
+  }
+
+  private waitForNextRender(): Promise<void> {
+    return new Promise<void>((resolve: () => void) =>
+      afterNextRender(resolve, { injector: this.injector }),
+    );
   }
 }
