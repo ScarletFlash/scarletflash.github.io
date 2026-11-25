@@ -25,7 +25,8 @@
     "posthog-js": "^1.454.2",
     "rxjs": "~7.8.0",
     "three": "^0.187.0",
-    "tslib": "^2.9.1"
+    "tslib": "^2.9.1",
+    "wheel-gestures": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^22.3.0",
