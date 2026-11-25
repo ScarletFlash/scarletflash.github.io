@@ -58,6 +58,7 @@ export class BackgroundComponent {
         canvas: this.canvas().nativeElement,
         host: this.componentElementRef.nativeElement,
         movementStepDurationMilliseconds,
+        initialTargetTilt: this.tilt()(),
       });
 
       animationFrames()
@@ -65,7 +66,7 @@ export class BackgroundComponent {
         .subscribe((animationFrame: AnimationFrame) =>
           backgroundScene.renderFrame({
             timeStamp: animationFrame.timestamp,
-            tilt: this.tilt()(),
+            targetTilt: this.tilt()(),
             autoMovementSpeedFactor: this.autoMovementSpeedFactor()(),
             contentScrollDistance: this.contentScrollDistance()(),
           }),

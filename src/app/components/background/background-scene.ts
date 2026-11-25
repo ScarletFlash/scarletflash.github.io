@@ -1,3 +1,4 @@
+import { MotionValue, motionValue, springValue } from "motion";
 import { Color, Timer, WebGLRenderer } from "three";
 import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { RectSize } from "../../../declarations/types/rect-size.type";
@@ -14,16 +15,20 @@ const CELL_SIZE: number = 100;
 const MILLISECONDS_PER_SECOND: number = 1000;
 const STOPPED_AUTO_MOVEMENT_SPEED_FACTOR: number = 0;
 const STOPPED_AUTO_MOVEMENT_DISTANCE_PER_MILLISECOND: number = 0;
+const TILT_SPRING_STIFFNESS: number = 120;
+const TILT_SPRING_DAMPING: number = 14;
+const TILT_SPRING_MASS: number = 1;
 
 interface BackgroundSceneParameters {
   readonly canvas: HTMLCanvasElement;
   readonly host: HTMLElement;
   readonly movementStepDurationMilliseconds: number;
+  readonly initialTargetTilt: number;
 }
 
 interface BackgroundSceneFrame {
   readonly timeStamp: DOMHighResTimeStamp;
-  readonly tilt: number;
+  readonly targetTilt: number;
   readonly autoMovementSpeedFactor: number;
   readonly contentScrollDistance: number;
 }
@@ -43,11 +48,20 @@ export class BackgroundScene {
     REDUCED_MOTION_MEDIA_QUERY,
   );
 
+  private readonly targetTiltMotionValue: MotionValue<number>;
+
+  private readonly springTiltMotionValue: MotionValue<number>;
+
   private readonly autoMovementDistancePerMillisecond: number;
 
   private autoMovementOffset: number = 0;
 
-  constructor({ canvas, host, movementStepDurationMilliseconds }: BackgroundSceneParameters) {
+  constructor({
+    canvas,
+    host,
+    movementStepDurationMilliseconds,
+    initialTargetTilt,
+  }: BackgroundSceneParameters) {
     this.renderer = new WebGLRenderer({
       powerPreference: "low-power",
       antialias: false,
@@ -67,6 +81,13 @@ export class BackgroundScene {
       cellSize: CELL_SIZE,
     });
     this.quad = new FullScreenQuad(this.material);
+
+    this.targetTiltMotionValue = motionValue(initialTargetTilt);
+    this.springTiltMotionValue = springValue(this.targetTiltMotionValue, {
+      stiffness: TILT_SPRING_STIFFNESS,
+      damping: TILT_SPRING_DAMPING,
+      mass: TILT_SPRING_MASS,
+    });
 
     this.autoMovementDistancePerMillisecond =
       movementStepDurationMilliseconds > 0
@@ -92,23 +113,27 @@ export class BackgroundScene {
 
   public renderFrame({
     timeStamp,
-    tilt,
+    targetTilt,
     autoMovementSpeedFactor,
     contentScrollDistance,
   }: BackgroundSceneFrame): void {
+    const isReducedMotionPreferred: boolean = this.reducedMotionMediaQueryList.matches;
+
+    this.targetTiltMotionValue.set(targetTilt);
+
     this.timer.update(timeStamp);
     this.autoMovementOffset =
       (this.autoMovementOffset +
         this.timer.getDelta() *
           MILLISECONDS_PER_SECOND *
           this.autoMovementDistancePerMillisecond *
-          (this.reducedMotionMediaQueryList.matches
+          (isReducedMotionPreferred
             ? STOPPED_AUTO_MOVEMENT_SPEED_FACTOR
             : autoMovementSpeedFactor)) %
       CELL_SIZE;
 
     this.material.setFrameState({
-      tilt,
+      tilt: isReducedMotionPreferred ? targetTilt : this.springTiltMotionValue.get(),
       gridOffset: (this.autoMovementOffset - contentScrollDistance) % CELL_SIZE,
     });
     this.quad.render(this.renderer);
@@ -117,6 +142,8 @@ export class BackgroundScene {
   public dispose(): void {
     this.resizeObserver.disconnect();
     this.timer.dispose();
+    this.springTiltMotionValue.destroy();
+    this.targetTiltMotionValue.destroy();
     this.quad.dispose();
     this.material.dispose();
     this.renderer.dispose();
