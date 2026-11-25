@@ -21,6 +21,7 @@
     "@angular/router": "^22.3.0",
     "@angular/ssr": "^22.3.0",
     "feather-icons": "^4.0.0",
+    "motion": "^14.14.0",
     "posthog-js": "^1.454.2",
     "rxjs": "~7.8.0",
     "three": "^0.187.0",
