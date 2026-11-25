@@ -19,12 +19,13 @@ import {
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Event, Route, Router, RouterOutlet } from "@angular/router";
 import { animationFrames, exhaustMap, filter, map, take } from "rxjs";
-import { PageDirection } from "../../../declarations/enums/page-direction.enum";
 import { PageEdge } from "../../../declarations/enums/page-edge.enum";
+import { PageNavigationInformation } from "../../../declarations/interfaces/page-navigation-information.interface";
 import { getNeighbourPageRoute } from "../../../utilities/get-neighbour-page-route.utility";
 import { isNavigationEnd } from "../../../utilities/is-navigation-end.utility";
 import { BackgroundComponent } from "../../components/background/background.component";
 import { PageEdgeGestureService } from "../../services/page-edge-gesture.service";
+import { PageSlideService } from "../../services/page-slide.service";
 import { ScrollStateService } from "../../services/scroll-state.service";
 
 const VISIBLE_VISIBILITY: string = "visible";
@@ -53,6 +54,8 @@ export class HomeComponent {
   protected readonly scrollStateService: ScrollStateService = inject(ScrollStateService);
 
   private readonly pageEdgeGestureService: PageEdgeGestureService = inject(PageEdgeGestureService);
+
+  private readonly pageSlideService: PageSlideService = inject(PageSlideService);
 
   private readonly errorHandler: ErrorHandler = inject(ErrorHandler);
 
@@ -88,6 +91,12 @@ export class HomeComponent {
     () => this.isScrollStateSynchronized() && this.scrollStateService.isOpeningAligned(),
   );
 
+  protected readonly slidingContentScrollDistance: Signal<number> = computed(
+    () =>
+      this.scrollStateService.contentScrollDistanceAfterAlignment() -
+      this.pageSlideService.gridSlideOffset(),
+  );
+
   constructor() {
     const renderer: Renderer2 = inject(Renderer2);
     const documentElement: HTMLElement = inject(DOCUMENT).documentElement;
@@ -107,8 +116,8 @@ export class HomeComponent {
 
     this.pageEdgeGestureService.pushes
       .pipe(
-        filter(() => this.isScrollStateSynchronized()),
-        exhaustMap(async (direction: PageDirection): Promise<void> => {
+        filter(() => this.isScrollStateSynchronized() && !this.pageSlideService.isSliding()),
+        exhaustMap(async (navigationInformation: PageNavigationInformation): Promise<void> => {
           const pageRoutes: readonly Route[] | undefined =
             this.activatedRoute.routeConfig?.children;
           if (pageRoutes === undefined) {
@@ -118,7 +127,7 @@ export class HomeComponent {
           const neighbourPageRoute: Route | undefined = getNeighbourPageRoute({
             pageRoutes,
             pageRoute: this.pageRoute(),
-            direction,
+            direction: navigationInformation.direction,
           });
           if (neighbourPageRoute === undefined) {
             return;
@@ -136,7 +145,7 @@ export class HomeComponent {
               replaceUrl: true,
               queryParamsHandling: "preserve",
               preserveFragment: true,
-              info: direction,
+              info: navigationInformation,
             })
             .catch((error: unknown) => this.errorHandler.handleError(error));
           await this.waitForNextRender();

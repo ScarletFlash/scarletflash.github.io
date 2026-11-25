@@ -30,9 +30,11 @@
       cell-dent-shading="35"
       [tilt]="scrollStateService.tilt"
       [autoMovementSpeedFactor]="scrollStateService.autoMovementSpeedFactor"
-      [contentScrollDistance]="scrollStateService.contentScrollDistanceAfterAlignment"
+      [contentScrollDistance]="slidingContentScrollDistance"
     />
   }
 
-  <router-outlet [routerOutletData]="isFirstScreenAligned()" />
+  <div class="[:active-view-transition_&]:[view-transition-name:home-page]">
+    <router-outlet [routerOutletData]="isFirstScreenAligned()" />
+  </div>
 </section>

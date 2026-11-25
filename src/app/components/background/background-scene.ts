@@ -27,6 +27,7 @@ import { PointerType } from "../../../declarations/enums/pointer-type.enum";
 import { BackgroundWave } from "../../../declarations/interfaces/background-wave.interface";
 import { RectSize } from "../../../declarations/types/rect-size.type";
 import { getDebounced } from "../../../utilities/get-debounced.utility";
+import { getReducedMotionMediaQueryList } from "../../../utilities/get-reduced-motion-media-query-list.utility";
 import { isArrayOfLength } from "../../../utilities/is-array-of-length.utility";
 import { BackgroundFillMaterial } from "./background-fill.material";
 import { BackgroundWaveMaterial } from "./background-wave.material";
@@ -38,7 +39,6 @@ import { WAVE_SLOT_COUNT } from "./wave-slot-count";
 
 const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT: 1 = 1;
 const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS: number = 250;
-const REDUCED_MOTION_MEDIA_QUERY: string = "(prefers-reduced-motion: reduce)";
 const ACCENT_COLOR_PROPERTY_NAME: string = "--accent-color";
 const FLOAT_COLOR_BUFFER_EXTENSION_NAME: string = "EXT_color_buffer_float";
 const WAVE_COLOR: string = "#ffffff";
@@ -143,9 +143,7 @@ export class BackgroundScene {
 
   private readonly timer: Timer = new Timer();
 
-  private readonly reducedMotionMediaQueryList: MediaQueryList = window.matchMedia(
-    REDUCED_MOTION_MEDIA_QUERY,
-  );
+  private readonly reducedMotionMediaQueryList: MediaQueryList = getReducedMotionMediaQueryList();
 
   private readonly targetTiltMotionValue: MotionValue<number>;
 

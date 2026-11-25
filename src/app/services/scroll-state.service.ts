@@ -7,21 +7,23 @@ import {
   signal,
   WritableSignal,
 } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Router } from "@angular/router";
-import { filter, map } from "rxjs";
+import { filter } from "rxjs";
 import { BackgroundMotion } from "../../declarations/enums/background-motion.enum";
 import { PageDirection } from "../../declarations/enums/page-direction.enum";
 import { PageEdge } from "../../declarations/enums/page-edge.enum";
 import { RouteDataKey } from "../../declarations/enums/route-data-key.enum";
+import { PageNavigationInformation } from "../../declarations/interfaces/page-navigation-information.interface";
 import { ScrollMeasurement } from "../../declarations/interfaces/scroll-measurement.interface";
 import { getClampedValue } from "../../utilities/get-clamped-value.utility";
+import { getPageNavigationInformation } from "../../utilities/get-page-navigation-information.utility";
+import { getPageSlideDistance } from "../../utilities/get-page-slide-distance.utility";
 import { getScrollMeasurement } from "../../utilities/get-scroll-measurement.utility";
 import { getScrollingElement } from "../../utilities/get-scrolling-element.utility";
 import { isAtPageEnd } from "../../utilities/is-at-page-end.utility";
 import { isBackgroundMotion } from "../../utilities/is-background-motion.utility";
 import { isNavigationEnd } from "../../utilities/is-navigation-end.utility";
-import { isPageDirection } from "../../utilities/is-page-direction.utility";
 import { PAGE_START_SCROLL_POSITION } from "../../utilities/page-start-scroll-position";
 
 const MINIMUM_PROGRESS: number = 0;
@@ -29,6 +31,7 @@ const MAXIMUM_PROGRESS: number = 1;
 const FLOOR_TILT: number = 1;
 const FULL_AUTO_MOVEMENT_SPEED_FACTOR: number = 1;
 const NO_CONTENT_SCROLL_DISTANCE: number = 0;
+const NO_PAGE_SLIDE_DISTANCE: number = 0;
 
 @Service({ autoProvided: false })
 export class ScrollStateService {
@@ -40,33 +43,14 @@ export class ScrollStateService {
 
   private readonly measurement: WritableSignal<ScrollMeasurement | null> = signal(null);
 
-  private readonly backgroundMotion: Signal<BackgroundMotion> = toSignal(
-    this.router.events.pipe(
-      filter(isNavigationEnd),
-      map(() => this.getPageBackgroundMotion()),
-    ),
-    { initialValue: this.getPageBackgroundMotion() },
+  private readonly backgroundMotion: WritableSignal<BackgroundMotion> = signal(
+    this.getPageBackgroundMotion(),
   );
 
-  private readonly navigationDirection: Signal<PageDirection | null> = toSignal(
-    this.router.events.pipe(
-      filter(isNavigationEnd),
-      map((): PageDirection | null => {
-        const navigationInformation: unknown = this.router.currentNavigation()?.extras.info;
-        if (navigationInformation === undefined) {
-          return null;
-        }
+  private readonly navigationDirection: WritableSignal<PageDirection | null> = signal(null);
 
-        if (!isPageDirection(navigationInformation)) {
-          throw new Error(
-            `Expected the home page navigation information to be a page direction, but got [${navigationInformation}]`,
-          );
-        }
-
-        return navigationInformation;
-      }),
-    ),
-    { initialValue: null },
+  private readonly landingContentScrollDistance: WritableSignal<number> = signal(
+    NO_CONTENT_SCROLL_DISTANCE,
   );
 
   public readonly landingEdge: Signal<PageEdge> = computed(() => {
@@ -88,6 +72,12 @@ export class ScrollStateService {
 
     return measurement;
   });
+
+  private readonly landingScrollPosition: Signal<number> = computed(() =>
+    this.landingEdge() === PageEdge.End
+      ? this.observedMeasurement().maximumScrollPosition
+      : PAGE_START_SCROLL_POSITION,
+  );
 
   private readonly pageScrollProgress: Signal<number> = computed(() => {
     const measurement: ScrollMeasurement = this.observedMeasurement();
@@ -126,11 +116,41 @@ export class ScrollStateService {
     () => this.openingTiltProgress() === MAXIMUM_PROGRESS,
   );
 
-  public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(() =>
-    this.backgroundMotion() === BackgroundMotion.Content
-      ? this.observedMeasurement().scrollPosition
-      : NO_CONTENT_SCROLL_DISTANCE,
+  public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(
+    () =>
+      this.landingContentScrollDistance() +
+      (this.backgroundMotion() === BackgroundMotion.Content
+        ? this.observedMeasurement().scrollPosition - this.landingScrollPosition()
+        : NO_CONTENT_SCROLL_DISTANCE),
   );
+
+  constructor() {
+    this.router.events.pipe(filter(isNavigationEnd), takeUntilDestroyed()).subscribe(() => {
+      const navigationInformation: PageNavigationInformation | null = getPageNavigationInformation(
+        this.router.currentNavigation()?.extras.info,
+      );
+      const measurement: ScrollMeasurement | null = this.measurement();
+
+      this.landingContentScrollDistance.set(
+        (measurement === null
+          ? NO_CONTENT_SCROLL_DISTANCE
+          : this.contentScrollDistanceAfterAlignment()) +
+          (navigationInformation === null
+            ? NO_PAGE_SLIDE_DISTANCE
+            : getPageSlideDistance(navigationInformation.direction)),
+      );
+      this.backgroundMotion.set(this.getPageBackgroundMotion());
+      this.navigationDirection.set(navigationInformation?.direction ?? null);
+      if (measurement === null) {
+        return;
+      }
+
+      this.measurement.set({
+        scrollPosition: this.landingScrollPosition(),
+        maximumScrollPosition: measurement.maximumScrollPosition,
+      });
+    });
+  }
 
   public observe(): void {
     if (this.measurement() !== null) {
