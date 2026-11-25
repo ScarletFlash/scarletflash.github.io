@@ -1,10 +1,9 @@
 import { inject, Service } from "@angular/core";
 import { ActivatedRouteSnapshot, PreloadingStrategy, Route, Router } from "@angular/router";
 import { Observable, of } from "rxjs";
+import { PageDirection } from "../../declarations/enums/page-direction.enum";
 import { RouteDataKey } from "../../declarations/enums/route-data-key.enum";
-
-const NEIGHBOUR_PAGE_DISTANCE: number = 1;
-const MISSING_INDEX: number = -1;
+import { getNeighbourPageRoute } from "../../utilities/get-neighbour-page-route.utility";
 
 @Service()
 export class NeighbourPagePreloadingStrategy implements PreloadingStrategy {
@@ -24,17 +23,11 @@ export class NeighbourPagePreloadingStrategy implements PreloadingStrategy {
       throw new Error("Expected the page sequence route to declare its page routes");
     }
 
-    const pageIndex: number = pageRoutes.findIndex(
-      (pageRoute: Route) => pageRoute === pageSnapshot.routeConfig,
+    const neighbourPageRoutes: ReadonlySet<Route | undefined> = new Set<Route | undefined>(
+      [PageDirection.Previous, PageDirection.Next].map((direction: PageDirection) =>
+        getNeighbourPageRoute({ pageRoutes, pageRoute: pageSnapshot.routeConfig, direction }),
+      ),
     );
-    if (pageIndex === MISSING_INDEX) {
-      throw new Error("Expected the current page route to be a child of its page sequence route");
-    }
-
-    const neighbourPageRoutes: ReadonlySet<Route | undefined> = new Set<Route | undefined>([
-      pageRoutes[pageIndex - NEIGHBOUR_PAGE_DISTANCE],
-      pageRoutes[pageIndex + NEIGHBOUR_PAGE_DISTANCE],
-    ]);
     if (!neighbourPageRoutes.has(route)) {
       return of(null);
     }
