@@ -20,10 +20,21 @@ const enum AttributeName {
   MovementStepDuration = "movement-step-duration",
   CellFillDuration = "cell-fill-duration",
   CellFadeDuration = "cell-fade-duration",
+  CellChargeDuration = "cell-charge-duration",
+  CellWaveStepDuration = "cell-wave-step-duration",
+  CellWaveFadeDuration = "cell-wave-fade-duration",
+  CellWaveReach = "cell-wave-reach",
+  CellWaveBurstRadius = "cell-wave-burst-radius",
+  CellWaveBurstBrightness = "cell-wave-burst-brightness",
+  CellDentDuration = "cell-dent-duration",
+  CellDentRadius = "cell-dent-radius",
+  CellDentDepth = "cell-dent-depth",
+  CellDentShading = "cell-dent-shading",
 }
 
 const MINIMUM_NON_NEGATIVE_INTEGER: number = 0;
 const MINIMUM_POSITIVE_INTEGER: number = 1;
+const FULL_PERCENT: number = 100;
 
 interface AnimationFrame {
   readonly timestamp: DOMHighResTimeStamp;
@@ -66,6 +77,42 @@ export class BackgroundComponent {
       attributeName: AttributeName.CellFadeDuration,
       minimum: MINIMUM_POSITIVE_INTEGER,
     });
+    const cellChargeDurationMilliseconds: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellChargeDuration,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+    });
+    const cellWaveStepDurationMilliseconds: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellWaveStepDuration,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+    });
+    const cellWaveFadeDurationMilliseconds: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellWaveFadeDuration,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+    });
+    const cellWaveReachCellCount: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellWaveReach,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+    });
+    const cellWaveBurstRadiusCellCount: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellWaveBurstRadius,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+    });
+    const cellWaveBurstBrightness: number = BackgroundComponent.injectPercentAttribute(
+      AttributeName.CellWaveBurstBrightness,
+    );
+    const cellDentDurationMilliseconds: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellDentDuration,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+    });
+    const cellDentRadiusFraction: number = BackgroundComponent.injectPercentAttribute(
+      AttributeName.CellDentRadius,
+    );
+    const cellDentDepth: number = BackgroundComponent.injectPercentAttribute(
+      AttributeName.CellDentDepth,
+    );
+    const cellDentShading: number = BackgroundComponent.injectPercentAttribute(
+      AttributeName.CellDentShading,
+    );
 
     const errorHandler: ErrorHandler = inject(ErrorHandler);
     const destroyRef: DestroyRef = inject(DestroyRef);
@@ -77,6 +124,16 @@ export class BackgroundComponent {
         movementStepDurationMilliseconds,
         cellFillDurationMilliseconds,
         cellFadeDurationMilliseconds,
+        cellChargeDurationMilliseconds,
+        cellWaveStepDurationMilliseconds,
+        cellWaveFadeDurationMilliseconds,
+        cellWaveReachCellCount,
+        cellWaveBurstRadiusCellCount,
+        cellWaveBurstBrightness,
+        cellDentDurationMilliseconds,
+        cellDentRadiusFraction,
+        cellDentDepth,
+        cellDentShading,
         initialTargetTilt: this.tilt()(),
         errorHandler,
       });
@@ -110,5 +167,15 @@ export class BackgroundComponent {
     }
 
     return value;
+  }
+
+  private static injectPercentAttribute(attributeName: AttributeName): number {
+    return (
+      BackgroundComponent.injectIntegerAttribute({
+        attributeName,
+        minimum: MINIMUM_POSITIVE_INTEGER,
+        maximum: FULL_PERCENT,
+      }) / FULL_PERCENT
+    );
   }
 }
