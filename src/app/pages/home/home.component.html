@@ -1,6 +1,5 @@
 <section
   #root
-  class="flex flex-col gap-[300px]"
   [class.opacity-100]="!isContentHidden()"
   [class.visible]="!isContentHidden()"
   [class.transition-[opacity,visibility]]="!isContentHidden()"
@@ -35,30 +34,5 @@
     />
   }
 
-  <div #openingPinWrapper>
-    <section class="sticky top-0 flex min-h-svh flex-col">
-      <router-outlet
-        [name]="homeOutletName.FirstScreen"
-        [routerOutletData]="isFirstScreenAligned()"
-      />
-    </section>
-
-    <div #openingSpacer class="h-svh" aria-hidden="true"></div>
-  </div>
-
-  <section #sibeBlock>
-    <router-outlet [name]="homeOutletName.Sibe" />
-  </section>
-
-  <section #bimeisterBlock>
-    <router-outlet [name]="homeOutletName.Bimeister" />
-  </section>
-
-  <div #closingPinWrapper>
-    <section class="sticky top-0 flex min-h-svh flex-col">
-      <router-outlet [name]="homeOutletName.Contacts" />
-    </section>
-
-    <div class="h-svh" aria-hidden="true"></div>
-  </div>
+  <router-outlet [routerOutletData]="isFirstScreenAligned()" />
 </section>
