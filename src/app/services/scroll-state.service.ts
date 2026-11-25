@@ -7,46 +7,44 @@ import {
   signal,
   WritableSignal,
 } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { ActivatedRoute, Router } from "@angular/router";
+import { filter, map } from "rxjs";
+import { BackgroundMotion } from "../../declarations/enums/background-motion.enum";
+import { PageEdge } from "../../declarations/enums/page-edge.enum";
+import { RouteDataKey } from "../../declarations/enums/route-data-key.enum";
+import { ScrollMeasurement } from "../../declarations/interfaces/scroll-measurement.interface";
 import { getClampedValue } from "../../utilities/get-clamped-value.utility";
+import { getScrollingElement } from "../../utilities/get-scrolling-element.utility";
+import { isBackgroundMotion } from "../../utilities/is-background-motion.utility";
+import { isNavigationEnd } from "../../utilities/is-navigation-end.utility";
 
-const LANDING_POINT_TOLERANCE_PIXELS: number = 1;
 const MINIMUM_PROGRESS: number = 0;
 const MAXIMUM_PROGRESS: number = 1;
-const PAGE_START_SCROLL_POSITION: number = 0;
 const FLOOR_TILT: number = 1;
 const FULL_AUTO_MOVEMENT_SPEED_FACTOR: number = 1;
-
-interface ScrollLayout {
-  readonly root: HTMLElement;
-  readonly openingPinWrapper: HTMLElement;
-  readonly openingSpacer: HTMLElement;
-  readonly closingPinWrapper: HTMLElement;
-  readonly blockByAddressPath: ReadonlyMap<string, HTMLElement>;
-  readonly closingAddressPath: string;
-}
-
-interface ScrollMeasurement {
-  readonly openingStart: number;
-  readonly openingEnd: number;
-  readonly closingStart: number;
-  readonly scrollHeight: number;
-  readonly blockTopByAddressPath: ReadonlyMap<string, number>;
-  readonly closingAddressPath: string;
-  readonly scrollPosition: number;
-  readonly viewportHeight: number;
-}
-
-interface GetRangeProgressParameters {
-  readonly scrollPosition: number;
-  readonly start: number;
-  readonly end: number;
-}
+const NO_CONTENT_SCROLL_DISTANCE: number = 0;
+const PAGE_START_SCROLL_POSITION: number = 0;
 
 @Service({ autoProvided: false })
 export class ScrollStateService {
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
   private readonly measurement: WritableSignal<ScrollMeasurement | null> = signal(null);
+
+  private readonly backgroundMotion: Signal<BackgroundMotion> = toSignal(
+    inject(Router).events.pipe(
+      filter(isNavigationEnd),
+      map(() => this.getPageBackgroundMotion()),
+    ),
+    { initialValue: this.getPageBackgroundMotion() },
+  );
+
+  public readonly landingEdge: Signal<PageEdge> = computed(() =>
+    this.backgroundMotion() === BackgroundMotion.Closing ? PageEdge.End : PageEdge.Start,
+  );
 
   private readonly observedMeasurement: Signal<ScrollMeasurement> = computed(() => {
     const measurement: ScrollMeasurement | null = this.measurement();
@@ -59,32 +57,31 @@ export class ScrollStateService {
     return measurement;
   });
 
-  private readonly maximumScrollPosition: Signal<number> = computed(() => {
-    const { scrollHeight, viewportHeight }: ScrollMeasurement = this.observedMeasurement();
-
-    return Math.max(PAGE_START_SCROLL_POSITION, scrollHeight - viewportHeight);
-  });
-
-  private readonly openingTiltProgress: Signal<number> = computed(() => {
-    const { scrollPosition, openingStart, openingEnd }: ScrollMeasurement =
+  private readonly pageScrollProgress: Signal<number> = computed(() => {
+    const { scrollPosition, maximumScrollPosition }: ScrollMeasurement =
       this.observedMeasurement();
+    if (maximumScrollPosition === PAGE_START_SCROLL_POSITION) {
+      return MAXIMUM_PROGRESS;
+    }
 
-    return ScrollStateService.getRangeProgress({
-      scrollPosition,
-      start: openingStart,
-      end: openingEnd,
+    return getClampedValue({
+      value: scrollPosition / maximumScrollPosition,
+      minimum: MINIMUM_PROGRESS,
+      maximum: MAXIMUM_PROGRESS,
     });
   });
 
-  private readonly closingTiltProgress: Signal<number> = computed(() => {
-    const { scrollPosition, closingStart }: ScrollMeasurement = this.observedMeasurement();
+  private readonly openingTiltProgress: Signal<number> = computed(() =>
+    this.backgroundMotion() === BackgroundMotion.Opening
+      ? this.pageScrollProgress()
+      : MAXIMUM_PROGRESS,
+  );
 
-    return ScrollStateService.getRangeProgress({
-      scrollPosition,
-      start: closingStart,
-      end: this.maximumScrollPosition(),
-    });
-  });
+  private readonly closingTiltProgress: Signal<number> = computed(() =>
+    this.backgroundMotion() === BackgroundMotion.Closing
+      ? this.pageScrollProgress()
+      : MINIMUM_PROGRESS,
+  );
 
   public readonly tilt: Signal<number> = computed(
     () => FLOOR_TILT - this.openingTiltProgress() - this.closingTiltProgress(),
@@ -98,66 +95,29 @@ export class ScrollStateService {
     () => this.openingTiltProgress() === MAXIMUM_PROGRESS,
   );
 
-  public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(() => {
-    const { scrollPosition, openingEnd, closingStart }: ScrollMeasurement =
-      this.observedMeasurement();
+  public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(() =>
+    this.backgroundMotion() === BackgroundMotion.Content
+      ? this.observedMeasurement().scrollPosition
+      : NO_CONTENT_SCROLL_DISTANCE,
+  );
 
-    return getClampedValue({
-      value: scrollPosition - openingEnd,
-      minimum: 0,
-      maximum: closingStart - openingEnd,
-    });
-  });
-
-  public readonly landingScrollPositionByAddressPath: Signal<ReadonlyMap<string, number>> =
-    computed(() => {
-      const { blockTopByAddressPath, closingAddressPath }: ScrollMeasurement =
-        this.observedMeasurement();
-
-      return new Map<string, number>(
-        Array.from(blockTopByAddressPath).concat([
-          [closingAddressPath, this.maximumScrollPosition()],
-        ]),
-      );
-    });
-
-  public readonly currentAddressPath: Signal<string> = computed(() => {
-    const reachedScrollPosition: number =
-      this.observedMeasurement().scrollPosition + LANDING_POINT_TOLERANCE_PIXELS;
-
-    const currentLandingPoint: [string, number] | undefined = Array.from(
-      this.landingScrollPositionByAddressPath(),
-    )
-      .filter(
-        ([, landingScrollPosition]: [string, number], landingPointIndex: number) =>
-          landingPointIndex === 0 || landingScrollPosition <= reachedScrollPosition,
-      )
-      .at(-1);
-    if (currentLandingPoint === undefined) {
-      throw new Error("Expected the scroll layout to have at least one landing point");
-    }
-
-    return currentLandingPoint[0];
-  });
-
-  public observe(layout: ScrollLayout): void {
+  public observe(): void {
     if (this.measurement() !== null) {
-      throw new Error("Expected ScrollStateService to observe a single layout");
+      throw new Error("Expected ScrollStateService to observe the page once");
     }
 
-    this.measure(layout);
+    this.measure();
 
     const abortController: AbortController = new AbortController();
     const listenerOptions: AddEventListenerOptions = {
       passive: true,
       signal: abortController.signal,
     };
-    window.addEventListener("scroll", () => this.measure(layout), listenerOptions);
-    window.addEventListener("resize", () => this.measure(layout), listenerOptions);
+    window.addEventListener("scroll", () => this.measure(), listenerOptions);
+    window.addEventListener("resize", () => this.measure(), listenerOptions);
 
-    const resizeObserver: ResizeObserver = new ResizeObserver(() => this.measure(layout));
-    resizeObserver.observe(layout.root);
-    Array.from(layout.root.children).forEach((child: Element) => resizeObserver.observe(child));
+    const resizeObserver: ResizeObserver = new ResizeObserver(() => this.measure());
+    resizeObserver.observe(document.documentElement);
 
     this.destroyRef.onDestroy(() => {
       abortController.abort();
@@ -165,48 +125,35 @@ export class ScrollStateService {
     });
   }
 
-  private measure(layout: ScrollLayout): void {
-    const scrollingElement: Element | null = document.scrollingElement;
-    if (scrollingElement === null) {
-      throw new Error("Expected the document to have a scrolling element");
-    }
-
-    const openingStart: number = ScrollStateService.getDocumentTop(layout.openingPinWrapper);
-
-    this.measurement.set({
-      openingStart,
-      openingEnd: openingStart + layout.openingSpacer.getBoundingClientRect().height,
-      closingStart: ScrollStateService.getDocumentTop(layout.closingPinWrapper),
-      scrollHeight: scrollingElement.scrollHeight,
-      blockTopByAddressPath: new Map<string, number>(
-        Array.from(layout.blockByAddressPath, ([addressPath, block]: [string, HTMLElement]) => [
-          addressPath,
-          ScrollStateService.getDocumentTop(block),
-        ]),
-      ),
-      closingAddressPath: layout.closingAddressPath,
-      scrollPosition: window.scrollY,
-      viewportHeight: window.innerHeight,
+  public scrollToLandingEdge(): void {
+    window.scrollTo({
+      top:
+        this.landingEdge() === PageEdge.End
+          ? getScrollingElement().scrollHeight
+          : PAGE_START_SCROLL_POSITION,
+      behavior: "instant",
     });
   }
 
-  private static getDocumentTop(element: HTMLElement): number {
-    return element.getBoundingClientRect().top + window.scrollY;
+  private measure(): void {
+    this.measurement.set({
+      scrollPosition: window.scrollY,
+      maximumScrollPosition: Math.max(
+        getScrollingElement().scrollHeight - window.innerHeight,
+        PAGE_START_SCROLL_POSITION,
+      ),
+    });
   }
 
-  private static getRangeProgress({
-    scrollPosition,
-    start,
-    end,
-  }: GetRangeProgressParameters): number {
-    if (scrollPosition >= end) {
-      return MAXIMUM_PROGRESS;
+  private getPageBackgroundMotion(): BackgroundMotion {
+    const backgroundMotion: unknown =
+      this.activatedRoute.snapshot.firstChild?.data[RouteDataKey.BackgroundMotion];
+    if (!isBackgroundMotion(backgroundMotion)) {
+      throw new Error(
+        `Expected the active home page route to declare its background motion, but got [${backgroundMotion}]`,
+      );
     }
 
-    if (scrollPosition <= start) {
-      return MINIMUM_PROGRESS;
-    }
-
-    return (scrollPosition - start) / (end - start);
+    return backgroundMotion;
   }
 }

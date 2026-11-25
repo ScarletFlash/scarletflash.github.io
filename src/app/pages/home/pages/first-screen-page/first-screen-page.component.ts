@@ -16,7 +16,7 @@ import { TextRouletteComponent } from "../../components/text-roulette/text-roule
   templateUrl: "./first-screen-page.component.html",
   encapsulation: ViewEncapsulation.None,
   host: {
-    class: "flex grow flex-col items-center justify-center py-5",
+    class: "block",
   },
 })
 export class FirstScreenPageComponent {
