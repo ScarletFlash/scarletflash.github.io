@@ -3,6 +3,7 @@ import { Observable, Subject } from "rxjs";
 import { VectorXYZ, WheelEventState, WheelGestures } from "wheel-gestures";
 import { KeyboardKey } from "../../declarations/enums/keyboard-key.enum";
 import { PageDirection } from "../../declarations/enums/page-direction.enum";
+import { PageNavigationInformation } from "../../declarations/interfaces/page-navigation-information.interface";
 import { ScrollMeasurement } from "../../declarations/interfaces/scroll-measurement.interface";
 import { getScrollMeasurement } from "../../utilities/get-scroll-measurement.utility";
 import { isAtPageEnd } from "../../utilities/is-at-page-end.utility";
@@ -23,6 +24,11 @@ const PAGE_DIRECTION_BY_KEY: ReadonlyMap<string, PageDirection> = new Map<string
   [KeyboardKey.Home, PageDirection.Previous],
 ]);
 
+interface TouchSample {
+  readonly clientY: number;
+  readonly timeStamp: DOMHighResTimeStamp;
+}
+
 interface GetPushedDirectionParameters {
   readonly requestedDirection: PageDirection | null;
   readonly measurement: ScrollMeasurement;
@@ -32,15 +38,18 @@ interface GetPushedDirectionParameters {
 export class PageEdgeGestureService {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-  private readonly edgePushes: Subject<PageDirection> = new Subject<PageDirection>();
+  private readonly edgePushes: Subject<PageNavigationInformation> =
+    new Subject<PageNavigationInformation>();
 
-  public readonly pushes: Observable<PageDirection> = this.edgePushes.asObservable();
+  public readonly pushes: Observable<PageNavigationInformation> = this.edgePushes.asObservable();
 
   private readonly activeTouchIdentifier: WritableSignal<number | null> = signal(null);
 
   private readonly touchEdgeAnchorY: WritableSignal<number | null> = signal(null);
 
   private readonly isTouchPushConsumed: WritableSignal<boolean> = signal(false);
+
+  private readonly lastTouchSample: WritableSignal<TouchSample | null> = signal(null);
 
   public observe(): void {
     const abortController: AbortController = new AbortController();
@@ -55,12 +64,13 @@ export class PageEdgeGestureService {
     });
     const removeWheelGestureListener: VoidFunction = wheelGestures.on(
       "wheel",
-      ({ axisDelta, event }: WheelEventState) => {
+      ({ isStart, axisDelta, axisVelocity, event }: WheelEventState) => {
         if (event.ctrlKey === true) {
           return;
         }
 
         const [, verticalDelta]: VectorXYZ = axisDelta;
+        const [, verticalVelocity]: VectorXYZ = axisVelocity;
         const pushedDirection: PageDirection | null = PageEdgeGestureService.getPushedDirection({
           requestedDirection: PageEdgeGestureService.getRequestedDirection(verticalDelta),
           measurement: getScrollMeasurement(),
@@ -69,7 +79,10 @@ export class PageEdgeGestureService {
           return;
         }
 
-        this.edgePushes.next(pushedDirection);
+        this.edgePushes.next({
+          direction: pushedDirection,
+          velocityPixelsPerMillisecond: isStart ? null : Math.abs(verticalVelocity),
+        });
       },
     );
     wheelGestures.observe(window);
@@ -89,6 +102,7 @@ export class PageEdgeGestureService {
         this.activeTouchIdentifier.set(startedTouch.identifier);
         this.touchEdgeAnchorY.set(null);
         this.isTouchPushConsumed.set(false);
+        this.lastTouchSample.set({ clientY: startedTouch.clientY, timeStamp: event.timeStamp });
       },
       listenerOptions,
     );
@@ -100,6 +114,12 @@ export class PageEdgeGestureService {
           return;
         }
 
+        const previousTouchSample: TouchSample | null = this.lastTouchSample();
+        if (previousTouchSample === null) {
+          throw new Error("Expected a touch start to record the first sample of the active touch");
+        }
+
+        this.lastTouchSample.set({ clientY: activeTouch.clientY, timeStamp: event.timeStamp });
         const measurement: ScrollMeasurement = getScrollMeasurement();
         if (!isAtPageStart(measurement) && !isAtPageEnd(measurement)) {
           this.touchEdgeAnchorY.set(null);
@@ -122,7 +142,14 @@ export class PageEdgeGestureService {
         }
 
         this.isTouchPushConsumed.set(true);
-        this.edgePushes.next(pushedDirection);
+        this.edgePushes.next({
+          direction: pushedDirection,
+          velocityPixelsPerMillisecond:
+            event.timeStamp > previousTouchSample.timeStamp
+              ? Math.abs(activeTouch.clientY - previousTouchSample.clientY) /
+                (event.timeStamp - previousTouchSample.timeStamp)
+              : null,
+        });
       },
       listenerOptions,
     );
@@ -161,7 +188,7 @@ export class PageEdgeGestureService {
         }
 
         event.preventDefault();
-        this.edgePushes.next(pushedDirection);
+        this.edgePushes.next({ direction: pushedDirection, velocityPixelsPerMillisecond: null });
       },
       { signal: abortController.signal },
     );
