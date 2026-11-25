@@ -227,6 +227,9 @@ importers:
       tslib:
         specifier: ^2.9.1
         version: 2.9.1
+      wheel-gestures:
+        specifier: ^2.3.0
+        version: 2.3.0
     devDependencies:
       '@angular/build':
         specifier: ^22.3.0
@@ -2846,6 +2849,10 @@ packages:
   web-vitals@6.2.3:
     resolution: {integrity: sha512-Dmy+vdO1UPMqXiAtZSNayhl4f794Bxfd94W4HIj2HlYtczEQfEOon969memlcpcHrTuOKLa5baFjX7WbgmOq+A==}
 
+  wheel-gestures@2.3.0:
+    resolution: {integrity: sha512-6b+PIXuKIy0ibVnF04GoijGKGIDwjlYSK7bCgicuQwPLivfjoLeCCK0bwbjyOdrStDTNPlyGFixIj0d0kZzwiQ==}
+    engines: {node: '>=18'}
+
   wrap-ansi@10.0.2:
     resolution: {integrity: sha512-6OLRNZqRntVGBm26ghZ5eZhCuWWyOkRCSn8XsOIuq5stpCE/tjLbdozd93naILZig0lmD8ANfRwnhn0DLeXGlg==}
     engines: {node: '>=20'}
@@ -5153,6 +5160,8 @@ snapshots:
   web-vitals@6.2.1: {}
 
   web-vitals@6.2.3: {}
+
+  wheel-gestures@2.3.0: {}
 
   wrap-ansi@10.0.2:
     dependencies:
