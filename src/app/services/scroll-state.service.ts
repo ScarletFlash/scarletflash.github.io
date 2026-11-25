@@ -94,6 +94,10 @@ export class ScrollStateService {
     () => FULL_AUTO_MOVEMENT_SPEED_FACTOR - this.openingTiltProgress(),
   );
 
+  public readonly isOpeningAligned: Signal<boolean> = computed(
+    () => this.openingTiltProgress() === MAXIMUM_PROGRESS,
+  );
+
   public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(() => {
     const { scrollPosition, openingEnd, closingStart }: ScrollMeasurement =
       this.observedMeasurement();

@@ -108,6 +108,14 @@ export class HomeComponent {
     () => this.revealPhase() === RevealPhase.Fallback,
   );
 
+  private readonly isScrollStateSynchronized: WritableSignal<boolean> = signal(false);
+
+  protected readonly isFirstScreenAligned: Signal<boolean> = computed(() =>
+    this.isScrollStateSynchronized()
+      ? this.scrollStateService.isOpeningAligned()
+      : this.routerAddressPath() !== this.firstScreenAddressPath,
+  );
+
   constructor() {
     this.router.events
       .pipe(
@@ -174,6 +182,7 @@ export class HomeComponent {
   }
 
   private startAddressSynchronization(): void {
+    this.isScrollStateSynchronized.set(true);
     toObservable(this.scrollStateService.currentAddressPath, { injector: this.injector })
       .pipe(
         throttleTime(ADDRESS_NAVIGATION_THROTTLE_TIME_MILLISECONDS, asyncScheduler, {
