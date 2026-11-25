@@ -25,7 +25,10 @@
 
   <div #openingPinWrapper>
     <section class="sticky top-0 flex min-h-svh flex-col">
-      <router-outlet [name]="homeOutletName.FirstScreen" />
+      <router-outlet
+        [name]="homeOutletName.FirstScreen"
+        [routerOutletData]="isFirstScreenAligned()"
+      />
     </section>
 
     <div #openingSpacer class="h-svh" aria-hidden="true"></div>
