@@ -1,4 +1,4 @@
-import { DestroyRef, Service, computed, inject, signal, type Signal, type WritableSignal } from '@angular/core';
+import { DestroyRef, Service, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter } from 'rxjs';
@@ -26,21 +26,21 @@ const NO_PAGE_SLIDE_DISTANCE = 0;
 
 @Service({ autoProvided: false })
 export class ScrollStateService {
-  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
-  private readonly router: Router = inject(Router);
+  private readonly router = inject(Router);
 
-  private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private readonly measurement: WritableSignal<ScrollMeasurement | null> = signal(null);
+  private readonly measurement = signal<ScrollMeasurement | null>(null);
 
-  private readonly backgroundMotion: WritableSignal<BackgroundMotion> = signal(this.getPageBackgroundMotion());
+  private readonly backgroundMotion = signal(this.getPageBackgroundMotion());
 
-  private readonly navigationDirection: WritableSignal<PageDirection | null> = signal(null);
+  private readonly navigationDirection = signal<PageDirection | null>(null);
 
-  private readonly landingContentScrollDistance: WritableSignal<number> = signal(NO_CONTENT_SCROLL_DISTANCE);
+  private readonly landingContentScrollDistance = signal(NO_CONTENT_SCROLL_DISTANCE);
 
-  public readonly landingEdge: Signal<PageEdge> = computed(() => {
+  public readonly landingEdge = computed(() => {
     const navigationDirection = this.navigationDirection();
     if (navigationDirection !== null) {
       return navigationDirection === PageDirection.Previous ? PageEdge.End : PageEdge.Start;
@@ -49,7 +49,7 @@ export class ScrollStateService {
     return this.backgroundMotion() === BackgroundMotion.Closing ? PageEdge.End : PageEdge.Start;
   });
 
-  private readonly observedMeasurement: Signal<ScrollMeasurement> = computed(() => {
+  private readonly observedMeasurement = computed(() => {
     const measurement = this.measurement();
     if (measurement === null) {
       throw new Error('Expected ScrollStateService.observe to be called before the scroll state is read');
@@ -58,11 +58,11 @@ export class ScrollStateService {
     return measurement;
   });
 
-  private readonly landingScrollPosition: Signal<number> = computed(() =>
+  private readonly landingScrollPosition = computed(() =>
     this.landingEdge() === PageEdge.End ? this.observedMeasurement().maximumScrollPosition : PAGE_START_SCROLL_POSITION
   );
 
-  private readonly pageScrollProgress: Signal<number> = computed(() => {
+  private readonly pageScrollProgress = computed(() => {
     const measurement = this.observedMeasurement();
     if (isAtPageEnd(measurement)) {
       return MAXIMUM_PROGRESS;
@@ -75,25 +75,23 @@ export class ScrollStateService {
     });
   });
 
-  private readonly openingTiltProgress: Signal<number> = computed(() =>
+  private readonly openingTiltProgress = computed(() =>
     this.backgroundMotion() === BackgroundMotion.Opening ? this.pageScrollProgress() : MAXIMUM_PROGRESS
   );
 
-  private readonly closingTiltProgress: Signal<number> = computed(() =>
+  private readonly closingTiltProgress = computed(() =>
     this.backgroundMotion() === BackgroundMotion.Closing ? this.pageScrollProgress() : MINIMUM_PROGRESS
   );
 
-  public readonly tilt: Signal<number> = computed(
-    () => FLOOR_TILT - this.openingTiltProgress() - this.closingTiltProgress()
-  );
+  public readonly tilt = computed(() => FLOOR_TILT - this.openingTiltProgress() - this.closingTiltProgress());
 
-  public readonly autoMovementSpeedFactor: Signal<number> = computed(
+  public readonly autoMovementSpeedFactor = computed(
     () => FULL_AUTO_MOVEMENT_SPEED_FACTOR - this.openingTiltProgress()
   );
 
-  public readonly isOpeningAligned: Signal<boolean> = computed(() => this.openingTiltProgress() === MAXIMUM_PROGRESS);
+  public readonly isOpeningAligned = computed(() => this.openingTiltProgress() === MAXIMUM_PROGRESS);
 
-  public readonly contentScrollDistanceAfterAlignment: Signal<number> = computed(
+  public readonly contentScrollDistanceAfterAlignment = computed(
     () =>
       this.landingContentScrollDistance() +
       (this.backgroundMotion() === BackgroundMotion.Content

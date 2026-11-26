@@ -1,12 +1,11 @@
 import { type ErrorHandler } from '@angular/core';
-import { debounce } from '@tanstack/pacer';
+import { Debouncer } from '@tanstack/pacer';
 import {
   cubicBezier,
   easeOut,
   interpolate,
   motionValue,
   springValue,
-  type EasingFunction,
   type MotionValue,
   type SingleTransformer,
   type SpringOptions
@@ -27,6 +26,7 @@ import { PointerType } from '../../../declarations/enums/pointer-type.enum';
 import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
 import { type BackgroundWave } from '../../../declarations/interfaces/background-wave.interface';
 import { type RectSize } from '../../../declarations/types/rect-size.type';
+import { type TupleOfLength } from '../../../declarations/types/tuple-of-length.type';
 import { getReducedMotionMediaQueryList } from '../../../utilities/get-reduced-motion-media-query-list.utility';
 import { isArrayOfLength } from '../../../utilities/is-array-of-length.utility';
 import { BackgroundFillMaterial } from './background-fill.material';
@@ -41,6 +41,7 @@ import { WAVE_SLOT_COUNT } from './wave-slot-count';
 
 const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT = 1;
 const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS = 250;
+const MAXIMUM_PIXEL_RATIO = 2;
 const ACCENT_COLOR_PROPERTY_NAME = '--accent-color';
 const FLOAT_COLOR_BUFFER_EXTENSION_NAME = 'EXT_color_buffer_float';
 const STROKE_WIDTH = 10;
@@ -63,7 +64,7 @@ const NO_POINTER_RELEASE_TIME_STAMP = Infinity;
 const NO_PRESS_START_TIME_STAMP = Infinity;
 const PRIMARY_BUTTON = 0;
 const NO_PRESS_DURATION_MILLISECONDS = 0;
-const CHARGE_EASING: EasingFunction = cubicBezier(0.25, 1, 0.5, 1);
+const CHARGE_EASING = cubicBezier(0.25, 1, 0.5, 1);
 const NO_DENT_STRENGTH = 0;
 const FULL_DENT_STRENGTH = 1;
 const DENT_SPRING_OPTIONS: SpringOptions = {
@@ -141,6 +142,21 @@ export class BackgroundScene {
 
   private readonly waveLifetimeMilliseconds: number;
 
+  private readonly resizeDebouncer = new Debouncer(
+    (entries: ResizeObserverEntry[]) => {
+      if (!isArrayOfLength(entries, EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT)) {
+        throw new Error(
+          `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`
+        );
+      }
+
+      const [observedEntry]: TupleOfLength<ResizeObserverEntry, typeof EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT> =
+        entries;
+      this.resize(observedEntry.contentRect);
+    },
+    { wait: RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS }
+  );
+
   private readonly resizeObserver: ResizeObserver;
 
   private readonly disposalController = new AbortController();
@@ -157,12 +173,9 @@ export class BackgroundScene {
 
   private readonly getDentStrength: SingleTransformer<number, number>;
 
-  private readonly targetDentStrengthMotionValue: MotionValue<number> = motionValue(NO_DENT_STRENGTH);
+  private readonly targetDentStrengthMotionValue = motionValue(NO_DENT_STRENGTH);
 
-  private readonly springDentStrengthMotionValue: MotionValue<number> = springValue(
-    this.targetDentStrengthMotionValue,
-    DENT_SPRING_OPTIONS
-  );
+  private readonly springDentStrengthMotionValue = springValue(this.targetDentStrengthMotionValue, DENT_SPRING_OPTIONS);
 
   private readonly dentCenter = new Vector2();
 
@@ -279,22 +292,10 @@ export class BackgroundScene {
 
     this.timer.connect(ownerDocument);
 
-    this.resizeObserver = new ResizeObserver(
-      debounce(
-        (entries: ResizeObserverEntry[]) => {
-          if (!isArrayOfLength(entries, EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT)) {
-            throw new Error(
-              `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`
-            );
-          }
-
-          this.resize(entries[0].contentRect);
-        },
-        { wait: RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS }
-      )
-    );
+    this.resizeObserver = new ResizeObserver(this.resizeDebouncer.maybeExecute);
     this.resizeObserver.observe(host, { box: 'border-box' });
     this.resize(this.getCanvasBounds());
+    this.observePixelRatioChange();
 
     const inputListenerOptions: AddEventListenerOptions = {
       passive: true,
@@ -328,7 +329,11 @@ export class BackgroundScene {
     window.addEventListener(
       'touchstart',
       (event: TouchEvent) => {
-        const startedTouch = event.changedTouches[0];
+        const startedTouch = event.changedTouches.item(0);
+        if (startedTouch === null) {
+          return;
+        }
+
         this.activeTouchIdentifier = startedTouch.identifier;
         this.trackPointer(startedTouch);
       },
@@ -530,6 +535,7 @@ export class BackgroundScene {
   public dispose(): void {
     this.disposalController.abort();
     this.resizeObserver.disconnect();
+    this.resizeDebouncer.cancel();
     this.timer.dispose();
     this.springTiltMotionValue.destroy();
     this.targetTiltMotionValue.destroy();
@@ -562,8 +568,24 @@ export class BackgroundScene {
   }
 
   private resize(size: RectSize): void {
+    this.applyPixelRatio();
     this.renderer.setSize(size.width, size.height);
     this.planeNodes.setSize(size);
+  }
+
+  private applyPixelRatio(): void {
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, MAXIMUM_PIXEL_RATIO));
+  }
+
+  private observePixelRatioChange(): void {
+    window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`).addEventListener(
+      'change',
+      () => {
+        this.applyPixelRatio();
+        this.observePixelRatioChange();
+      },
+      { once: true, signal: this.disposalController.signal }
+    );
   }
 
   private getCanvasBounds(): DOMRect {

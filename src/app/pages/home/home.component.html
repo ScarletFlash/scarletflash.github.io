@@ -1,17 +1,7 @@
 <section
   #root
   class="select-none"
-  [class.opacity-100]="!isContentHidden()"
-  [class.visible]="!isContentHidden()"
-  [class.transition-[opacity,visibility]]="!isContentHidden()"
-  [class.duration-500]="!isContentHidden()"
-  [class.motion-reduce:duration-0]="!isContentHidden()"
-  [class.delay-5000]="isFallbackRevealApplied()"
-  [class.starting:opacity-0]="isFallbackRevealApplied()"
-  [class.starting:invisible]="isFallbackRevealApplied()"
-  [class.opacity-0]="isContentHidden()"
-  [class.invisible]="isContentHidden()"
-  [class.transition-none]="isContentHidden()"
+  [class]="revealPhaseClasses()"
 >
   @defer (on idle) {
     <app-background

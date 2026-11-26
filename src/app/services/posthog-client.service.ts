@@ -7,7 +7,7 @@ import type * as PosthogModule from 'posthog-js';
 export class PosthogClientService {
   private readonly platformIdentifier: object = inject(PLATFORM_ID);
 
-  public readonly client: Promise<PostHog | null> = Promise.resolve(null);
+  public readonly client = Promise.resolve<PostHog | null>(null);
 
   constructor() {
     if (isDevMode()) {

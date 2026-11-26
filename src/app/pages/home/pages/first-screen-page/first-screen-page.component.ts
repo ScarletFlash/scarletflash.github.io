@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, computed, inject, type Signal } from '@angular/core';
+import { Component, ViewEncapsulation, computed, inject } from '@angular/core';
 import { ROUTER_OUTLET_DATA } from '@angular/router';
 import { AvatarComponent } from '../../components/avatar/avatar.component';
 import { ContactsComponent } from '../../components/contacts/contacts.component';
@@ -15,9 +15,9 @@ import { TextRouletteComponent } from '../../components/text-roulette/text-roule
   }
 })
 export class FirstScreenPageComponent {
-  private readonly routerOutletData: Signal<unknown> = inject(ROUTER_OUTLET_DATA);
+  private readonly routerOutletData = inject(ROUTER_OUTLET_DATA);
 
-  protected readonly isFirstScreenAligned: Signal<boolean> = computed(() => {
+  protected readonly isFirstScreenAligned = computed(() => {
     const firstScreenAlignment = this.routerOutletData();
     if (typeof firstScreenAlignment !== 'boolean') {
       throw new Error(

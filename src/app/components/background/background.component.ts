@@ -65,7 +65,7 @@ export class BackgroundComponent {
 
   public readonly contentScrollDistance = input.required<Signal<number>>();
 
-  private readonly canvas: Signal<ElementRef<HTMLCanvasElement>> = viewChild.required('canvas');
+  private readonly canvas = viewChild.required<ElementRef<HTMLCanvasElement>>('canvas');
 
   private readonly componentElementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -125,8 +125,8 @@ export class BackgroundComponent {
       maximum: MAXIMUM_ACUTE_ANGLE_DEGREES
     });
 
-    const errorHandler: ErrorHandler = inject(ErrorHandler);
-    const destroyRef: DestroyRef = inject(DestroyRef);
+    const errorHandler = inject(ErrorHandler);
+    const destroyRef = inject(DestroyRef);
 
     afterNextRender(() => {
       const backgroundScene = new BackgroundScene({

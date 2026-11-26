@@ -6,7 +6,7 @@ const SITE_TITLE = 'Fedor Usakov';
 
 @Service({ autoProvided: false })
 export class SiteTitleStrategy extends TitleStrategy {
-  private readonly title: Title = inject(Title);
+  private readonly title = inject(Title);
 
   public override updateTitle(snapshot: RouterStateSnapshot): void {
     const pageTitle = this.buildTitle(snapshot);

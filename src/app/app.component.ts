@@ -12,7 +12,7 @@ import { UrlTagCaptureService } from './services/url-tag-capture.service';
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-  private readonly urlTagCaptureService: UrlTagCaptureService = inject(UrlTagCaptureService);
+  private readonly urlTagCaptureService = inject(UrlTagCaptureService);
 
   constructor() {
     inject(Router)
