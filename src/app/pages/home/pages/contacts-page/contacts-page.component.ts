@@ -7,10 +7,10 @@ import { Component, ViewEncapsulation } from '@angular/core';
       <h2 class="p-5">Contacts</h2>
     </section>
 
-    <div
+    <section
       class="h-svh"
       aria-hidden="true"
-    ></div>
+    ></section>
   `,
   encapsulation: ViewEncapsulation.None,
   host: {
