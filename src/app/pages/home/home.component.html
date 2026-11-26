@@ -1,5 +1,6 @@
 <section
   #root
+  class="select-none"
   [class.opacity-100]="!isContentHidden()"
   [class.visible]="!isContentHidden()"
   [class.transition-[opacity,visibility]]="!isContentHidden()"
@@ -35,7 +36,7 @@
     />
   }
 
-  <div class="[:active-view-transition_&]:[view-transition-name:home-page]">
+  <section class="in-[:active-view-transition]:[view-transition-name:home-page]">
     <router-outlet [routerOutletData]="isFirstScreenAligned()" />
-  </div>
+  </section>
 </section>
