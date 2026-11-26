@@ -16,14 +16,13 @@ import {
   FloatType,
   MathUtils,
   NearestFilter,
+  QuadMesh,
+  RenderTarget,
   Timer,
   Vector2,
-  WebGLRenderTarget,
-  WebGLRenderer,
+  WebGPURenderer,
   type RenderTargetOptions
-} from 'three';
-// eslint-disable-next-line import-x/extensions
-import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
+} from 'three/webgpu';
 import { PointerType } from '../../../declarations/enums/pointer-type.enum';
 import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
 import { type BackgroundWave } from '../../../declarations/interfaces/background-wave.interface';
@@ -31,7 +30,8 @@ import { type RectSize } from '../../../declarations/types/rect-size.type';
 import { getReducedMotionMediaQueryList } from '../../../utilities/get-reduced-motion-media-query-list.utility';
 import { isArrayOfLength } from '../../../utilities/is-array-of-length.utility';
 import { BackgroundFillMaterial } from './background-fill.material';
-import { BackgroundMaterial } from './background.material';
+import { BackgroundGridPass } from './background-grid-pass';
+import { BackgroundPlaneNodes } from './background-plane-nodes';
 import { FILL_STATE_CELL_ROW_COUNT } from './fill-state-cell-row-count';
 import { FILL_STATE_CELLS_PER_TEXEL } from './fill-state-cells-per-texel';
 import { FILL_STATE_COLUMN_COUNT } from './fill-state-column-count';
@@ -115,27 +115,35 @@ interface ClientPoint {
 }
 
 export class BackgroundScene {
-  private readonly renderer: WebGLRenderer;
+  private readonly renderer: WebGPURenderer;
 
-  private readonly material: BackgroundMaterial;
+  private readonly planeNodes = new BackgroundPlaneNodes(CELL_SIZE);
 
-  private readonly quad: FullScreenQuad;
+  private readonly gridPass: BackgroundGridPass;
 
   private readonly fillMaterial: BackgroundFillMaterial;
 
-  private readonly fillQuad: FullScreenQuad;
+  private readonly fillQuad: QuadMesh;
 
-  private fillStateSourceTarget: WebGLRenderTarget;
+  private fillStateSourceTarget = new RenderTarget(
+    FILL_STATE_COLUMN_COUNT,
+    FILL_STATE_TEXEL_ROW_COUNT,
+    FILL_STATE_TARGET_OPTIONS
+  );
 
-  private fillStateDestinationTarget: WebGLRenderTarget;
+  private fillStateDestinationTarget = this.fillStateSourceTarget.clone();
 
-  private readonly isFillStateRenderable: boolean;
+  private isRendererInitialized = false;
+
+  private isFillStateRenderable = false;
+
+  private readonly errorHandler: ErrorHandler;
 
   private readonly waveLifetimeMilliseconds: number;
 
   private readonly resizeObserver: ResizeObserver;
 
-  private readonly inputListenersController = new AbortController();
+  private readonly disposalController = new AbortController();
 
   private readonly timer = new Timer();
 
@@ -205,7 +213,8 @@ export class BackgroundScene {
     const ownerDocument = canvas.ownerDocument;
     const waveFillFadeDurationMilliseconds = cellFadeDurationMilliseconds / cellWaveFillFadeSpeedFactor;
 
-    this.renderer = new WebGLRenderer({
+    this.errorHandler = errorHandler;
+    this.renderer = new WebGPURenderer({
       powerPreference: 'low-power',
       antialias: false,
       stencil: false,
@@ -214,12 +223,13 @@ export class BackgroundScene {
       alpha: true
     });
 
-    this.material = new BackgroundMaterial({
+    this.gridPass = new BackgroundGridPass({
+      planeNodes: this.planeNodes,
+      fillState: this.fillStateDestinationTarget.texture,
       strokeColor: new Color(
         getComputedStyle(ownerDocument.documentElement).getPropertyValue(ACCENT_COLOR_PROPERTY_NAME).trim()
       ),
       strokeWidth: STROKE_WIDTH,
-      cellSize: CELL_SIZE,
       dentDepth: cellDentDepth,
       dentRadiusFraction: cellDentRadiusFraction,
       dentShading: cellDentShading,
@@ -230,33 +240,14 @@ export class BackgroundScene {
       waveFillFadeDurationMilliseconds,
       waveReachCellCount: cellWaveReachCellCount
     });
-    this.quad = new FullScreenQuad(this.material);
 
     this.fillMaterial = new BackgroundFillMaterial({
-      planeUniforms: this.material.planeUniforms,
-      pointerUniforms: this.material.pointerUniforms,
+      planeNodes: this.planeNodes,
+      previousFillState: this.fillStateSourceTarget.texture,
       cellFillDurationMilliseconds,
       cellFadeDurationMilliseconds
     });
-    this.fillQuad = new FullScreenQuad(this.fillMaterial);
-
-    this.fillStateSourceTarget = new WebGLRenderTarget(
-      FILL_STATE_COLUMN_COUNT,
-      FILL_STATE_TEXEL_ROW_COUNT,
-      FILL_STATE_TARGET_OPTIONS
-    );
-    this.fillStateDestinationTarget = this.fillStateSourceTarget.clone();
-    this.renderer.initRenderTarget(this.fillStateSourceTarget);
-    this.renderer.initRenderTarget(this.fillStateDestinationTarget);
-
-    this.isFillStateRenderable = this.renderer.extensions.has(FLOAT_COLOR_BUFFER_EXTENSION_NAME);
-    if (!this.isFillStateRenderable) {
-      errorHandler.handleError(
-        new Error(
-          `Expected the [${FLOAT_COLOR_BUFFER_EXTENSION_NAME}] WebGL extension to fill grid cells, but the browser does not support it`
-        )
-      );
-    }
+    this.fillQuad = new QuadMesh(this.fillMaterial);
 
     this.waveLifetimeMilliseconds = Math.max(
       cellWaveReachCellCount * cellWaveStepDurationMilliseconds + cellWaveFadeDurationMilliseconds,
@@ -304,14 +295,10 @@ export class BackgroundScene {
     );
     this.resizeObserver.observe(host, { box: 'border-box' });
     this.resize(this.getCanvasBounds());
-    this.material.renderEachShaderVariant(() => {
-      this.quad.render(this.renderer);
-    });
-    this.renderer.clear();
 
     const inputListenerOptions: AddEventListenerOptions = {
       passive: true,
-      signal: this.inputListenersController.signal
+      signal: this.disposalController.signal
     };
     window.addEventListener(
       'pointerdown',
@@ -436,6 +423,29 @@ export class BackgroundScene {
     );
   }
 
+  public async initialize(): Promise<void> {
+    await this.renderer.init();
+    if (this.disposalController.signal.aborted) {
+      this.disposeRenderer();
+      return;
+    }
+
+    this.isRendererInitialized = true;
+    this.renderer.initRenderTarget(this.fillStateSourceTarget);
+    this.renderer.initRenderTarget(this.fillStateDestinationTarget);
+    this.isFillStateRenderable = this.isFloatColorBufferSupported();
+    if (!this.isFillStateRenderable) {
+      this.errorHandler.handleError(
+        new Error(
+          `Expected the [${FLOAT_COLOR_BUFFER_EXTENSION_NAME}] WebGL extension to fill grid cells, but the browser does not support it`
+        )
+      );
+    }
+
+    this.gridPass.renderEachGlowScope(this.renderer);
+    this.renderer.clear();
+  }
+
   public renderFrame({
     timeStamp,
     targetTilt,
@@ -478,13 +488,15 @@ export class BackgroundScene {
       rowShift: Math.floor(gridDistance / CELL_SIZE)
     };
 
-    this.material.setFrameState({
+    this.planeNodes.setFrameState({
       ...planeState,
+      isPointerPresent,
+      pointerPosition: this.pointerPosition
+    });
+    this.gridPass.setFrameState({
       fillState: this.fillStateDestinationTarget.texture,
       dentCenter: this.dentCenter,
       dentStrength: isReducedMotionPreferred ? NO_DENT_STRENGTH : this.springDentStrengthMotionValue.get(),
-      isPointerPresent,
-      pointerPosition: this.pointerPosition,
       timeStamp,
       chargeLevel,
       chargeHeightLevel: isReducedMotionPreferred ? FULL_ENERGY : chargeLevel,
@@ -504,7 +516,7 @@ export class BackgroundScene {
       this.fillQuad.render(this.renderer);
     }
     this.renderer.setRenderTarget(null);
-    this.quad.render(this.renderer);
+    this.gridPass.render(this.renderer);
 
     [this.fillStateSourceTarget, this.fillStateDestinationTarget] = [
       this.fillStateDestinationTarget,
@@ -516,25 +528,42 @@ export class BackgroundScene {
   }
 
   public dispose(): void {
-    this.inputListenersController.abort();
+    this.disposalController.abort();
     this.resizeObserver.disconnect();
     this.timer.dispose();
     this.springTiltMotionValue.destroy();
     this.targetTiltMotionValue.destroy();
     this.springDentStrengthMotionValue.destroy();
     this.targetDentStrengthMotionValue.destroy();
-    this.fillQuad.dispose();
     this.fillMaterial.dispose();
     this.fillStateSourceTarget.dispose();
     this.fillStateDestinationTarget.dispose();
-    this.quad.dispose();
-    this.material.dispose();
-    this.renderer.dispose();
+    this.gridPass.dispose();
+    if (!this.isRendererInitialized) {
+      return;
+    }
+
+    this.disposeRenderer();
+  }
+
+  private disposeRenderer(): void {
+    this.renderer.dispose().catch((error: unknown) => {
+      this.errorHandler.handleError(error);
+    });
+  }
+
+  private isFloatColorBufferSupported(): boolean {
+    const context = this.renderer.getContext();
+    if (!(context instanceof WebGL2RenderingContext)) {
+      return true;
+    }
+
+    return context.getExtension(FLOAT_COLOR_BUFFER_EXTENSION_NAME) !== null;
   }
 
   private resize(size: RectSize): void {
     this.renderer.setSize(size.width, size.height);
-    this.material.setSize(size);
+    this.planeNodes.setSize(size);
   }
 
   private getCanvasBounds(): DOMRect {

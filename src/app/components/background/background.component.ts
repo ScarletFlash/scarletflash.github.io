@@ -12,7 +12,7 @@ import {
   type Signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { animationFrames } from 'rxjs';
+import { animationFrames, from, switchMap } from 'rxjs';
 import { BackgroundScene } from './background-scene';
 
 const enum AttributeName {
@@ -150,15 +150,23 @@ export class BackgroundComponent {
         errorHandler
       });
 
-      animationFrames()
-        .pipe(takeUntilDestroyed(destroyRef))
-        .subscribe((animationFrame: AnimationFrame) => {
-          backgroundScene.renderFrame({
-            timeStamp: animationFrame.timestamp,
-            targetTilt: this.tilt()(),
-            autoMovementSpeedFactor: this.autoMovementSpeedFactor()(),
-            contentScrollDistance: this.contentScrollDistance()()
-          });
+      from(backgroundScene.initialize())
+        .pipe(
+          switchMap(() => animationFrames()),
+          takeUntilDestroyed(destroyRef)
+        )
+        .subscribe({
+          next: (animationFrame: AnimationFrame) => {
+            backgroundScene.renderFrame({
+              timeStamp: animationFrame.timestamp,
+              targetTilt: this.tilt()(),
+              autoMovementSpeedFactor: this.autoMovementSpeedFactor()(),
+              contentScrollDistance: this.contentScrollDistance()()
+            });
+          },
+          error: (error: unknown) => {
+            errorHandler.handleError(error);
+          }
         });
 
       destroyRef.onDestroy(() => {
