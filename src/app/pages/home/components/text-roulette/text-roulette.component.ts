@@ -17,10 +17,10 @@ import {
   type ElementRef,
   type Signal
 } from '@angular/core';
-import { getDebounced } from '../../../../../utilities/get-debounced.utility';
+import { debounce } from '@tanstack/pacer';
 import { TextRouletteAnimatedItemComponent } from '../text-roulette-animated-item/text-roulette-animated-item.component';
 
-const SELECTION_DEBOUNCE_TIME_MS = 100;
+const SELECTION_DEBOUNCE_TIME_MILLISECONDS = 100;
 
 interface GetValueByIndexParams {
   source: Signal<string[]>;
@@ -68,6 +68,29 @@ export class TextRouletteComponent {
 
   private readonly renderer: Renderer2 = inject(Renderer2);
 
+  private readonly debouncedSelectionEventHandler: (event: unknown) => void = debounce(
+    (event: unknown) => {
+      if (!(event instanceof Event)) {
+        throw new Error(`Expected event to be an instance of Event`);
+      }
+
+      const currentSelection = window.getSelection();
+      if (currentSelection === null || currentSelection.toString() === '') {
+        this.isSelectionTarget.set(false);
+        return;
+      }
+
+      const dynamicValuesContainer = this.dynamicValuesContainer();
+
+      const isContainerSelected = Array.from({ length: currentSelection.rangeCount }, (_: unknown, index: number) =>
+        currentSelection.getRangeAt(index)
+      ).some((range: Range) => range.intersectsNode(dynamicValuesContainer.nativeElement));
+
+      this.isSelectionTarget.set(isContainerSelected);
+    },
+    { wait: SELECTION_DEBOUNCE_TIME_MILLISECONDS }
+  );
+
   constructor() {
     const rawSwapFrequencyMs = inject(new HostAttributeToken('swap-frequency'));
 
@@ -104,26 +127,6 @@ export class TextRouletteComponent {
       });
     });
   }
-
-  private readonly debouncedSelectionEventHandler: (event: unknown) => void = getDebounced((event: unknown) => {
-    if (!(event instanceof Event)) {
-      throw new Error(`Expected event to be an instance of Event`);
-    }
-
-    const currentSelection = window.getSelection();
-    if (currentSelection === null || currentSelection.toString() === '') {
-      this.isSelectionTarget.set(false);
-      return;
-    }
-
-    const dynamicValuesContainer = this.dynamicValuesContainer();
-
-    const isContainerSelected = Array.from({ length: currentSelection.rangeCount }, (_: unknown, index: number) =>
-      currentSelection.getRangeAt(index)
-    ).some((range: Range) => range.intersectsNode(dynamicValuesContainer.nativeElement));
-
-    this.isSelectionTarget.set(isContainerSelected);
-  }, SELECTION_DEBOUNCE_TIME_MS);
 
   private rotateValues(): void {
     const isSelectionTarget = this.isSelectionTarget();

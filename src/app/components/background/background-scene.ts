@@ -1,4 +1,5 @@
 import { type ErrorHandler } from '@angular/core';
+import { debounce } from '@tanstack/pacer';
 import {
   cubicBezier,
   easeOut,
@@ -26,7 +27,6 @@ import { PointerType } from '../../../declarations/enums/pointer-type.enum';
 import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
 import { type BackgroundWave } from '../../../declarations/interfaces/background-wave.interface';
 import { type RectSize } from '../../../declarations/types/rect-size.type';
-import { getDebounced } from '../../../utilities/get-debounced.utility';
 import { getReducedMotionMediaQueryList } from '../../../utilities/get-reduced-motion-media-query-list.utility';
 import { isArrayOfLength } from '../../../utilities/is-array-of-length.utility';
 import { BackgroundFillMaterial } from './background-fill.material';
@@ -288,15 +288,18 @@ export class BackgroundScene {
     this.timer.connect(ownerDocument);
 
     this.resizeObserver = new ResizeObserver(
-      getDebounced<ResizeObserverCallback>((entries: ResizeObserverEntry[]) => {
-        if (!isArrayOfLength(entries, EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT)) {
-          throw new Error(
-            `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`
-          );
-        }
+      debounce(
+        (entries: ResizeObserverEntry[]) => {
+          if (!isArrayOfLength(entries, EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT)) {
+            throw new Error(
+              `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`
+            );
+          }
 
-        this.resize(entries[0].contentRect);
-      }, RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS)
+          this.resize(entries[0].contentRect);
+        },
+        { wait: RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS }
+      )
     );
     this.resizeObserver.observe(host, { box: 'border-box' });
     this.resize(this.getCanvasBounds());
