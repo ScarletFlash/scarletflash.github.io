@@ -1,4 +1,4 @@
-import { type Vector2 } from 'three';
+import { type Vector2 } from 'three/webgpu';
 import { type BackgroundPlaneState } from './background-plane-state.interface';
 
 export interface BackgroundWave {

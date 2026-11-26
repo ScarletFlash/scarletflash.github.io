@@ -1,0 +1,1 @@
+export const MINIMUM_INVERSE_DEPTH_RATIO = 0.001;
