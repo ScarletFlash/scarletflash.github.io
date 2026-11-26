@@ -17,7 +17,7 @@
     "linter__fix": "ng lint --quiet --cache --cache-strategy content --fix",
     "formatter__check": "prettier --config .prettierrc.mjs --ignore-path .prettierignore --cache --cache-location .prettiercache --cache-strategy content --check .",
     "formatter__fix": "prettier --config .prettierrc.mjs --ignore-path .prettierignore --cache --cache-location .prettiercache --cache-strategy content --write .",
-    "spell-checker__check": "cspell lint --config .cspell.json --cache --cache-location .cspellcache --no-progress .",
+    "spell-checker__check": "cspell lint --config .cspell.json --cache --no-progress .",
     "dependencies-checker__check": "knip --strict --cache --cache-location .knipcache",
     "prettier": "prettier",
     "turbo": "turbo --color --no-update-notifier",
