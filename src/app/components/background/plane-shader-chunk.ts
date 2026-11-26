@@ -21,7 +21,13 @@ const int FILL_STATE_CELLS_PER_TEXEL = ${FILL_STATE_CELLS_PER_TEXEL};
 struct PlanePoint {
     vec2 gridPosition;
     float visibility;
+    float depthRatio;
+    vec3 cameraPosition;
 };
+
+float getDepthVisibility(float depthRatio) {
+    return 1.0 - smoothstep(FADE_START_DEPTH_RATIO, FADE_END_DEPTH_RATIO, depthRatio);
+}
 
 PlanePoint getPlanePoint(vec2 canvasPosition, float planeTilt, float planeGridOffset) {
     vec2 halfCanvasSize = ${BackgroundPlaneUniformName.CanvasSize} * 0.5;
@@ -34,13 +40,20 @@ PlanePoint getPlanePoint(vec2 canvasPosition, float planeTilt, float planeGridOf
     float depthRatio = 1.0 / max(inverseDepthRatio, MINIMUM_INVERSE_DEPTH_RATIO);
 
     vec2 planePosition = vec2(screenPosition.x, screenPosition.y / cos(angle)) * depthRatio;
-    float fadeFactor = 1.0 - smoothstep(FADE_START_DEPTH_RATIO, FADE_END_DEPTH_RATIO, depthRatio);
 
-    return PlanePoint(planePosition + vec2(0.0, planeGridOffset), fadeFactor * planeHitFactor);
+    return PlanePoint(
+        planePosition + vec2(0.0, planeGridOffset),
+        getDepthVisibility(depthRatio) * planeHitFactor,
+        depthRatio,
+        vec3(0.0, planeGridOffset - cameraDistance * sin(angle), cameraDistance * cos(angle))
+    );
+}
+
+vec2 getShiftedCellIndex(vec2 gridPosition, float planeRowShift) {
+    return floor(gridPosition / ${BackgroundPlaneUniformName.CellSize}) + vec2(0.0, planeRowShift);
 }
 
 ivec2 getFillStateCell(vec2 gridPosition, float planeRowShift) {
-    vec2 cellIndex = floor(gridPosition / ${BackgroundPlaneUniformName.CellSize}) + vec2(0.0, planeRowShift);
-    return ivec2(mod(cellIndex, vec2(FILL_STATE_CELL_GRID_SIZE)));
+    return ivec2(mod(getShiftedCellIndex(gridPosition, planeRowShift), vec2(FILL_STATE_CELL_GRID_SIZE)));
 }
 `;

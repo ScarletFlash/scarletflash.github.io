@@ -22,34 +22,35 @@ import {
   WebGLRenderTarget,
 } from "three";
 import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
-import { BackgroundPlaneUniformName } from "../../../declarations/enums/background-plane-uniform-name.enum";
 import { PointerType } from "../../../declarations/enums/pointer-type.enum";
+import { BackgroundPlaneState } from "../../../declarations/interfaces/background-plane-state.interface";
 import { BackgroundWave } from "../../../declarations/interfaces/background-wave.interface";
 import { RectSize } from "../../../declarations/types/rect-size.type";
 import { getDebounced } from "../../../utilities/get-debounced.utility";
 import { getReducedMotionMediaQueryList } from "../../../utilities/get-reduced-motion-media-query-list.utility";
 import { isArrayOfLength } from "../../../utilities/is-array-of-length.utility";
 import { BackgroundFillMaterial } from "./background-fill.material";
-import { BackgroundWaveMaterial } from "./background-wave.material";
 import { BackgroundMaterial } from "./background.material";
 import { FILL_STATE_CELL_ROW_COUNT } from "./fill-state-cell-row-count";
 import { FILL_STATE_CELLS_PER_TEXEL } from "./fill-state-cells-per-texel";
 import { FILL_STATE_COLUMN_COUNT } from "./fill-state-column-count";
+import { FULL_ENERGY } from "./full-energy";
+import { NO_ENERGY } from "./no-energy";
 import { WAVE_SLOT_COUNT } from "./wave-slot-count";
 
 const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT: 1 = 1;
 const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS: number = 250;
 const ACCENT_COLOR_PROPERTY_NAME: string = "--accent-color";
 const FLOAT_COLOR_BUFFER_EXTENSION_NAME: string = "EXT_color_buffer_float";
-const WAVE_COLOR: string = "#ffffff";
 const STROKE_WIDTH: number = 10;
 const CELL_SIZE: number = 100;
 const FILL_STATE_REPEAT_DISTANCE: number = CELL_SIZE * FILL_STATE_CELL_ROW_COUNT;
 const FILL_STATE_TEXEL_ROW_COUNT: number = FILL_STATE_CELL_ROW_COUNT / FILL_STATE_CELLS_PER_TEXEL;
-const CELL_STATE_TARGET_OPTIONS: RenderTargetOptions = {
+const FILL_STATE_TARGET_OPTIONS: RenderTargetOptions = {
   minFilter: NearestFilter,
   magFilter: NearestFilter,
   depthBuffer: false,
+  type: FloatType,
 };
 const MILLISECONDS_PER_SECOND: number = 1000;
 const STOPPED_AUTO_MOVEMENT_SPEED_FACTOR: number = 0;
@@ -58,10 +59,9 @@ const TILT_SPRING_STIFFNESS: number = 120;
 const TILT_SPRING_DAMPING: number = 14;
 const TILT_SPRING_MASS: number = 1;
 const NO_POINTER_RELEASE_TIME_STAMP: number = Infinity;
+const NO_PRESS_START_TIME_STAMP: number = Infinity;
 const PRIMARY_BUTTON: number = 0;
 const NO_PRESS_DURATION_MILLISECONDS: number = 0;
-const NO_CHARGE_LEVEL: number = 0;
-const FULL_CHARGE_LEVEL: number = 1;
 const CHARGE_EASING: EasingFunction = cubicBezier(0.25, 1, 0.5, 1);
 const NO_DENT_STRENGTH: number = 0;
 const FULL_DENT_STRENGTH: number = 1;
@@ -75,6 +75,11 @@ const MINIMUM_FLASHING_WAVE_INTERVAL_MILLISECONDS: number =
   MILLISECONDS_PER_SECOND / MAXIMUM_FLASHES_PER_SECOND;
 const MAXIMUM_NON_FLASHING_WAVE_POWER: number = 0.35;
 const NO_FLASHING_WAVE_TIME_STAMP: number = -Infinity;
+const INITIAL_PLANE_STATE: BackgroundPlaneState = {
+  tilt: 0,
+  gridOffset: 0,
+  rowShift: 0,
+};
 
 interface BackgroundSceneParameters {
   readonly canvas: HTMLCanvasElement;
@@ -86,12 +91,13 @@ interface BackgroundSceneParameters {
   readonly cellWaveStepDurationMilliseconds: number;
   readonly cellWaveFadeDurationMilliseconds: number;
   readonly cellWaveReachCellCount: number;
-  readonly cellWaveBurstRadiusCellCount: number;
-  readonly cellWaveBurstBrightness: number;
+  readonly cellWaveFillFadeSpeedFactor: number;
   readonly cellDentDurationMilliseconds: number;
   readonly cellDentRadiusFraction: number;
   readonly cellDentDepth: number;
   readonly cellDentShading: number;
+  readonly cellGlowHeightFraction: number;
+  readonly cellGlowLeanDegrees: number;
   readonly initialTargetTilt: number;
   readonly errorHandler: ErrorHandler;
 }
@@ -124,16 +130,6 @@ export class BackgroundScene {
   private fillStateDestinationTarget: WebGLRenderTarget;
 
   private readonly isFillStateRenderable: boolean;
-
-  private readonly waveMaterial: BackgroundWaveMaterial;
-
-  private readonly waveQuad: FullScreenQuad;
-
-  private readonly waveStateTarget: WebGLRenderTarget = new WebGLRenderTarget(
-    FILL_STATE_COLUMN_COUNT,
-    FILL_STATE_TEXEL_ROW_COUNT,
-    CELL_STATE_TARGET_OPTIONS,
-  );
 
   private readonly waveLifetimeMilliseconds: number;
 
@@ -175,11 +171,17 @@ export class BackgroundScene {
 
   private activeTouchIdentifier: number | null = null;
 
-  private pressStartTimeStamp: DOMHighResTimeStamp | null = null;
+  private pressStartTimeStamp: DOMHighResTimeStamp = NO_PRESS_START_TIME_STAMP;
 
   private lastFlashingWaveTimeStamp: DOMHighResTimeStamp = NO_FLASHING_WAVE_TIME_STAMP;
 
   private waves: readonly BackgroundWave[] = [];
+
+  private readonly previousPointerPosition: Vector2 = new Vector2();
+
+  private isPreviousPointerPresent: boolean = false;
+
+  private lastRenderedPlaneState: BackgroundPlaneState = INITIAL_PLANE_STATE;
 
   constructor({
     canvas,
@@ -191,16 +193,19 @@ export class BackgroundScene {
     cellWaveStepDurationMilliseconds,
     cellWaveFadeDurationMilliseconds,
     cellWaveReachCellCount,
-    cellWaveBurstRadiusCellCount,
-    cellWaveBurstBrightness,
+    cellWaveFillFadeSpeedFactor,
     cellDentDurationMilliseconds,
     cellDentRadiusFraction,
     cellDentDepth,
     cellDentShading,
+    cellGlowHeightFraction,
+    cellGlowLeanDegrees,
     initialTargetTilt,
     errorHandler,
   }: BackgroundSceneParameters) {
     const ownerDocument: Document = canvas.ownerDocument;
+    const waveFillFadeDurationMilliseconds: number =
+      cellFadeDurationMilliseconds / cellWaveFillFadeSpeedFactor;
 
     this.renderer = new WebGLRenderer({
       powerPreference: "low-power",
@@ -219,16 +224,21 @@ export class BackgroundScene {
       ),
       strokeWidth: STROKE_WIDTH,
       cellSize: CELL_SIZE,
-      waveState: this.waveStateTarget.texture,
-      waveColor: new Color(WAVE_COLOR),
       dentDepth: cellDentDepth,
       dentRadiusFraction: cellDentRadiusFraction,
       dentShading: cellDentShading,
+      glowHeight: cellGlowHeightFraction * CELL_SIZE,
+      glowLeanTangent: Math.tan(MathUtils.degToRad(cellGlowLeanDegrees)),
+      waveStepDurationMilliseconds: cellWaveStepDurationMilliseconds,
+      waveFadeDurationMilliseconds: cellWaveFadeDurationMilliseconds,
+      waveFillFadeDurationMilliseconds,
+      waveReachCellCount: cellWaveReachCellCount,
     });
     this.quad = new FullScreenQuad(this.material);
 
     this.fillMaterial = new BackgroundFillMaterial({
       planeUniforms: this.material.planeUniforms,
+      pointerUniforms: this.material.pointerUniforms,
       cellFillDurationMilliseconds,
       cellFadeDurationMilliseconds,
     });
@@ -237,7 +247,7 @@ export class BackgroundScene {
     this.fillStateSourceTarget = new WebGLRenderTarget(
       FILL_STATE_COLUMN_COUNT,
       FILL_STATE_TEXEL_ROW_COUNT,
-      { ...CELL_STATE_TARGET_OPTIONS, type: FloatType },
+      FILL_STATE_TARGET_OPTIONS,
     );
     this.fillStateDestinationTarget = this.fillStateSourceTarget.clone();
     this.renderer.initRenderTarget(this.fillStateSourceTarget);
@@ -252,18 +262,10 @@ export class BackgroundScene {
       );
     }
 
-    this.waveMaterial = new BackgroundWaveMaterial({
-      planeUniforms: this.material.planeUniforms,
-      pointerUniforms: this.fillMaterial.pointerUniforms,
-      stepDurationMilliseconds: cellWaveStepDurationMilliseconds,
-      fadeDurationMilliseconds: cellWaveFadeDurationMilliseconds,
-      reachCellCount: cellWaveReachCellCount,
-      burstRadiusCellCount: cellWaveBurstRadiusCellCount,
-      burstBrightness: cellWaveBurstBrightness,
-    });
-    this.waveQuad = new FullScreenQuad(this.waveMaterial);
-    this.waveLifetimeMilliseconds =
-      cellWaveReachCellCount * cellWaveStepDurationMilliseconds + cellWaveFadeDurationMilliseconds;
+    this.waveLifetimeMilliseconds = Math.max(
+      cellWaveReachCellCount * cellWaveStepDurationMilliseconds + cellWaveFadeDurationMilliseconds,
+      cellWaveStepDurationMilliseconds + waveFillFadeDurationMilliseconds,
+    );
 
     this.targetTiltMotionValue = motionValue(initialTargetTilt);
     this.springTiltMotionValue = springValue(this.targetTiltMotionValue, {
@@ -274,7 +276,7 @@ export class BackgroundScene {
 
     this.getChargeLevel = interpolate(
       [NO_PRESS_DURATION_MILLISECONDS, cellChargeDurationMilliseconds],
-      [NO_CHARGE_LEVEL, FULL_CHARGE_LEVEL],
+      [NO_ENERGY, FULL_ENERGY],
       { ease: CHARGE_EASING },
     );
     this.getDentStrength = interpolate(
@@ -303,6 +305,8 @@ export class BackgroundScene {
     );
     this.resizeObserver.observe(host, { box: "border-box" });
     this.resize(this.getCanvasBounds());
+    this.material.renderEachShaderVariant(() => this.quad.render(this.renderer));
+    this.renderer.clear();
 
     const inputListenerOptions: AddEventListenerOptions = {
       passive: true,
@@ -374,13 +378,13 @@ export class BackgroundScene {
     window.addEventListener(
       "pointerup",
       (event: PointerEvent) => {
-        if (!event.isPrimary || this.pressStartTimeStamp === null) {
+        if (!event.isPrimary || this.pressStartTimeStamp === NO_PRESS_START_TIME_STAMP) {
           return;
         }
 
         const releaseTimeStamp: DOMHighResTimeStamp = performance.now();
         const chargeLevel: number = this.getChargeLevel(releaseTimeStamp - this.pressStartTimeStamp);
-        this.pressStartTimeStamp = null;
+        this.pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
         if (this.reducedMotionMediaQueryList.matches) {
           return;
         }
@@ -398,11 +402,7 @@ export class BackgroundScene {
         this.waves = this.waves
           .concat({
             pointerPosition: this.getCanvasPosition(event),
-            planeState: {
-              tilt: this.material.planeUniforms[BackgroundPlaneUniformName.Tilt].value,
-              gridOffset: this.material.planeUniforms[BackgroundPlaneUniformName.GridOffset].value,
-              rowShift: this.material.planeUniforms[BackgroundPlaneUniformName.RowShift].value,
-            },
+            planeState: this.lastRenderedPlaneState,
             power,
             timeStamp: releaseTimeStamp,
           })
@@ -417,14 +417,14 @@ export class BackgroundScene {
           return;
         }
 
-        this.pressStartTimeStamp = null;
+        this.pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
       },
       inputListenerOptions,
     );
     window.addEventListener(
       "blur",
       () => {
-        this.pressStartTimeStamp = null;
+        this.pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
       },
       inputListenerOptions,
     );
@@ -456,47 +456,53 @@ export class BackgroundScene {
     );
     const isPointerPresent: boolean =
       this.isPointerPresent && timeStamp - elapsedTimeMilliseconds < this.pointerReleaseTimeStamp;
-    const pressDurationMilliseconds: number =
-      this.pressStartTimeStamp === null
-        ? NO_PRESS_DURATION_MILLISECONDS
-        : timeStamp - this.pressStartTimeStamp;
+    const isPressed: boolean = this.pressStartTimeStamp !== NO_PRESS_START_TIME_STAMP;
+    const pressDurationMilliseconds: number = isPressed
+      ? timeStamp - this.pressStartTimeStamp
+      : NO_PRESS_DURATION_MILLISECONDS;
+    const chargeLevel: number = this.getChargeLevel(pressDurationMilliseconds);
 
     this.targetDentStrengthMotionValue.set(this.getDentStrength(pressDurationMilliseconds));
-    if (this.pressStartTimeStamp !== null && isPointerPresent) {
+    if (isPressed && isPointerPresent) {
       this.dentCenter.copy(this.pointerPosition);
     }
     this.waves = this.waves.filter(
       (wave: BackgroundWave) => timeStamp - wave.timeStamp < this.waveLifetimeMilliseconds,
     );
 
-    this.material.setFrameState({
+    const planeState: BackgroundPlaneState = {
       tilt: isReducedMotionPreferred ? targetTilt : this.springTiltMotionValue.get(),
       gridOffset: gridDistance % CELL_SIZE,
       rowShift: Math.floor(gridDistance / CELL_SIZE),
+    };
+
+    this.material.setFrameState({
+      ...planeState,
       fillState: this.fillStateDestinationTarget.texture,
       dentCenter: this.dentCenter,
       dentStrength: isReducedMotionPreferred
         ? NO_DENT_STRENGTH
         : this.springDentStrengthMotionValue.get(),
+      isPointerPresent,
+      pointerPosition: this.pointerPosition,
+      timeStamp,
+      chargeLevel,
+      chargeHeightLevel: isReducedMotionPreferred ? FULL_ENERGY : chargeLevel,
+      waves: this.waves,
     });
     this.fillMaterial.setFrameState({
       elapsedTimeMilliseconds,
-      isPointerPresent,
-      pointerPosition: this.pointerPosition,
       previousFillState: this.fillStateSourceTarget.texture,
-    });
-    this.waveMaterial.setFrameState({
-      timeStamp,
-      chargeLevel: this.getChargeLevel(pressDurationMilliseconds),
-      waves: this.waves,
+      isPressed,
+      previousPointerPosition: this.previousPointerPosition,
+      isPreviousPointerPresent: this.isPreviousPointerPresent,
+      previousPlaneState: this.lastRenderedPlaneState,
     });
 
     if (this.isFillStateRenderable) {
       this.renderer.setRenderTarget(this.fillStateDestinationTarget);
       this.fillQuad.render(this.renderer);
     }
-    this.renderer.setRenderTarget(this.waveStateTarget);
-    this.waveQuad.render(this.renderer);
     this.renderer.setRenderTarget(null);
     this.quad.render(this.renderer);
 
@@ -504,6 +510,9 @@ export class BackgroundScene {
       this.fillStateDestinationTarget,
       this.fillStateSourceTarget,
     ];
+    this.previousPointerPosition.copy(this.pointerPosition);
+    this.isPreviousPointerPresent = isPointerPresent;
+    this.lastRenderedPlaneState = planeState;
   }
 
   public dispose(): void {
@@ -518,9 +527,6 @@ export class BackgroundScene {
     this.fillMaterial.dispose();
     this.fillStateSourceTarget.dispose();
     this.fillStateDestinationTarget.dispose();
-    this.waveQuad.dispose();
-    this.waveMaterial.dispose();
-    this.waveStateTarget.dispose();
     this.quad.dispose();
     this.material.dispose();
     this.renderer.dispose();

@@ -21,6 +21,10 @@ PointerCell getPointerCell(vec2 canvasPosition, float planeTilt, float planeGrid
     );
 }
 
+PointerCell getPointerCellAtPlaneState(vec2 canvasPosition, vec3 planeState) {
+    return getPointerCell(canvasPosition, planeState.x, planeState.y, planeState.z);
+}
+
 PointerCell getCurrentPointerCell() {
     PointerCell pointerCell = getPointerCell(
         ${BackgroundPointerUniformName.Position},

@@ -24,17 +24,20 @@ const enum AttributeName {
   CellWaveStepDuration = "cell-wave-step-duration",
   CellWaveFadeDuration = "cell-wave-fade-duration",
   CellWaveReach = "cell-wave-reach",
-  CellWaveBurstRadius = "cell-wave-burst-radius",
-  CellWaveBurstBrightness = "cell-wave-burst-brightness",
+  CellWaveFillFadeSpeed = "cell-wave-fill-fade-speed",
   CellDentDuration = "cell-dent-duration",
   CellDentRadius = "cell-dent-radius",
   CellDentDepth = "cell-dent-depth",
   CellDentShading = "cell-dent-shading",
+  CellGlowHeight = "cell-glow-height",
+  CellGlowLean = "cell-glow-lean",
 }
 
 const MINIMUM_NON_NEGATIVE_INTEGER: number = 0;
 const MINIMUM_POSITIVE_INTEGER: number = 1;
 const FULL_PERCENT: number = 100;
+const UNLIMITED_PERCENT: number = Infinity;
+const MAXIMUM_ACUTE_ANGLE_DEGREES: number = 89;
 
 interface AnimationFrame {
   readonly timestamp: DOMHighResTimeStamp;
@@ -44,6 +47,11 @@ interface InjectIntegerAttributeParameters {
   readonly attributeName: AttributeName;
   readonly minimum: number;
   readonly maximum?: number;
+}
+
+interface InjectPercentAttributeParameters {
+  readonly attributeName: AttributeName;
+  readonly maximumPercent?: number;
 }
 
 @Component({
@@ -93,26 +101,32 @@ export class BackgroundComponent {
       attributeName: AttributeName.CellWaveReach,
       minimum: MINIMUM_POSITIVE_INTEGER,
     });
-    const cellWaveBurstRadiusCellCount: number = BackgroundComponent.injectIntegerAttribute({
-      attributeName: AttributeName.CellWaveBurstRadius,
-      minimum: MINIMUM_POSITIVE_INTEGER,
+    const cellWaveFillFadeSpeedFactor: number = BackgroundComponent.injectPercentAttribute({
+      attributeName: AttributeName.CellWaveFillFadeSpeed,
+      maximumPercent: UNLIMITED_PERCENT,
     });
-    const cellWaveBurstBrightness: number = BackgroundComponent.injectPercentAttribute(
-      AttributeName.CellWaveBurstBrightness,
-    );
     const cellDentDurationMilliseconds: number = BackgroundComponent.injectIntegerAttribute({
       attributeName: AttributeName.CellDentDuration,
       minimum: MINIMUM_POSITIVE_INTEGER,
     });
-    const cellDentRadiusFraction: number = BackgroundComponent.injectPercentAttribute(
-      AttributeName.CellDentRadius,
-    );
-    const cellDentDepth: number = BackgroundComponent.injectPercentAttribute(
-      AttributeName.CellDentDepth,
-    );
-    const cellDentShading: number = BackgroundComponent.injectPercentAttribute(
-      AttributeName.CellDentShading,
-    );
+    const cellDentRadiusFraction: number = BackgroundComponent.injectPercentAttribute({
+      attributeName: AttributeName.CellDentRadius,
+    });
+    const cellDentDepth: number = BackgroundComponent.injectPercentAttribute({
+      attributeName: AttributeName.CellDentDepth,
+    });
+    const cellDentShading: number = BackgroundComponent.injectPercentAttribute({
+      attributeName: AttributeName.CellDentShading,
+    });
+    const cellGlowHeightFraction: number = BackgroundComponent.injectPercentAttribute({
+      attributeName: AttributeName.CellGlowHeight,
+      maximumPercent: UNLIMITED_PERCENT,
+    });
+    const cellGlowLeanDegrees: number = BackgroundComponent.injectIntegerAttribute({
+      attributeName: AttributeName.CellGlowLean,
+      minimum: MINIMUM_POSITIVE_INTEGER,
+      maximum: MAXIMUM_ACUTE_ANGLE_DEGREES,
+    });
 
     const errorHandler: ErrorHandler = inject(ErrorHandler);
     const destroyRef: DestroyRef = inject(DestroyRef);
@@ -128,12 +142,13 @@ export class BackgroundComponent {
         cellWaveStepDurationMilliseconds,
         cellWaveFadeDurationMilliseconds,
         cellWaveReachCellCount,
-        cellWaveBurstRadiusCellCount,
-        cellWaveBurstBrightness,
+        cellWaveFillFadeSpeedFactor,
         cellDentDurationMilliseconds,
         cellDentRadiusFraction,
         cellDentDepth,
         cellDentShading,
+        cellGlowHeightFraction,
+        cellGlowLeanDegrees,
         initialTargetTilt: this.tilt()(),
         errorHandler,
       });
@@ -169,12 +184,15 @@ export class BackgroundComponent {
     return value;
   }
 
-  private static injectPercentAttribute(attributeName: AttributeName): number {
+  private static injectPercentAttribute({
+    attributeName,
+    maximumPercent = FULL_PERCENT,
+  }: InjectPercentAttributeParameters): number {
     return (
       BackgroundComponent.injectIntegerAttribute({
         attributeName,
         minimum: MINIMUM_POSITIVE_INTEGER,
-        maximum: FULL_PERCENT,
+        maximum: maximumPercent,
       }) / FULL_PERCENT
     );
   }
