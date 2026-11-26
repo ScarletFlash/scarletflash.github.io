@@ -44,6 +44,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "public/page-metadata/icons",
+                "output": "/"
               }
             ],
             "browser": "src/main.ts",
