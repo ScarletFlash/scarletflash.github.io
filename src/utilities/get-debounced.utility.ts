@@ -2,7 +2,7 @@ export function getDebounced<F extends (...params: any[]) => void>(
   originalFunction: F,
   delayMs: number
 ): (...params: Parameters<F>) => void {
-  let timeoutId: number = NaN;
+  let timeoutId = NaN;
 
   return (...params: Parameters<F>): void => {
     if (!Number.isNaN(timeoutId)) {

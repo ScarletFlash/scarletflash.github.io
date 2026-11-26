@@ -1,4 +1,4 @@
-import { BackgroundMotion } from "../declarations/enums/background-motion.enum";
+import { BackgroundMotion } from '../declarations/enums/background-motion.enum';
 
 const backgroundMotions: ReadonlySet<unknown> = new Set<unknown>(Object.values(BackgroundMotion));
 

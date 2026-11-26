@@ -1,4 +1,4 @@
-export const fillLevelShaderChunk: string = `
+export const fillLevelShaderChunk = `
 const float FILLING_STATE_OFFSET = 2.0;
 const float EMPTY_FILL = 0.0;
 const float FULL_FILL = 1.0;

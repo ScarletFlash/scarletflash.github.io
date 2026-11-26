@@ -1,84 +1,83 @@
-import { ErrorHandler } from "@angular/core";
+import { type ErrorHandler } from '@angular/core';
 import {
   cubicBezier,
-  EasingFunction,
   easeOut,
   interpolate,
-  MotionValue,
   motionValue,
-  SingleTransformer,
-  SpringOptions,
   springValue,
-} from "motion";
+  type EasingFunction,
+  type MotionValue,
+  type SingleTransformer,
+  type SpringOptions
+} from 'motion';
 import {
   Color,
   FloatType,
   MathUtils,
   NearestFilter,
-  RenderTargetOptions,
   Timer,
   Vector2,
-  WebGLRenderer,
   WebGLRenderTarget,
-} from "three";
-import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
-import { PointerType } from "../../../declarations/enums/pointer-type.enum";
-import { BackgroundPlaneState } from "../../../declarations/interfaces/background-plane-state.interface";
-import { BackgroundWave } from "../../../declarations/interfaces/background-wave.interface";
-import { RectSize } from "../../../declarations/types/rect-size.type";
-import { getDebounced } from "../../../utilities/get-debounced.utility";
-import { getReducedMotionMediaQueryList } from "../../../utilities/get-reduced-motion-media-query-list.utility";
-import { isArrayOfLength } from "../../../utilities/is-array-of-length.utility";
-import { BackgroundFillMaterial } from "./background-fill.material";
-import { BackgroundMaterial } from "./background.material";
-import { FILL_STATE_CELL_ROW_COUNT } from "./fill-state-cell-row-count";
-import { FILL_STATE_CELLS_PER_TEXEL } from "./fill-state-cells-per-texel";
-import { FILL_STATE_COLUMN_COUNT } from "./fill-state-column-count";
-import { FULL_ENERGY } from "./full-energy";
-import { NO_ENERGY } from "./no-energy";
-import { WAVE_SLOT_COUNT } from "./wave-slot-count";
+  WebGLRenderer,
+  type RenderTargetOptions
+} from 'three';
+import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
+import { PointerType } from '../../../declarations/enums/pointer-type.enum';
+import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
+import { type BackgroundWave } from '../../../declarations/interfaces/background-wave.interface';
+import { type RectSize } from '../../../declarations/types/rect-size.type';
+import { getDebounced } from '../../../utilities/get-debounced.utility';
+import { getReducedMotionMediaQueryList } from '../../../utilities/get-reduced-motion-media-query-list.utility';
+import { isArrayOfLength } from '../../../utilities/is-array-of-length.utility';
+import { BackgroundFillMaterial } from './background-fill.material';
+import { BackgroundMaterial } from './background.material';
+import { FILL_STATE_CELL_ROW_COUNT } from './fill-state-cell-row-count';
+import { FILL_STATE_CELLS_PER_TEXEL } from './fill-state-cells-per-texel';
+import { FILL_STATE_COLUMN_COUNT } from './fill-state-column-count';
+import { FULL_ENERGY } from './full-energy';
+import { NO_ENERGY } from './no-energy';
+import { WAVE_SLOT_COUNT } from './wave-slot-count';
 
-const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT: 1 = 1;
-const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS: number = 250;
-const ACCENT_COLOR_PROPERTY_NAME: string = "--accent-color";
-const FLOAT_COLOR_BUFFER_EXTENSION_NAME: string = "EXT_color_buffer_float";
-const STROKE_WIDTH: number = 10;
-const CELL_SIZE: number = 100;
-const FILL_STATE_REPEAT_DISTANCE: number = CELL_SIZE * FILL_STATE_CELL_ROW_COUNT;
-const FILL_STATE_TEXEL_ROW_COUNT: number = FILL_STATE_CELL_ROW_COUNT / FILL_STATE_CELLS_PER_TEXEL;
+const EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT = 1;
+const RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS = 250;
+const ACCENT_COLOR_PROPERTY_NAME = '--accent-color';
+const FLOAT_COLOR_BUFFER_EXTENSION_NAME = 'EXT_color_buffer_float';
+const STROKE_WIDTH = 10;
+const CELL_SIZE = 100;
+const FILL_STATE_REPEAT_DISTANCE = CELL_SIZE * FILL_STATE_CELL_ROW_COUNT;
+const FILL_STATE_TEXEL_ROW_COUNT = FILL_STATE_CELL_ROW_COUNT / FILL_STATE_CELLS_PER_TEXEL;
 const FILL_STATE_TARGET_OPTIONS: RenderTargetOptions = {
   minFilter: NearestFilter,
   magFilter: NearestFilter,
   depthBuffer: false,
-  type: FloatType,
+  type: FloatType
 };
-const MILLISECONDS_PER_SECOND: number = 1000;
-const STOPPED_AUTO_MOVEMENT_SPEED_FACTOR: number = 0;
-const STOPPED_AUTO_MOVEMENT_DISTANCE_PER_MILLISECOND: number = 0;
-const TILT_SPRING_STIFFNESS: number = 120;
-const TILT_SPRING_DAMPING: number = 14;
-const TILT_SPRING_MASS: number = 1;
-const NO_POINTER_RELEASE_TIME_STAMP: number = Infinity;
-const NO_PRESS_START_TIME_STAMP: number = Infinity;
-const PRIMARY_BUTTON: number = 0;
-const NO_PRESS_DURATION_MILLISECONDS: number = 0;
+const MILLISECONDS_PER_SECOND = 1000;
+const STOPPED_AUTO_MOVEMENT_SPEED_FACTOR = 0;
+const STOPPED_AUTO_MOVEMENT_DISTANCE_PER_MILLISECOND = 0;
+const TILT_SPRING_STIFFNESS = 120;
+const TILT_SPRING_DAMPING = 14;
+const TILT_SPRING_MASS = 1;
+const NO_POINTER_RELEASE_TIME_STAMP = Infinity;
+const NO_PRESS_START_TIME_STAMP = Infinity;
+const PRIMARY_BUTTON = 0;
+const NO_PRESS_DURATION_MILLISECONDS = 0;
 const CHARGE_EASING: EasingFunction = cubicBezier(0.25, 1, 0.5, 1);
-const NO_DENT_STRENGTH: number = 0;
-const FULL_DENT_STRENGTH: number = 1;
+const NO_DENT_STRENGTH = 0;
+const FULL_DENT_STRENGTH = 1;
 const DENT_SPRING_OPTIONS: SpringOptions = {
   stiffness: 300,
   damping: 12,
-  mass: 1,
+  mass: 1
 };
-const MAXIMUM_FLASHES_PER_SECOND: number = 3;
-const MINIMUM_FLASHING_WAVE_INTERVAL_MILLISECONDS: number =
-  MILLISECONDS_PER_SECOND / MAXIMUM_FLASHES_PER_SECOND;
-const MAXIMUM_NON_FLASHING_WAVE_POWER: number = 0.35;
-const NO_FLASHING_WAVE_TIME_STAMP: number = -Infinity;
+const MAXIMUM_FLASHES_PER_SECOND = 3;
+const MINIMUM_FLASHING_WAVE_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND / MAXIMUM_FLASHES_PER_SECOND;
+const MAXIMUM_NON_FLASHING_WAVE_POWER = 0.35;
+const NO_FLASHING_WAVE_TIME_STAMP = -Infinity;
 const INITIAL_PLANE_STATE: BackgroundPlaneState = {
   tilt: 0,
   gridOffset: 0,
-  rowShift: 0,
+  rowShift: 0
 };
 
 interface BackgroundSceneParameters {
@@ -135,11 +134,11 @@ export class BackgroundScene {
 
   private readonly resizeObserver: ResizeObserver;
 
-  private readonly inputListenersController: AbortController = new AbortController();
+  private readonly inputListenersController = new AbortController();
 
-  private readonly timer: Timer = new Timer();
+  private readonly timer = new Timer();
 
-  private readonly reducedMotionMediaQueryList: MediaQueryList = getReducedMotionMediaQueryList();
+  private readonly reducedMotionMediaQueryList = getReducedMotionMediaQueryList();
 
   private readonly targetTiltMotionValue: MotionValue<number>;
 
@@ -149,39 +148,38 @@ export class BackgroundScene {
 
   private readonly getDentStrength: SingleTransformer<number, number>;
 
-  private readonly targetDentStrengthMotionValue: MotionValue<number> =
-    motionValue(NO_DENT_STRENGTH);
+  private readonly targetDentStrengthMotionValue: MotionValue<number> = motionValue(NO_DENT_STRENGTH);
 
   private readonly springDentStrengthMotionValue: MotionValue<number> = springValue(
     this.targetDentStrengthMotionValue,
-    DENT_SPRING_OPTIONS,
+    DENT_SPRING_OPTIONS
   );
 
-  private readonly dentCenter: Vector2 = new Vector2();
+  private readonly dentCenter = new Vector2();
 
   private readonly autoMovementDistancePerMillisecond: number;
 
-  private autoMovementOffset: number = 0;
+  private autoMovementOffset = 0;
 
-  private readonly pointerPosition: Vector2 = new Vector2();
+  private readonly pointerPosition = new Vector2();
 
-  private isPointerPresent: boolean = false;
+  private isPointerPresent = false;
 
-  private pointerReleaseTimeStamp: DOMHighResTimeStamp = NO_POINTER_RELEASE_TIME_STAMP;
+  private pointerReleaseTimeStamp = NO_POINTER_RELEASE_TIME_STAMP;
 
   private activeTouchIdentifier: number | null = null;
 
-  private pressStartTimeStamp: DOMHighResTimeStamp = NO_PRESS_START_TIME_STAMP;
+  private pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
 
-  private lastFlashingWaveTimeStamp: DOMHighResTimeStamp = NO_FLASHING_WAVE_TIME_STAMP;
+  private lastFlashingWaveTimeStamp = NO_FLASHING_WAVE_TIME_STAMP;
 
   private waves: readonly BackgroundWave[] = [];
 
-  private readonly previousPointerPosition: Vector2 = new Vector2();
+  private readonly previousPointerPosition = new Vector2();
 
-  private isPreviousPointerPresent: boolean = false;
+  private isPreviousPointerPresent = false;
 
-  private lastRenderedPlaneState: BackgroundPlaneState = INITIAL_PLANE_STATE;
+  private lastRenderedPlaneState = INITIAL_PLANE_STATE;
 
   constructor({
     canvas,
@@ -201,26 +199,23 @@ export class BackgroundScene {
     cellGlowHeightFraction,
     cellGlowLeanDegrees,
     initialTargetTilt,
-    errorHandler,
+    errorHandler
   }: BackgroundSceneParameters) {
-    const ownerDocument: Document = canvas.ownerDocument;
-    const waveFillFadeDurationMilliseconds: number =
-      cellFadeDurationMilliseconds / cellWaveFillFadeSpeedFactor;
+    const ownerDocument = canvas.ownerDocument;
+    const waveFillFadeDurationMilliseconds = cellFadeDurationMilliseconds / cellWaveFillFadeSpeedFactor;
 
     this.renderer = new WebGLRenderer({
-      powerPreference: "low-power",
+      powerPreference: 'low-power',
       antialias: false,
       stencil: false,
       depth: true,
       canvas,
-      alpha: true,
+      alpha: true
     });
 
     this.material = new BackgroundMaterial({
       strokeColor: new Color(
-        getComputedStyle(ownerDocument.documentElement)
-          .getPropertyValue(ACCENT_COLOR_PROPERTY_NAME)
-          .trim(),
+        getComputedStyle(ownerDocument.documentElement).getPropertyValue(ACCENT_COLOR_PROPERTY_NAME).trim()
       ),
       strokeWidth: STROKE_WIDTH,
       cellSize: CELL_SIZE,
@@ -232,7 +227,7 @@ export class BackgroundScene {
       waveStepDurationMilliseconds: cellWaveStepDurationMilliseconds,
       waveFadeDurationMilliseconds: cellWaveFadeDurationMilliseconds,
       waveFillFadeDurationMilliseconds,
-      waveReachCellCount: cellWaveReachCellCount,
+      waveReachCellCount: cellWaveReachCellCount
     });
     this.quad = new FullScreenQuad(this.material);
 
@@ -240,14 +235,14 @@ export class BackgroundScene {
       planeUniforms: this.material.planeUniforms,
       pointerUniforms: this.material.pointerUniforms,
       cellFillDurationMilliseconds,
-      cellFadeDurationMilliseconds,
+      cellFadeDurationMilliseconds
     });
     this.fillQuad = new FullScreenQuad(this.fillMaterial);
 
     this.fillStateSourceTarget = new WebGLRenderTarget(
       FILL_STATE_COLUMN_COUNT,
       FILL_STATE_TEXEL_ROW_COUNT,
-      FILL_STATE_TARGET_OPTIONS,
+      FILL_STATE_TARGET_OPTIONS
     );
     this.fillStateDestinationTarget = this.fillStateSourceTarget.clone();
     this.renderer.initRenderTarget(this.fillStateSourceTarget);
@@ -257,32 +252,32 @@ export class BackgroundScene {
     if (!this.isFillStateRenderable) {
       errorHandler.handleError(
         new Error(
-          `Expected the [${FLOAT_COLOR_BUFFER_EXTENSION_NAME}] WebGL extension to fill grid cells, but the browser does not support it`,
-        ),
+          `Expected the [${FLOAT_COLOR_BUFFER_EXTENSION_NAME}] WebGL extension to fill grid cells, but the browser does not support it`
+        )
       );
     }
 
     this.waveLifetimeMilliseconds = Math.max(
       cellWaveReachCellCount * cellWaveStepDurationMilliseconds + cellWaveFadeDurationMilliseconds,
-      cellWaveStepDurationMilliseconds + waveFillFadeDurationMilliseconds,
+      cellWaveStepDurationMilliseconds + waveFillFadeDurationMilliseconds
     );
 
     this.targetTiltMotionValue = motionValue(initialTargetTilt);
     this.springTiltMotionValue = springValue(this.targetTiltMotionValue, {
       stiffness: TILT_SPRING_STIFFNESS,
       damping: TILT_SPRING_DAMPING,
-      mass: TILT_SPRING_MASS,
+      mass: TILT_SPRING_MASS
     });
 
     this.getChargeLevel = interpolate(
       [NO_PRESS_DURATION_MILLISECONDS, cellChargeDurationMilliseconds],
       [NO_ENERGY, FULL_ENERGY],
-      { ease: CHARGE_EASING },
+      { ease: CHARGE_EASING }
     );
     this.getDentStrength = interpolate(
       [NO_PRESS_DURATION_MILLISECONDS, cellDentDurationMilliseconds],
       [NO_DENT_STRENGTH, FULL_DENT_STRENGTH],
-      { ease: easeOut },
+      { ease: easeOut }
     );
 
     this.autoMovementDistancePerMillisecond =
@@ -296,34 +291,40 @@ export class BackgroundScene {
       getDebounced<ResizeObserverCallback>((entries: ResizeObserverEntry[]) => {
         if (!isArrayOfLength(entries, EXPECTED_RESIZE_OBSERVER_ENTRIES_COUNT)) {
           throw new Error(
-            `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`,
+            `Expected ResizeObserver to monitor only single element, but looks like it monitors [${entries.length}] elements`
           );
         }
 
         this.resize(entries[0].contentRect);
-      }, RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS),
+      }, RESIZE_OBSERVER_ENTRIES_DEBOUNCE_TIME_MILLISECONDS)
     );
-    this.resizeObserver.observe(host, { box: "border-box" });
+    this.resizeObserver.observe(host, { box: 'border-box' });
     this.resize(this.getCanvasBounds());
-    this.material.renderEachShaderVariant(() => this.quad.render(this.renderer));
+    this.material.renderEachShaderVariant(() => {
+      this.quad.render(this.renderer);
+    });
     this.renderer.clear();
 
     const inputListenerOptions: AddEventListenerOptions = {
       passive: true,
-      signal: this.inputListenersController.signal,
+      signal: this.inputListenersController.signal
     };
     window.addEventListener(
-      "pointerdown",
-      (event: PointerEvent) => this.trackMouseOrPen(event),
-      inputListenerOptions,
+      'pointerdown',
+      (event: PointerEvent) => {
+        this.trackMouseOrPen(event);
+      },
+      inputListenerOptions
     );
     window.addEventListener(
-      "pointermove",
-      (event: PointerEvent) => this.trackMouseOrPen(event),
-      inputListenerOptions,
+      'pointermove',
+      (event: PointerEvent) => {
+        this.trackMouseOrPen(event);
+      },
+      inputListenerOptions
     );
     ownerDocument.addEventListener(
-      "pointerout",
+      'pointerout',
       (event: PointerEvent) => {
         if (event.pointerType === PointerType.Touch || event.relatedTarget !== null) {
           return;
@@ -331,41 +332,45 @@ export class BackgroundScene {
 
         this.isPointerPresent = false;
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
     window.addEventListener(
-      "touchstart",
+      'touchstart',
       (event: TouchEvent) => {
-        const startedTouch: Touch = event.changedTouches[0];
+        const startedTouch = event.changedTouches[0];
         this.activeTouchIdentifier = startedTouch.identifier;
         this.trackPointer(startedTouch);
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
     window.addEventListener(
-      "touchmove",
+      'touchmove',
       (event: TouchEvent) => {
-        const activeTouch: Touch | undefined = this.getActiveTouch(event);
+        const activeTouch = this.getActiveTouch(event);
         if (activeTouch === undefined) {
           return;
         }
 
         this.trackPointer(activeTouch);
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
     window.addEventListener(
-      "touchend",
-      (event: TouchEvent) => this.releaseActiveTouch(event),
-      inputListenerOptions,
+      'touchend',
+      (event: TouchEvent) => {
+        this.releaseActiveTouch(event);
+      },
+      inputListenerOptions
     );
     window.addEventListener(
-      "touchcancel",
-      (event: TouchEvent) => this.releaseActiveTouch(event),
-      inputListenerOptions,
+      'touchcancel',
+      (event: TouchEvent) => {
+        this.releaseActiveTouch(event);
+      },
+      inputListenerOptions
     );
     window.addEventListener(
-      "pointerdown",
+      'pointerdown',
       (event: PointerEvent) => {
         if (!event.isPrimary || event.button !== PRIMARY_BUTTON) {
           return;
@@ -373,28 +378,25 @@ export class BackgroundScene {
 
         this.pressStartTimeStamp = performance.now();
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
     window.addEventListener(
-      "pointerup",
+      'pointerup',
       (event: PointerEvent) => {
         if (!event.isPrimary || this.pressStartTimeStamp === NO_PRESS_START_TIME_STAMP) {
           return;
         }
 
-        const releaseTimeStamp: DOMHighResTimeStamp = performance.now();
-        const chargeLevel: number = this.getChargeLevel(releaseTimeStamp - this.pressStartTimeStamp);
+        const releaseTimeStamp = performance.now();
+        const chargeLevel = this.getChargeLevel(releaseTimeStamp - this.pressStartTimeStamp);
         this.pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
         if (this.reducedMotionMediaQueryList.matches) {
           return;
         }
 
-        const isFlashingAllowed: boolean =
-          releaseTimeStamp - this.lastFlashingWaveTimeStamp >=
-          MINIMUM_FLASHING_WAVE_INTERVAL_MILLISECONDS;
-        const power: number = isFlashingAllowed
-          ? chargeLevel
-          : Math.min(chargeLevel, MAXIMUM_NON_FLASHING_WAVE_POWER);
+        const isFlashingAllowed =
+          releaseTimeStamp - this.lastFlashingWaveTimeStamp >= MINIMUM_FLASHING_WAVE_INTERVAL_MILLISECONDS;
+        const power = isFlashingAllowed ? chargeLevel : Math.min(chargeLevel, MAXIMUM_NON_FLASHING_WAVE_POWER);
         if (power > MAXIMUM_NON_FLASHING_WAVE_POWER) {
           this.lastFlashingWaveTimeStamp = releaseTimeStamp;
         }
@@ -404,14 +406,14 @@ export class BackgroundScene {
             pointerPosition: this.getCanvasPosition(event),
             planeState: this.lastRenderedPlaneState,
             power,
-            timeStamp: releaseTimeStamp,
+            timeStamp: releaseTimeStamp
           })
           .slice(-WAVE_SLOT_COUNT);
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
     window.addEventListener(
-      "pointercancel",
+      'pointercancel',
       (event: PointerEvent) => {
         if (!event.isPrimary) {
           return;
@@ -419,14 +421,14 @@ export class BackgroundScene {
 
         this.pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
     window.addEventListener(
-      "blur",
+      'blur',
       () => {
         this.pressStartTimeStamp = NO_PRESS_START_TIME_STAMP;
       },
-      inputListenerOptions,
+      inputListenerOptions
     );
   }
 
@@ -434,61 +436,55 @@ export class BackgroundScene {
     timeStamp,
     targetTilt,
     autoMovementSpeedFactor,
-    contentScrollDistance,
+    contentScrollDistance
   }: BackgroundSceneFrame): void {
-    const isReducedMotionPreferred: boolean = this.reducedMotionMediaQueryList.matches;
+    const isReducedMotionPreferred = this.reducedMotionMediaQueryList.matches;
 
     this.targetTiltMotionValue.set(targetTilt);
 
     this.timer.update(timeStamp);
-    const elapsedTimeMilliseconds: number = this.timer.getDelta() * MILLISECONDS_PER_SECOND;
+    const elapsedTimeMilliseconds = this.timer.getDelta() * MILLISECONDS_PER_SECOND;
     this.autoMovementOffset =
       (this.autoMovementOffset +
         elapsedTimeMilliseconds *
           this.autoMovementDistancePerMillisecond *
-          (isReducedMotionPreferred
-            ? STOPPED_AUTO_MOVEMENT_SPEED_FACTOR
-            : autoMovementSpeedFactor)) %
+          (isReducedMotionPreferred ? STOPPED_AUTO_MOVEMENT_SPEED_FACTOR : autoMovementSpeedFactor)) %
       FILL_STATE_REPEAT_DISTANCE;
-    const gridDistance: number = MathUtils.euclideanModulo(
+    const gridDistance = MathUtils.euclideanModulo(
       this.autoMovementOffset - contentScrollDistance,
-      FILL_STATE_REPEAT_DISTANCE,
+      FILL_STATE_REPEAT_DISTANCE
     );
-    const isPointerPresent: boolean =
+    const isPointerPresent =
       this.isPointerPresent && timeStamp - elapsedTimeMilliseconds < this.pointerReleaseTimeStamp;
-    const isPressed: boolean = this.pressStartTimeStamp !== NO_PRESS_START_TIME_STAMP;
-    const pressDurationMilliseconds: number = isPressed
-      ? timeStamp - this.pressStartTimeStamp
-      : NO_PRESS_DURATION_MILLISECONDS;
-    const chargeLevel: number = this.getChargeLevel(pressDurationMilliseconds);
+    const isPressed = this.pressStartTimeStamp !== NO_PRESS_START_TIME_STAMP;
+    const pressDurationMilliseconds = isPressed ? timeStamp - this.pressStartTimeStamp : NO_PRESS_DURATION_MILLISECONDS;
+    const chargeLevel = this.getChargeLevel(pressDurationMilliseconds);
 
     this.targetDentStrengthMotionValue.set(this.getDentStrength(pressDurationMilliseconds));
     if (isPressed && isPointerPresent) {
       this.dentCenter.copy(this.pointerPosition);
     }
     this.waves = this.waves.filter(
-      (wave: BackgroundWave) => timeStamp - wave.timeStamp < this.waveLifetimeMilliseconds,
+      (wave: BackgroundWave) => timeStamp - wave.timeStamp < this.waveLifetimeMilliseconds
     );
 
     const planeState: BackgroundPlaneState = {
       tilt: isReducedMotionPreferred ? targetTilt : this.springTiltMotionValue.get(),
       gridOffset: gridDistance % CELL_SIZE,
-      rowShift: Math.floor(gridDistance / CELL_SIZE),
+      rowShift: Math.floor(gridDistance / CELL_SIZE)
     };
 
     this.material.setFrameState({
       ...planeState,
       fillState: this.fillStateDestinationTarget.texture,
       dentCenter: this.dentCenter,
-      dentStrength: isReducedMotionPreferred
-        ? NO_DENT_STRENGTH
-        : this.springDentStrengthMotionValue.get(),
+      dentStrength: isReducedMotionPreferred ? NO_DENT_STRENGTH : this.springDentStrengthMotionValue.get(),
       isPointerPresent,
       pointerPosition: this.pointerPosition,
       timeStamp,
       chargeLevel,
       chargeHeightLevel: isReducedMotionPreferred ? FULL_ENERGY : chargeLevel,
-      waves: this.waves,
+      waves: this.waves
     });
     this.fillMaterial.setFrameState({
       elapsedTimeMilliseconds,
@@ -496,7 +492,7 @@ export class BackgroundScene {
       isPressed,
       previousPointerPosition: this.previousPointerPosition,
       isPreviousPointerPresent: this.isPreviousPointerPresent,
-      previousPlaneState: this.lastRenderedPlaneState,
+      previousPlaneState: this.lastRenderedPlaneState
     });
 
     if (this.isFillStateRenderable) {
@@ -508,7 +504,7 @@ export class BackgroundScene {
 
     [this.fillStateSourceTarget, this.fillStateDestinationTarget] = [
       this.fillStateDestinationTarget,
-      this.fillStateSourceTarget,
+      this.fillStateSourceTarget
     ];
     this.previousPointerPosition.copy(this.pointerPosition);
     this.isPreviousPointerPresent = isPointerPresent;
@@ -542,11 +538,8 @@ export class BackgroundScene {
   }
 
   private getCanvasPosition(clientPoint: ClientPoint): Vector2 {
-    const canvasBounds: DOMRect = this.getCanvasBounds();
-    return new Vector2(
-      clientPoint.clientX - canvasBounds.left,
-      canvasBounds.bottom - clientPoint.clientY,
-    );
+    const canvasBounds = this.getCanvasBounds();
+    return new Vector2(clientPoint.clientX - canvasBounds.left, canvasBounds.bottom - clientPoint.clientY);
   }
 
   private trackMouseOrPen(event: PointerEvent): void {
@@ -564,9 +557,7 @@ export class BackgroundScene {
   }
 
   private getActiveTouch(event: TouchEvent): Touch | undefined {
-    return Array.from(event.changedTouches).find(
-      (touch: Touch) => touch.identifier === this.activeTouchIdentifier,
-    );
+    return Array.from(event.changedTouches).find((touch: Touch) => touch.identifier === this.activeTouchIdentifier);
   }
 
   private releaseActiveTouch(event: TouchEvent): void {

@@ -1,1 +1,1 @@
-export type RectSize = Pick<DOMRect, "width" | "height">;
+export type RectSize = Pick<DOMRect, 'width' | 'height'>;

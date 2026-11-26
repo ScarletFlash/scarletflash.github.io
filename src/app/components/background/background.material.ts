@@ -1,52 +1,52 @@
-import { Color, ShaderMaterial, Texture, Uniform, Vector2, Vector3 } from "three";
-import { BackgroundPlaneUniformName } from "../../../declarations/enums/background-plane-uniform-name.enum";
-import { BackgroundPointerUniformName } from "../../../declarations/enums/background-pointer-uniform-name.enum";
-import { BackgroundPlaneState } from "../../../declarations/interfaces/background-plane-state.interface";
-import { BackgroundPlaneUniforms } from "../../../declarations/interfaces/background-plane-uniforms.interface";
-import { BackgroundPointerUniforms } from "../../../declarations/interfaces/background-pointer-uniforms.interface";
-import { BackgroundWave } from "../../../declarations/interfaces/background-wave.interface";
-import { RectSize } from "../../../declarations/types/rect-size.type";
-import { getPlaneStateVector } from "../../../utilities/get-plane-state-vector.utility";
-import { fillLevelShaderChunk } from "./fill-level-shader-chunk";
-import { FULL_ENERGY } from "./full-energy";
-import { fullScreenVertexShader } from "./full-screen-vertex-shader";
-import { NO_ENERGY } from "./no-energy";
-import { planeShaderChunk } from "./plane-shader-chunk";
-import { pointerCellShaderChunk } from "./pointer-cell-shader-chunk";
-import { WAVE_SLOT_COUNT } from "./wave-slot-count";
+import { ShaderMaterial, Uniform, Vector2, Vector3, type Color, type Texture } from 'three';
+import { BackgroundPlaneUniformName } from '../../../declarations/enums/background-plane-uniform-name.enum';
+import { BackgroundPointerUniformName } from '../../../declarations/enums/background-pointer-uniform-name.enum';
+import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
+import { type BackgroundPlaneUniforms } from '../../../declarations/interfaces/background-plane-uniforms.interface';
+import { type BackgroundPointerUniforms } from '../../../declarations/interfaces/background-pointer-uniforms.interface';
+import { type BackgroundWave } from '../../../declarations/interfaces/background-wave.interface';
+import { type RectSize } from '../../../declarations/types/rect-size.type';
+import { getPlaneStateVector } from '../../../utilities/get-plane-state-vector.utility';
+import { fillLevelShaderChunk } from './fill-level-shader-chunk';
+import { FULL_ENERGY } from './full-energy';
+import { fullScreenVertexShader } from './full-screen-vertex-shader';
+import { NO_ENERGY } from './no-energy';
+import { planeShaderChunk } from './plane-shader-chunk';
+import { pointerCellShaderChunk } from './pointer-cell-shader-chunk';
+import { WAVE_SLOT_COUNT } from './wave-slot-count';
 
 const enum DefineName {
-  GlowScope = "GLOW_SCOPE",
+  GlowScope = 'GLOW_SCOPE'
 }
 
 const enum GlowScope {
   None = 0,
   Charge = 1,
-  ChargeAndWaves = 2,
+  ChargeAndWaves = 2
 }
 
 const enum UniformName {
-  StrokeWidth = "strokeWidth",
-  StrokeColor = "strokeColor",
-  FillState = "fillState",
-  DentCenter = "dentCenter",
-  DentStrength = "dentStrength",
-  DentDepth = "dentDepth",
-  DentRadiusFraction = "dentRadiusFraction",
-  DentShading = "dentShading",
-  GlowHeight = "glowHeight",
-  GlowLeanTangent = "glowLeanTangent",
-  ChargeLevel = "chargeLevel",
-  ChargeHeightLevel = "chargeHeightLevel",
-  WaveStepDurationMilliseconds = "waveStepDurationMilliseconds",
-  WaveFadeDurationMilliseconds = "waveFadeDurationMilliseconds",
-  WaveFillFadeDurationMilliseconds = "waveFillFadeDurationMilliseconds",
-  WaveReachCellCount = "waveReachCellCount",
-  WaveCount = "waveCount",
-  WavePointerPositions = "wavePointerPositions",
-  WavePlaneStates = "wavePlaneStates",
-  WavePowers = "wavePowers",
-  WaveAgesMilliseconds = "waveAgesMilliseconds",
+  StrokeWidth = 'strokeWidth',
+  StrokeColor = 'strokeColor',
+  FillState = 'fillState',
+  DentCenter = 'dentCenter',
+  DentStrength = 'dentStrength',
+  DentDepth = 'dentDepth',
+  DentRadiusFraction = 'dentRadiusFraction',
+  DentShading = 'dentShading',
+  GlowHeight = 'glowHeight',
+  GlowLeanTangent = 'glowLeanTangent',
+  ChargeLevel = 'chargeLevel',
+  ChargeHeightLevel = 'chargeHeightLevel',
+  WaveStepDurationMilliseconds = 'waveStepDurationMilliseconds',
+  WaveFadeDurationMilliseconds = 'waveFadeDurationMilliseconds',
+  WaveFillFadeDurationMilliseconds = 'waveFillFadeDurationMilliseconds',
+  WaveReachCellCount = 'waveReachCellCount',
+  WaveCount = 'waveCount',
+  WavePointerPositions = 'wavePointerPositions',
+  WavePlaneStates = 'wavePlaneStates',
+  WavePowers = 'wavePowers',
+  WaveAgesMilliseconds = 'waveAgesMilliseconds'
 }
 
 interface BackgroundMaterialParameters {
@@ -76,14 +76,10 @@ interface BackgroundMaterialFrameState extends BackgroundPlaneState {
   readonly waves: readonly BackgroundWave[];
 }
 
-const RELEASE_AGE_MILLISECONDS: number = 0;
-const GLOW_SCOPES: readonly GlowScope[] = [
-  GlowScope.ChargeAndWaves,
-  GlowScope.Charge,
-  GlowScope.None,
-];
+const RELEASE_AGE_MILLISECONDS = 0;
+const GLOW_SCOPES: readonly GlowScope[] = [GlowScope.ChargeAndWaves, GlowScope.Charge, GlowScope.None];
 
-const fragmentShader: string = `
+const fragmentShader = `
 uniform vec3 ${UniformName.StrokeColor};
 uniform float ${UniformName.StrokeWidth};
 uniform sampler2D ${UniformName.FillState};
@@ -440,27 +436,21 @@ export class BackgroundMaterial extends ShaderMaterial {
     waveStepDurationMilliseconds,
     waveFadeDurationMilliseconds,
     waveFillFadeDurationMilliseconds,
-    waveReachCellCount,
+    waveReachCellCount
   }: BackgroundMaterialParameters) {
     const planeUniforms: BackgroundPlaneUniforms = {
       [BackgroundPlaneUniformName.CanvasSize]: new Uniform(new Vector2()),
       [BackgroundPlaneUniformName.CellSize]: new Uniform(cellSize),
       [BackgroundPlaneUniformName.Tilt]: new Uniform(0),
       [BackgroundPlaneUniformName.GridOffset]: new Uniform(0),
-      [BackgroundPlaneUniformName.RowShift]: new Uniform(0),
+      [BackgroundPlaneUniformName.RowShift]: new Uniform(0)
     };
     const pointerUniforms: BackgroundPointerUniforms = {
       [BackgroundPointerUniformName.Position]: new Uniform(new Vector2()),
-      [BackgroundPointerUniformName.IsPresent]: new Uniform(false),
+      [BackgroundPointerUniformName.IsPresent]: new Uniform(false)
     };
-    const wavePointerPositions: readonly Vector2[] = Array.from(
-      { length: WAVE_SLOT_COUNT },
-      () => new Vector2(),
-    );
-    const wavePlaneStates: readonly Vector3[] = Array.from(
-      { length: WAVE_SLOT_COUNT },
-      () => new Vector3(),
-    );
+    const wavePointerPositions: readonly Vector2[] = Array.from({ length: WAVE_SLOT_COUNT }, () => new Vector2());
+    const wavePlaneStates: readonly Vector3[] = Array.from({ length: WAVE_SLOT_COUNT }, () => new Vector3());
     const wavePowers: Float32Array = new Float32Array(WAVE_SLOT_COUNT);
     const waveAgesMilliseconds: Float32Array = new Float32Array(WAVE_SLOT_COUNT);
 
@@ -484,18 +474,16 @@ export class BackgroundMaterial extends ShaderMaterial {
         [UniformName.ChargeHeightLevel]: new Uniform(0),
         [UniformName.WaveStepDurationMilliseconds]: new Uniform(waveStepDurationMilliseconds),
         [UniformName.WaveFadeDurationMilliseconds]: new Uniform(waveFadeDurationMilliseconds),
-        [UniformName.WaveFillFadeDurationMilliseconds]: new Uniform(
-          waveFillFadeDurationMilliseconds,
-        ),
+        [UniformName.WaveFillFadeDurationMilliseconds]: new Uniform(waveFillFadeDurationMilliseconds),
         [UniformName.WaveReachCellCount]: new Uniform(waveReachCellCount),
         [UniformName.WaveCount]: new Uniform(0),
         [UniformName.WavePointerPositions]: new Uniform(wavePointerPositions),
         [UniformName.WavePlaneStates]: new Uniform(wavePlaneStates),
         [UniformName.WavePowers]: new Uniform(wavePowers),
-        [UniformName.WaveAgesMilliseconds]: new Uniform(waveAgesMilliseconds),
+        [UniformName.WaveAgesMilliseconds]: new Uniform(waveAgesMilliseconds)
       },
       defines: { [DefineName.GlowScope]: GlowScope.None },
-      transparent: true,
+      transparent: true
     });
 
     this.planeUniforms = planeUniforms;
@@ -522,7 +510,7 @@ export class BackgroundMaterial extends ShaderMaterial {
     timeStamp,
     chargeLevel,
     chargeHeightLevel,
-    waves,
+    waves
   }: BackgroundMaterialFrameState): void {
     if (waves.length > WAVE_SLOT_COUNT) {
       throw new Error(`Expected at most [${WAVE_SLOT_COUNT}] waves, but got [${waves.length}]`);
@@ -543,14 +531,11 @@ export class BackgroundMaterial extends ShaderMaterial {
       this.wavePointerPositions[slot].copy(wave.pointerPosition);
       this.wavePlaneStates[slot].copy(getPlaneStateVector(wave.planeState));
       this.wavePowers[slot] = wave.power;
-      this.waveAgesMilliseconds[slot] = Math.max(
-        RELEASE_AGE_MILLISECONDS,
-        timeStamp - wave.timeStamp,
-      );
+      this.waveAgesMilliseconds[slot] = Math.max(RELEASE_AGE_MILLISECONDS, timeStamp - wave.timeStamp);
     });
     const glowScope: GlowScope = Math.max(
       chargeLevel > NO_ENERGY ? GlowScope.Charge : GlowScope.None,
-      waves.length > 0 ? GlowScope.ChargeAndWaves : GlowScope.None,
+      waves.length > 0 ? GlowScope.ChargeAndWaves : GlowScope.None
     );
     if (this.defines[DefineName.GlowScope] === glowScope) {
       return;

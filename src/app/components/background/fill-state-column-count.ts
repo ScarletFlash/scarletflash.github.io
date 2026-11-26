@@ -1,1 +1,1 @@
-export const FILL_STATE_COLUMN_COUNT: number = 128;
+export const FILL_STATE_COLUMN_COUNT = 128;

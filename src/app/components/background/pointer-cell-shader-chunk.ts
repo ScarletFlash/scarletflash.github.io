@@ -1,7 +1,7 @@
-import { BackgroundPlaneUniformName } from "../../../declarations/enums/background-plane-uniform-name.enum";
-import { BackgroundPointerUniformName } from "../../../declarations/enums/background-pointer-uniform-name.enum";
+import { BackgroundPlaneUniformName } from '../../../declarations/enums/background-plane-uniform-name.enum';
+import { BackgroundPointerUniformName } from '../../../declarations/enums/background-pointer-uniform-name.enum';
 
-export const pointerCellShaderChunk: string = `
+export const pointerCellShaderChunk = `
 uniform vec2 ${BackgroundPointerUniformName.Position};
 uniform bool ${BackgroundPointerUniformName.IsPresent};
 

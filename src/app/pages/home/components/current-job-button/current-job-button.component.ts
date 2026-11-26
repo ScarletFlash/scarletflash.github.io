@@ -1,18 +1,11 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  InputSignal,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, InputSignal, ViewEncapsulation, input } from '@angular/core';
 
 @Component({
-    selector: "app-current-job-button",
-    imports: [],
-    templateUrl: "./current-job-button.component.html",
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-current-job-button',
+  imports: [],
+  templateUrl: './current-job-button.component.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class CurrentJobButtonComponent {
-  public readonly href: InputSignal<string> = input.required<string>();
+  public readonly href = input.required<string>();
 }

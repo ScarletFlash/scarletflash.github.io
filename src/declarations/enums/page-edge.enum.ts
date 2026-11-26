@@ -1,4 +1,4 @@
 export const enum PageEdge {
-  Start = "start",
-  End = "end",
+  Start = 'start',
+  End = 'end'
 }

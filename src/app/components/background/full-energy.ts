@@ -1,1 +1,1 @@
-export const FULL_ENERGY: number = 1;
+export const FULL_ENERGY = 1;

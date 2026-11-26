@@ -1,6 +1,6 @@
-import { ErrorHandler, inject, Service } from "@angular/core";
-import type { PostHog } from "posthog-js";
-import { PosthogClientService } from "../services/posthog-client.service";
+import { ErrorHandler, Service, inject } from '@angular/core';
+import type { PostHog } from 'posthog-js';
+import { PosthogClientService } from '../services/posthog-client.service';
 
 @Service({ autoProvided: false })
 export class PosthogErrorHandler extends ErrorHandler {
@@ -11,6 +11,8 @@ export class PosthogErrorHandler extends ErrorHandler {
 
     this.posthogClientService.client
       .then((posthog: PostHog | null) => posthog?.captureException(error))
-      .catch((reason: unknown) => console.error(reason));
+      .catch((reason: unknown) => {
+        console.error(reason);
+      });
   }
 }

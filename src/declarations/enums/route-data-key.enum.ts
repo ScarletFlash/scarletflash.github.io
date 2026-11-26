@@ -1,4 +1,4 @@
 export const enum RouteDataKey {
-  IsPageSequence = "isPageSequence",
-  BackgroundMotion = "backgroundMotion",
+  IsPageSequence = 'isPageSequence',
+  BackgroundMotion = 'backgroundMotion'
 }

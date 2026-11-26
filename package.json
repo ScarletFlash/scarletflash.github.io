@@ -1,6 +1,7 @@
 {
   "name": "application",
   "version": "0.0.0",
+  "private": true,
   "scripts": {
     "check-all": "pnpm run compiler__check && pnpm run linter__check && pnpm run formatter__check && pnpm run spell-checker__check && pnpm run dependencies-checker__check",
     "fix-all": "pnpm run linter__fix && pnpm run formatter__fix",
@@ -20,7 +21,6 @@
     "dependencies-checker__check": "knip --strict --cache --cache-location .knipcache",
     "prettier": "prettier"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^22.3.0",
     "@angular/compiler": "^22.3.0",

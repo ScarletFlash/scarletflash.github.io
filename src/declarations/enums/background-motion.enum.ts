@@ -1,5 +1,5 @@
 export enum BackgroundMotion {
-  Opening = "opening",
-  Content = "content",
-  Closing = "closing",
+  Opening = 'opening',
+  Content = 'content',
+  Closing = 'closing'
 }

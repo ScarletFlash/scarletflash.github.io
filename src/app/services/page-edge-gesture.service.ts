@@ -1,18 +1,18 @@
-import { DestroyRef, inject, Service, signal, WritableSignal } from "@angular/core";
-import { Observable, Subject } from "rxjs";
-import { VectorXYZ, WheelEventState, WheelGestures } from "wheel-gestures";
-import { KeyboardKey } from "../../declarations/enums/keyboard-key.enum";
-import { PageDirection } from "../../declarations/enums/page-direction.enum";
-import { PageNavigationInformation } from "../../declarations/interfaces/page-navigation-information.interface";
-import { ScrollMeasurement } from "../../declarations/interfaces/scroll-measurement.interface";
-import { getScrollMeasurement } from "../../utilities/get-scroll-measurement.utility";
-import { isAtPageEnd } from "../../utilities/is-at-page-end.utility";
-import { isAtPageStart } from "../../utilities/is-at-page-start.utility";
+import { DestroyRef, Service, inject, signal, type WritableSignal } from '@angular/core';
+import { Subject, type Observable } from 'rxjs';
+import { WheelGestures, type VectorXYZ, type WheelEventState } from 'wheel-gestures';
+import { KeyboardKey } from '../../declarations/enums/keyboard-key.enum';
+import { PageDirection } from '../../declarations/enums/page-direction.enum';
+import { type PageNavigationInformation } from '../../declarations/interfaces/page-navigation-information.interface';
+import { type ScrollMeasurement } from '../../declarations/interfaces/scroll-measurement.interface';
+import { getScrollMeasurement } from '../../utilities/get-scroll-measurement.utility';
+import { isAtPageEnd } from '../../utilities/is-at-page-end.utility';
+import { isAtPageStart } from '../../utilities/is-at-page-start.utility';
 
-const NO_DISTANCE: number = 0;
-const TOUCH_PUSH_THRESHOLD_PIXELS: number = 24;
-const SINGLE_TOUCH_COUNT: number = 1;
-const INTERACTIVE_ELEMENT_SELECTOR: string =
+const NO_DISTANCE = 0;
+const TOUCH_PUSH_THRESHOLD_PIXELS = 24;
+const SINGLE_TOUCH_COUNT = 1;
+const INTERACTIVE_ELEMENT_SELECTOR =
   "a[href], button, input, select, textarea, summary, [contenteditable], [role='button'], [role='link']";
 const PAGE_DIRECTION_BY_KEY: ReadonlyMap<string, PageDirection> = new Map<string, PageDirection>([
   [KeyboardKey.ArrowDown, PageDirection.Next],
@@ -21,7 +21,7 @@ const PAGE_DIRECTION_BY_KEY: ReadonlyMap<string, PageDirection> = new Map<string
   [KeyboardKey.Space, PageDirection.Next],
   [KeyboardKey.ArrowUp, PageDirection.Previous],
   [KeyboardKey.PageUp, PageDirection.Previous],
-  [KeyboardKey.Home, PageDirection.Previous],
+  [KeyboardKey.Home, PageDirection.Previous]
 ]);
 
 interface TouchSample {
@@ -38,10 +38,9 @@ interface GetPushedDirectionParameters {
 export class PageEdgeGestureService {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-  private readonly edgePushes: Subject<PageNavigationInformation> =
-    new Subject<PageNavigationInformation>();
+  private readonly edgePushes = new Subject<PageNavigationInformation>();
 
-  public readonly pushes: Observable<PageNavigationInformation> = this.edgePushes.asObservable();
+  public readonly pushes = this.edgePushes.asObservable();
 
   private readonly activeTouchIdentifier: WritableSignal<number | null> = signal(null);
 
@@ -52,18 +51,18 @@ export class PageEdgeGestureService {
   private readonly lastTouchSample: WritableSignal<TouchSample | null> = signal(null);
 
   public observe(): void {
-    const abortController: AbortController = new AbortController();
+    const abortController = new AbortController();
     const listenerOptions: AddEventListenerOptions = {
       passive: true,
-      signal: abortController.signal,
+      signal: abortController.signal
     };
 
-    const wheelGestures: ReturnType<typeof WheelGestures> = WheelGestures({
+    const wheelGestures = WheelGestures({
       preventWheelAction: false,
-      reverseSign: false,
+      reverseSign: false
     });
     const removeWheelGestureListener: VoidFunction = wheelGestures.on(
-      "wheel",
+      'wheel',
       ({ isStart, axisDelta, axisVelocity, event }: WheelEventState) => {
         if (event.ctrlKey === true) {
           return;
@@ -71,9 +70,9 @@ export class PageEdgeGestureService {
 
         const [, verticalDelta]: VectorXYZ = axisDelta;
         const [, verticalVelocity]: VectorXYZ = axisVelocity;
-        const pushedDirection: PageDirection | null = PageEdgeGestureService.getPushedDirection({
+        const pushedDirection = PageEdgeGestureService.getPushedDirection({
           requestedDirection: PageEdgeGestureService.getRequestedDirection(verticalDelta),
-          measurement: getScrollMeasurement(),
+          measurement: getScrollMeasurement()
         });
         if (pushedDirection === null) {
           return;
@@ -81,18 +80,18 @@ export class PageEdgeGestureService {
 
         this.edgePushes.next({
           direction: pushedDirection,
-          velocityPixelsPerMillisecond: isStart ? null : Math.abs(verticalVelocity),
+          velocityPixelsPerMillisecond: isStart ? null : Math.abs(verticalVelocity)
         });
-      },
+      }
     );
     wheelGestures.observe(window);
 
     window.addEventListener(
-      "touchstart",
+      'touchstart',
       (event: TouchEvent) => {
         const [startedTouch]: readonly Touch[] = Array.from(event.changedTouches);
         if (startedTouch === undefined) {
-          throw new Error("Expected a touch start to change at least one touch");
+          throw new Error('Expected a touch start to change at least one touch');
         }
 
         if (event.touches.length > SINGLE_TOUCH_COUNT) {
@@ -104,38 +103,38 @@ export class PageEdgeGestureService {
         this.isTouchPushConsumed.set(false);
         this.lastTouchSample.set({ clientY: startedTouch.clientY, timeStamp: event.timeStamp });
       },
-      listenerOptions,
+      listenerOptions
     );
     window.addEventListener(
-      "touchmove",
+      'touchmove',
       (event: TouchEvent) => {
-        const activeTouch: Touch | undefined = this.getActiveTouch(event);
+        const activeTouch = this.getActiveTouch(event);
         if (activeTouch === undefined || this.isTouchPushConsumed()) {
           return;
         }
 
-        const previousTouchSample: TouchSample | null = this.lastTouchSample();
+        const previousTouchSample = this.lastTouchSample();
         if (previousTouchSample === null) {
-          throw new Error("Expected a touch start to record the first sample of the active touch");
+          throw new Error('Expected a touch start to record the first sample of the active touch');
         }
 
         this.lastTouchSample.set({ clientY: activeTouch.clientY, timeStamp: event.timeStamp });
-        const measurement: ScrollMeasurement = getScrollMeasurement();
+        const measurement = getScrollMeasurement();
         if (!isAtPageStart(measurement) && !isAtPageEnd(measurement)) {
           this.touchEdgeAnchorY.set(null);
           return;
         }
 
-        const anchorY: number = this.touchEdgeAnchorY() ?? activeTouch.clientY;
+        const anchorY = this.touchEdgeAnchorY() ?? activeTouch.clientY;
         this.touchEdgeAnchorY.set(anchorY);
-        const pushDistance: number = anchorY - activeTouch.clientY;
+        const pushDistance = anchorY - activeTouch.clientY;
         if (Math.abs(pushDistance) < TOUCH_PUSH_THRESHOLD_PIXELS) {
           return;
         }
 
-        const pushedDirection: PageDirection | null = PageEdgeGestureService.getPushedDirection({
+        const pushedDirection = PageEdgeGestureService.getPushedDirection({
           requestedDirection: PageEdgeGestureService.getRequestedDirection(pushDistance),
-          measurement,
+          measurement
         });
         if (pushedDirection === null) {
           return;
@@ -148,20 +147,28 @@ export class PageEdgeGestureService {
             event.timeStamp > previousTouchSample.timeStamp
               ? Math.abs(activeTouch.clientY - previousTouchSample.clientY) /
                 (event.timeStamp - previousTouchSample.timeStamp)
-              : null,
+              : null
         });
       },
-      listenerOptions,
+      listenerOptions
     );
-    window.addEventListener("touchend", (event: TouchEvent) => this.endTouch(event), listenerOptions);
     window.addEventListener(
-      "touchcancel",
-      (event: TouchEvent) => this.endTouch(event),
-      listenerOptions,
+      'touchend',
+      (event: TouchEvent) => {
+        this.endTouch(event);
+      },
+      listenerOptions
+    );
+    window.addEventListener(
+      'touchcancel',
+      (event: TouchEvent) => {
+        this.endTouch(event);
+      },
+      listenerOptions
     );
 
     window.addEventListener(
-      "keydown",
+      'keydown',
       (event: KeyboardEvent) => {
         if (
           event.defaultPrevented ||
@@ -169,19 +176,18 @@ export class PageEdgeGestureService {
           event.altKey ||
           event.ctrlKey ||
           event.metaKey ||
-          (event.target instanceof Element &&
-            event.target.closest(INTERACTIVE_ELEMENT_SELECTOR) !== null)
+          (event.target instanceof Element && event.target.closest(INTERACTIVE_ELEMENT_SELECTOR) !== null)
         ) {
           return;
         }
 
-        const requestedDirection: PageDirection | null =
+        const requestedDirection =
           event.key === KeyboardKey.Space && event.shiftKey
             ? PageDirection.Previous
             : (PAGE_DIRECTION_BY_KEY.get(event.key) ?? null);
-        const pushedDirection: PageDirection | null = PageEdgeGestureService.getPushedDirection({
+        const pushedDirection = PageEdgeGestureService.getPushedDirection({
           requestedDirection,
-          measurement: getScrollMeasurement(),
+          measurement: getScrollMeasurement()
         });
         if (pushedDirection === null) {
           return;
@@ -190,7 +196,7 @@ export class PageEdgeGestureService {
         event.preventDefault();
         this.edgePushes.next({ direction: pushedDirection, velocityPixelsPerMillisecond: null });
       },
-      { signal: abortController.signal },
+      { signal: abortController.signal }
     );
 
     this.destroyRef.onDestroy(() => {
@@ -211,14 +217,12 @@ export class PageEdgeGestureService {
   }
 
   private getActiveTouch(event: TouchEvent): Touch | undefined {
-    return Array.from(event.changedTouches).find(
-      (touch: Touch) => touch.identifier === this.activeTouchIdentifier(),
-    );
+    return Array.from(event.changedTouches).find((touch: Touch) => touch.identifier === this.activeTouchIdentifier());
   }
 
   private static getPushedDirection({
     requestedDirection,
-    measurement,
+    measurement
   }: GetPushedDirectionParameters): PageDirection | null {
     if (requestedDirection === PageDirection.Next && isAtPageEnd(measurement)) {
       return PageDirection.Next;

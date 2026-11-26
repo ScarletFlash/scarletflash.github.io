@@ -1,1 +1,1 @@
-export const NO_ENERGY: number = 0;
+export const NO_ENERGY = 0;

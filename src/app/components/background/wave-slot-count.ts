@@ -1,1 +1,1 @@
-export const WAVE_SLOT_COUNT: number = 16;
+export const WAVE_SLOT_COUNT = 16;

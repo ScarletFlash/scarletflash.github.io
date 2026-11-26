@@ -1,14 +1,14 @@
-import { isPlatformBrowser } from "@angular/common";
-import { inject, PLATFORM_ID, Service } from "@angular/core";
-import { Router } from "@angular/router";
-import type { PostHog } from "posthog-js";
-import { PosthogClientService } from "./posthog-client.service";
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, Service, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import type { PostHog } from 'posthog-js';
+import { PosthogClientService } from './posthog-client.service';
 
-const TAG_QUERY_PARAMETER_NAME: string = "t";
+const TAG_QUERY_PARAMETER_NAME = 't';
 
 @Service()
 export class UrlTagCaptureService {
-  private readonly platformIdentifier: Object = inject(PLATFORM_ID);
+  private readonly platformIdentifier: object = inject(PLATFORM_ID);
   private readonly router: Router = inject(Router);
   private readonly posthogClientService: PosthogClientService = inject(PosthogClientService);
 
@@ -17,22 +17,22 @@ export class UrlTagCaptureService {
       return;
     }
 
-    const tag: string | null = new URLSearchParams(window.location.search).get(
-      TAG_QUERY_PARAMETER_NAME,
-    );
+    const tag = new URLSearchParams(window.location.search).get(TAG_QUERY_PARAMETER_NAME);
     if (tag === null || tag.length === 0) {
       return;
     }
 
     this.posthogClientService.client
-      .then((posthog: PostHog | null) => posthog?.capture("url_tag_detected", { tag }))
-      .catch((reason: unknown) => console.error(reason));
+      .then((posthog: PostHog | null) => posthog?.capture('url_tag_detected', { tag }))
+      .catch((reason: unknown) => {
+        console.error(reason);
+      });
 
     this.router.navigate([], {
       queryParams: { [TAG_QUERY_PARAMETER_NAME]: null },
-      queryParamsHandling: "merge",
+      queryParamsHandling: 'merge',
       preserveFragment: true,
-      replaceUrl: true,
+      replaceUrl: true
     });
   }
 }
