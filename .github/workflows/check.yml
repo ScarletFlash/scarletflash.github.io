@@ -1,0 +1,72 @@
+name: Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+  schedule:
+    - cron: '0 4 * * *'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.sha }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
+jobs:
+  check_codebase:
+    runs-on: ubuntu-latest
+    name: Run codebase health checks
+    steps:
+      - name: Fetch the repository
+        uses: actions/checkout@v7
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Restore tool caches
+        id: tool-caches
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            .eslintcache
+            .prettiercache
+            .cspellcache
+            .knipcache/
+          key:
+            ${{ runner.os }}-check-${{ hashFiles('pnpm-lock.yaml', 'tsconfig.json', 'tsconfig.app.json',
+            'eslint.config.mjs', '.prettierrc.mjs', '.prettierignore', '.cspell.json', 'knip.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-check-${{ hashFiles('pnpm-lock.yaml', 'tsconfig.json', 'tsconfig.app.json', 'eslint.config.mjs', '.prettierrc.mjs', '.prettierignore', '.cspell.json', 'knip.json') }}-
+
+      - name: Run codebase checks
+        run: pnpm run check-all
+
+      - name: Save tool caches
+        if: ${{ always() && steps.tool-caches.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v6
+        with:
+          path: |
+            .eslintcache
+            .prettiercache
+            .cspellcache
+            .knipcache/
+          key: ${{ steps.tool-caches.outputs.cache-primary-key }}
