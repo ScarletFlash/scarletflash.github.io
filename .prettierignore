@@ -1,0 +1,14 @@
+.angular/
+.DS_Store
+.editorconfig
+.gitignore
+.npmrc
+*.d.ts
+coverage/
+dist/
+node_modules/
+out-tsc/
+public/
+.*cache
+pnpm-lock.yaml
+CLAUDE.md

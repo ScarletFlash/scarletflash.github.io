@@ -2,13 +2,23 @@
   "name": "application",
   "version": "0.0.0",
   "scripts": {
+    "check-all": "pnpm run compiler__check && pnpm run linter__check && pnpm run formatter__check && pnpm run spell-checker__check && pnpm run dependencies-checker__check",
+    "fix-all": "pnpm run linter__fix && pnpm run formatter__fix",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "sourcemap:inject": "posthog-cli sourcemap inject --directory dist/application/browser",
-    "sourcemap:upload": "posthog-cli sourcemap upload --directory dist/application/browser --delete-after"
+    "sourcemap:upload": "posthog-cli sourcemap upload --directory dist/application/browser --delete-after",
+    "compiler__check": "tsc --project tsconfig.app.json --noEmit",
+    "linter__check": "ng lint --quiet --cache --cache-strategy content",
+    "linter__fix": "ng lint --quiet --cache --cache-strategy content --fix",
+    "formatter__check": "prettier --config .prettierrc.mjs --ignore-path .prettierignore --cache --cache-location .prettiercache --cache-strategy content --check .",
+    "formatter__fix": "prettier --config .prettierrc.mjs --ignore-path .prettierignore --cache --cache-location .prettiercache --cache-strategy content --write .",
+    "spell-checker__check": "cspell lint --config .cspell.json --cache --cache-location .cspellcache --no-progress .",
+    "dependencies-checker__check": "knip --strict --cache --cache-location .knipcache",
+    "prettier": "prettier"
   },
   "private": true,
   "dependencies": {

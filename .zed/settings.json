@@ -1,0 +1,43 @@
+{
+  "format_on_save": "on",
+  "formatter": [
+    {
+      "external": {
+        "arguments": ["run", "--silent", "prettier", "--stdin-filepath", "{buffer_path}"],
+        "command": "pnpm"
+      }
+    }
+  ],
+  "languages": {
+    "CSS": {
+      "language_servers": ["tailwindcss-language-server"]
+    },
+    "HTML": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "language_servers": ["vscode-html-language-server", "eslint", "tailwindcss-language-server"]
+    },
+    "JSON": {
+      "language_servers": ["json-language-server", "package-version-server"]
+    },
+    "JSONC": {
+      "language_servers": ["json-language-server"]
+    },
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "language_servers": ["vtsls", "eslint"]
+    },
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "language_servers": ["vtsls", "eslint", "tailwindcss-language-server"]
+    },
+    "YAML": {
+      "language_servers": ["yaml-language-server"]
+    }
+  }
+}

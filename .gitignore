@@ -28,6 +28,12 @@ yarn-error.log
 !.vscode/extensions.json
 .history/*
 
+# Linting, formatting and code checking caches
+.eslintcache
+.prettiercache
+.cspellcache
+.knipcache
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/
