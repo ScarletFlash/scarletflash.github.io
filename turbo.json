@@ -1,9 +1,16 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
   "globalDependencies": [
+    "!./node_modules/",
+    "!.cspellcache",
+    "!.eslintcache",
+    "!.knipcache",
+    "!.prettiercache",
+    "!.turbo/**/*",
     ".cspell.json",
     ".editorconfig",
     ".gitignore",
+    ".npmrc",
     ".postcssrc.json",
     ".prettierignore",
     ".prettierrc.mjs",
@@ -18,11 +25,11 @@
     "_check-all": {
       "cache": false,
       "dependsOn": [
+        "dependencies-checker__check",
         "compiler__check",
         "linter__check",
         "formatter__check",
-        "spell-checker__check",
-        "dependencies-checker__check"
+        "spell-checker__check"
       ],
       "outputLogs": "errors-only"
     },
@@ -33,40 +40,94 @@
     },
     "compiler__check": {
       "cache": true,
-      "inputs": ["./src/**"],
+      "inputs": [
+        "./**/*.{js,ts,tsx,html}",
+        "./**/tsconfig.*",
+        "./package.json",
+        "!./node_modules/",
+        "!./out-tsc/",
+        "!./dist/",
+        "!./.angular/"
+      ],
       "outputLogs": "errors-only",
       "outputs": []
     },
     "dependencies-checker__check": {
       "cache": true,
-      "inputs": ["./src/**", "./*.{js,mjs,cjs,ts,mts,cts}", "./.*.{js,mjs,cjs,ts,mts,cts}", "./.github/workflows/*"],
+      "inputs": [
+        "./**/*.{js,mjs,ts,mts,tsx}",
+        "./**/package.json",
+        "./**/tsconfig*.json",
+        "./.github/workflows/*",
+        "./knip.json",
+        "!./**/node_modules/",
+        "!./**/out-tsc/",
+        "!./**/dist/",
+        "!./**/.angular/"
+      ],
       "outputLogs": "errors-only",
       "outputs": []
     },
     "formatter__check": {
       "cache": true,
-      "inputs": ["$TURBO_DEFAULT$"],
+      "inputs": [
+        "./**/*.{js,mjs,ts,mts,tsx,html,css,yaml,yml,json,jsonc,md}",
+        "!./node_modules/",
+        "!./out-tsc/",
+        "!./dist/",
+        "!./.angular/",
+        "!./.turbo/"
+      ],
       "outputLogs": "errors-only",
       "outputs": []
     },
     "formatter__fix": {
-      "cache": false,
+      "cache": true,
       "dependsOn": ["linter__fix"],
-      "outputLogs": "errors-only"
+      "inputs": [
+        "./**/*.{js,mjs,ts,mts,tsx,html,css,yaml,yml,json,jsonc,md}",
+        "!./node_modules/",
+        "!./out-tsc/",
+        "!./dist/",
+        "!./.angular/",
+        "!./.turbo/",
+        "!./turbo.json"
+      ],
+      "outputLogs": "errors-only",
+      "outputs": [
+        "./**/*.{js,mjs,ts,mts,tsx,html,css,yaml,yml,json,jsonc,md}",
+        "!./node_modules/",
+        "!./out-tsc/",
+        "!./dist/",
+        "!./.angular/",
+        "!./.turbo/",
+        "!./turbo.json"
+      ]
     },
     "linter__check": {
       "cache": true,
-      "inputs": ["./src/**"],
+      "inputs": ["./**/*.{js,mjs,ts,mts,tsx,html}", "!./node_modules/", "!./out-tsc/", "!./dist/", "!./.angular/"],
       "outputLogs": "errors-only",
       "outputs": []
     },
     "linter__fix": {
-      "cache": false,
-      "outputLogs": "errors-only"
+      "cache": true,
+      "inputs": ["./**/*.{js,mjs,ts,mts,tsx,html}", "!./node_modules/", "!./out-tsc/", "!./dist/", "!./.angular/"],
+      "outputLogs": "errors-only",
+      "outputs": ["./**/*.{js,mjs,ts,mts,tsx,html}", "!./node_modules/", "!./out-tsc/", "!./dist/", "!./.angular/"]
     },
     "spell-checker__check": {
       "cache": true,
-      "inputs": ["$TURBO_DEFAULT$"],
+      "inputs": [
+        "./**/*",
+        "!./node_modules/",
+        "!./out-tsc/",
+        "!./dist/",
+        "!./.angular/",
+        "!./.git",
+        "!./.turbo/",
+        "!./.*cache"
+      ],
       "outputLogs": "errors-only",
       "outputs": []
     }
