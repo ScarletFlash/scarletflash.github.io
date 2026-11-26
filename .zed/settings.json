@@ -9,6 +9,12 @@
     }
   ],
   "languages": {
+    "Angular": {
+      "code_actions_on_format": {
+        "source.fixAll.eslint": true
+      },
+      "language_servers": ["angular", "eslint", "tailwindcss-language-server"]
+    },
     "CSS": {
       "language_servers": ["tailwindcss-language-server"]
     },
@@ -16,7 +22,7 @@
       "code_actions_on_format": {
         "source.fixAll.eslint": true
       },
-      "language_servers": ["vscode-html-language-server", "eslint", "tailwindcss-language-server"]
+      "language_servers": ["angular", "vscode-html-language-server", "eslint", "tailwindcss-language-server"]
     },
     "JSON": {
       "language_servers": ["json-language-server", "package-version-server"]
@@ -34,10 +40,24 @@
       "code_actions_on_format": {
         "source.fixAll.eslint": true
       },
-      "language_servers": ["vtsls", "eslint", "tailwindcss-language-server"]
+      "language_servers": ["angular", "vtsls", "eslint", "tailwindcss-language-server"]
     },
     "YAML": {
       "language_servers": ["yaml-language-server"]
+    }
+  },
+  "lsp": {
+    "tailwindcss-language-server": {
+      "settings": {
+        "includeLanguages": {
+          "angular": "html",
+          "css": "css",
+          "html": "html",
+          "javascript": "javascript",
+          "typescript": "typescript",
+          "typescriptreact": "typescriptreact"
+        }
+      }
     }
   }
 }

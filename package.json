@@ -43,6 +43,8 @@
     "@angular/build": "^22.3.0",
     "@angular/cli": "^22.3.0",
     "@angular/compiler-cli": "^22.3.0",
+    "@angular/language-server": "^22.3.0",
+    "@angular/language-service": "^22.3.0",
     "@cspell/dict-css": "^4.1.2",
     "@cspell/dict-docker": "^1.1.17",
     "@cspell/dict-filetypes": "^3.0.18",
