@@ -91,11 +91,11 @@ export class TextRouletteComponent {
   );
 
   constructor() {
-    const rawSwapFrequencyMs = inject(new HostAttributeToken('swap-frequency'));
+    const rawSwapFrequencyMilliseconds = inject(new HostAttributeToken('swap-frequency'));
 
-    const swapFrequencyMs = Number(rawSwapFrequencyMs);
-    if (!Number.isInteger(swapFrequencyMs) || swapFrequencyMs <= 0) {
-      throw new Error(`Expected swap-frequency to be a positive integer, but got [${rawSwapFrequencyMs}]`);
+    const swapFrequencyMilliseconds = Number(rawSwapFrequencyMilliseconds);
+    if (!Number.isInteger(swapFrequencyMilliseconds) || swapFrequencyMilliseconds <= 0) {
+      throw new Error(`Expected swap-frequency to be a positive integer, but got [${rawSwapFrequencyMilliseconds}]`);
     }
 
     const platformId: object = inject(PLATFORM_ID);
@@ -118,7 +118,7 @@ export class TextRouletteComponent {
       this.rotateValues();
       this.valueUpdateIntervalId = window.setInterval(() => {
         this.rotateValues();
-      }, swapFrequencyMs);
+      }, swapFrequencyMilliseconds);
 
       destroyRef.onDestroy(() => {
         unlistenFromSelectionChanges();

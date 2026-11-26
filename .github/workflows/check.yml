@@ -47,7 +47,6 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: |
-            .eslintcache
             .prettiercache
             .cspellcache
             .knipcache/
@@ -65,7 +64,6 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: |
-            .eslintcache
             .prettiercache
             .cspellcache
             .knipcache/
