@@ -16,7 +16,7 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/home/home.routes').then(({ homeRoutes }: typeof HomeRoutesModule) => homeRoutes)
   },
   {
-    path: '*',
+    path: '**',
     redirectTo: ''
   }
 ];
