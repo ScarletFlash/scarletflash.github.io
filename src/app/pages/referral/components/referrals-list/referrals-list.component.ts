@@ -18,7 +18,7 @@ export class ReferralsListComponent {
     },
     {
       name: 'Raycast',
-      description: 'AI-powered replacament for Spotlight with amazing integrations and extensions',
+      description: 'AI-powered replacement for Spotlight with amazing integrations and extensions',
       imageSrc: '/referrals/raycast.svg',
       url: 'https://raycast.com/?via=scarletflash'
     },

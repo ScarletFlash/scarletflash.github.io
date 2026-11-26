@@ -17,12 +17,14 @@ import { TextRouletteComponent } from '../../components/text-roulette/text-roule
 export class FirstScreenPageComponent {
   private readonly routerOutletData: Signal<unknown> = inject(ROUTER_OUTLET_DATA);
 
-  protected readonly isAligned: Signal<boolean> = computed(() => {
-    const isAligned = this.routerOutletData();
-    if (typeof isAligned !== 'boolean') {
-      throw new Error(`Expected the first screen outlet data to be the alignment flag, but got [${isAligned}]`);
+  protected readonly isFirstScreenAligned: Signal<boolean> = computed(() => {
+    const firstScreenAlignment = this.routerOutletData();
+    if (typeof firstScreenAlignment !== 'boolean') {
+      throw new Error(
+        `Expected the first screen outlet data to be the alignment flag, but got [${String(firstScreenAlignment)}]`
+      );
     }
 
-    return isAligned;
+    return firstScreenAlignment;
   });
 }

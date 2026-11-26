@@ -4,7 +4,6 @@ import {
   ElementRef,
   ErrorHandler,
   HostAttributeToken,
-  InputSignal,
   ViewEncapsulation,
   afterNextRender,
   inject,
@@ -68,7 +67,7 @@ export class BackgroundComponent {
 
   private readonly canvas: Signal<ElementRef<HTMLCanvasElement>> = viewChild.required('canvas');
 
-  private readonly componentElementRef: ElementRef<HTMLElement> = inject(ElementRef);
+  private readonly componentElementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   constructor() {
     const movementStepDurationMilliseconds = BackgroundComponent.injectIntegerAttribute({

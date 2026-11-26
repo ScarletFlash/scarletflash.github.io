@@ -6,7 +6,6 @@ import { BackgroundMotion } from '../../declarations/enums/background-motion.enu
 import { PageDirection } from '../../declarations/enums/page-direction.enum';
 import { PageEdge } from '../../declarations/enums/page-edge.enum';
 import { RouteDataKey } from '../../declarations/enums/route-data-key.enum';
-import { type PageNavigationInformation } from '../../declarations/interfaces/page-navigation-information.interface';
 import { type ScrollMeasurement } from '../../declarations/interfaces/scroll-measurement.interface';
 import { getClampedValue } from '../../utilities/get-clamped-value.utility';
 import { getPageNavigationInformation } from '../../utilities/get-page-navigation-information.utility';
@@ -179,7 +178,7 @@ export class ScrollStateService {
     const backgroundMotion: unknown = this.activatedRoute.snapshot.firstChild?.data[RouteDataKey.BackgroundMotion];
     if (!isBackgroundMotion(backgroundMotion)) {
       throw new Error(
-        `Expected the active home page route to declare its background motion, but got [${backgroundMotion}]`
+        `Expected the active home page route to declare its background motion, but got [${String(backgroundMotion)}]`
       );
     }
 

@@ -1,5 +1,5 @@
 import { DestroyRef, Service, inject, signal, type WritableSignal } from '@angular/core';
-import { Subject, type Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { WheelGestures, type VectorXYZ, type WheelEventState } from 'wheel-gestures';
 import { KeyboardKey } from '../../declarations/enums/keyboard-key.enum';
 import { PageDirection } from '../../declarations/enums/page-direction.enum';
@@ -23,6 +23,13 @@ const PAGE_DIRECTION_BY_KEY: ReadonlyMap<string, PageDirection> = new Map<string
   [KeyboardKey.PageUp, PageDirection.Previous],
   [KeyboardKey.Home, PageDirection.Previous]
 ]);
+const PAGE_DIRECTION_BY_SHIFTED_KEY: ReadonlyMap<string, PageDirection> = new Map<string, PageDirection>([
+  ...PAGE_DIRECTION_BY_KEY,
+  [KeyboardKey.Space, PageDirection.Previous]
+]);
+const BLOCKING_MODIFIER_FLAGS: readonly BlockingModifierFlag[] = ['altKey', 'ctrlKey', 'metaKey'];
+
+type BlockingModifierFlag = keyof Pick<KeyboardEvent, 'altKey' | 'ctrlKey' | 'metaKey'>;
 
 interface TouchSample {
   readonly clientY: number;
@@ -173,18 +180,14 @@ export class PageEdgeGestureService {
         if (
           event.defaultPrevented ||
           event.repeat ||
-          event.altKey ||
-          event.ctrlKey ||
-          event.metaKey ||
+          BLOCKING_MODIFIER_FLAGS.some((modifierFlag: BlockingModifierFlag) => event[modifierFlag]) ||
           (event.target instanceof Element && event.target.closest(INTERACTIVE_ELEMENT_SELECTOR) !== null)
         ) {
           return;
         }
 
         const requestedDirection =
-          event.key === KeyboardKey.Space && event.shiftKey
-            ? PageDirection.Previous
-            : (PAGE_DIRECTION_BY_KEY.get(event.key) ?? null);
+          (event.shiftKey ? PAGE_DIRECTION_BY_SHIFTED_KEY : PAGE_DIRECTION_BY_KEY).get(event.key) ?? null;
         const pushedDirection = PageEdgeGestureService.getPushedDirection({
           requestedDirection,
           measurement: getScrollMeasurement()

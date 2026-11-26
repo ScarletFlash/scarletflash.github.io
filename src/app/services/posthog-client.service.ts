@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Service, inject, isDevMode } from '@angular/core';
 import type { PostHog } from 'posthog-js';
+import type * as PosthogModule from 'posthog-js';
 
 @Service()
 export class PosthogClientService {
@@ -32,7 +33,7 @@ export class PosthogClientService {
       return;
     }
 
-    this.client = import('posthog-js').then(({ default: posthog }: typeof import('posthog-js')) =>
+    this.client = import('posthog-js').then(({ default: posthog }: typeof PosthogModule) =>
       posthog.init(projectToken, {
         api_host: apiHost,
         ui_host: uiHost,

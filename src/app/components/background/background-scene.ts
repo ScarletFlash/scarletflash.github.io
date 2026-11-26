@@ -22,6 +22,7 @@ import {
   WebGLRenderer,
   type RenderTargetOptions
 } from 'three';
+// eslint-disable-next-line import-x/extensions
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 import { PointerType } from '../../../declarations/enums/pointer-type.enum';
 import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';

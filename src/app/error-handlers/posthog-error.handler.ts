@@ -12,6 +12,7 @@ export class PosthogErrorHandler extends ErrorHandler {
     this.posthogClientService.client
       .then((posthog: PostHog | null) => posthog?.captureException(error))
       .catch((reason: unknown) => {
+        // eslint-disable-next-line no-console
         console.error(reason);
       });
   }
