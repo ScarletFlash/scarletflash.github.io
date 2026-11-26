@@ -56,3 +56,11 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Prefer the `@Service` decorator over `@Injectable({providedIn: 'root'})` for new singleton services (Angular v22+)
 - Use the `inject()` function instead of constructor injection
+
+## Code Checks
+
+- Run `pnpm run check-all` before finishing a change; it must pass
+- Run `pnpm run fix-all` to apply the automatic linter and formatter fixes
+- Individual checks: `compiler__check`, `linter__check`, `formatter__check`, `spell-checker__check`, `dependencies-checker__check`; fixes: `linter__fix`, `formatter__fix`
+- Always run tools through `pnpm run <script>`; never call them directly or through `npx`
+- Do NOT disable linter rules. A targeted `// eslint-disable-next-line <rule>` is allowed only where a fix would change behavior or is impossible because of an Angular or third-party contract
