@@ -1,1 +1,1 @@
-export const PAGE_START_SCROLL_POSITION: number = 0;
+export const PAGE_START_SCROLL_POSITION = 0;

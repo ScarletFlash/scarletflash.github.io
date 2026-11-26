@@ -1,5 +1,5 @@
 export const enum PointerType {
-  Mouse = "mouse",
-  Pen = "pen",
-  Touch = "touch",
+  Mouse = 'mouse',
+  Pen = 'pen',
+  Touch = 'touch'
 }

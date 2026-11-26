@@ -1,7 +1,10 @@
-<span class="relative" #dynamicValuesContainer>
+<span
+  class="relative"
+  #dynamicValuesContainer
+>
   @for (item of currentItem(); track item.id) {
     <app-text-roulette-animated-item
-      class="transition-[opacity,translate,rotate] duration-500 ease-in-out starting:opacity-0 starting:translate-x-[10%] starting:translate-y-[180%] starting:-rotate-1"
+      class="transition-[opacity,translate,rotate] duration-500 ease-in-out starting:translate-x-[10%] starting:translate-y-[180%] starting:-rotate-1 starting:opacity-0"
       animate.leave="opacity-0 translate-x-[10%] -translate-y-[180%] rotate-1"
       >{{ item.text }}</app-text-roulette-animated-item
     >

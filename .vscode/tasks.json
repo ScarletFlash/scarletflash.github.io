@@ -1,13 +1,8 @@
 {
-  "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "start",
       "isBackground": true,
       "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
         "background": {
           "activeOnStart": true,
           "beginsPattern": {
@@ -16,8 +11,13 @@
           "endsPattern": {
             "regexp": "bundle generation complete"
           }
-        }
-      }
+        },
+        "owner": "typescript",
+        "pattern": "$tsc"
+      },
+      "script": "start",
+      "type": "npm"
     }
-  ]
+  ],
+  "version": "2.0.0"
 }

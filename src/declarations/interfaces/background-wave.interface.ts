@@ -1,5 +1,5 @@
-import { Vector2 } from "three";
-import { BackgroundPlaneState } from "./background-plane-state.interface";
+import { type Vector2 } from 'three';
+import { type BackgroundPlaneState } from './background-plane-state.interface';
 
 export interface BackgroundWave {
   readonly pointerPosition: Vector2;

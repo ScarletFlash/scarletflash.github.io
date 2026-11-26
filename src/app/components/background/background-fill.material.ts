@@ -1,22 +1,22 @@
-import { ShaderMaterial, Texture, Uniform, Vector2, Vector3 } from "three";
-import { BackgroundPlaneState } from "../../../declarations/interfaces/background-plane-state.interface";
-import { BackgroundPlaneUniforms } from "../../../declarations/interfaces/background-plane-uniforms.interface";
-import { BackgroundPointerUniforms } from "../../../declarations/interfaces/background-pointer-uniforms.interface";
-import { getPlaneStateVector } from "../../../utilities/get-plane-state-vector.utility";
-import { fillLevelShaderChunk } from "./fill-level-shader-chunk";
-import { fullScreenVertexShader } from "./full-screen-vertex-shader";
-import { planeShaderChunk } from "./plane-shader-chunk";
-import { pointerCellShaderChunk } from "./pointer-cell-shader-chunk";
+import { ShaderMaterial, Uniform, Vector2, Vector3, type Texture } from 'three';
+import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
+import { type BackgroundPlaneUniforms } from '../../../declarations/interfaces/background-plane-uniforms.interface';
+import { type BackgroundPointerUniforms } from '../../../declarations/interfaces/background-pointer-uniforms.interface';
+import { getPlaneStateVector } from '../../../utilities/get-plane-state-vector.utility';
+import { fillLevelShaderChunk } from './fill-level-shader-chunk';
+import { fullScreenVertexShader } from './full-screen-vertex-shader';
+import { planeShaderChunk } from './plane-shader-chunk';
+import { pointerCellShaderChunk } from './pointer-cell-shader-chunk';
 
 const enum UniformName {
-  PreviousFillState = "previousFillState",
-  ElapsedTimeMilliseconds = "elapsedTimeMilliseconds",
-  CellFillDurationMilliseconds = "cellFillDurationMilliseconds",
-  CellFadeDurationMilliseconds = "cellFadeDurationMilliseconds",
-  IsPressed = "isPressed",
-  PreviousPointerPosition = "previousPointerPosition",
-  IsPreviousPointerPresent = "isPreviousPointerPresent",
-  PreviousPlaneState = "previousPlaneState",
+  PreviousFillState = 'previousFillState',
+  ElapsedTimeMilliseconds = 'elapsedTimeMilliseconds',
+  CellFillDurationMilliseconds = 'cellFillDurationMilliseconds',
+  CellFadeDurationMilliseconds = 'cellFadeDurationMilliseconds',
+  IsPressed = 'isPressed',
+  PreviousPointerPosition = 'previousPointerPosition',
+  IsPreviousPointerPresent = 'isPreviousPointerPresent',
+  PreviousPlaneState = 'previousPlaneState'
 }
 
 interface BackgroundFillMaterialParameters {
@@ -35,9 +35,9 @@ interface BackgroundFillMaterialFrameState {
   readonly previousPlaneState: BackgroundPlaneState;
 }
 
-const MAXIMUM_ELAPSED_TIME_MILLISECONDS: number = 250;
+const MAXIMUM_ELAPSED_TIME_MILLISECONDS = 250;
 
-const fragmentShader: string = `
+const fragmentShader = `
 uniform sampler2D ${UniformName.PreviousFillState};
 uniform float ${UniformName.ElapsedTimeMilliseconds};
 uniform float ${UniformName.CellFillDurationMilliseconds};
@@ -91,7 +91,7 @@ export class BackgroundFillMaterial extends ShaderMaterial {
     planeUniforms,
     pointerUniforms,
     cellFillDurationMilliseconds,
-    cellFadeDurationMilliseconds,
+    cellFadeDurationMilliseconds
   }: BackgroundFillMaterialParameters) {
     super({
       vertexShader: fullScreenVertexShader,
@@ -106,8 +106,8 @@ export class BackgroundFillMaterial extends ShaderMaterial {
         [UniformName.IsPressed]: new Uniform(false),
         [UniformName.PreviousPointerPosition]: new Uniform(new Vector2()),
         [UniformName.IsPreviousPointerPresent]: new Uniform(false),
-        [UniformName.PreviousPlaneState]: new Uniform(new Vector3()),
-      },
+        [UniformName.PreviousPlaneState]: new Uniform(new Vector3())
+      }
     });
   }
 
@@ -117,18 +117,16 @@ export class BackgroundFillMaterial extends ShaderMaterial {
     isPressed,
     previousPointerPosition,
     isPreviousPointerPresent,
-    previousPlaneState,
+    previousPlaneState
   }: BackgroundFillMaterialFrameState): void {
     this.uniforms[UniformName.ElapsedTimeMilliseconds].value = Math.min(
       elapsedTimeMilliseconds,
-      MAXIMUM_ELAPSED_TIME_MILLISECONDS,
+      MAXIMUM_ELAPSED_TIME_MILLISECONDS
     );
     this.uniforms[UniformName.PreviousFillState].value = previousFillState;
     this.uniforms[UniformName.IsPressed].value = isPressed;
     this.uniforms[UniformName.PreviousPointerPosition].value = previousPointerPosition;
     this.uniforms[UniformName.IsPreviousPointerPresent].value = isPreviousPointerPresent;
-    this.uniforms[UniformName.PreviousPlaneState].value.copy(
-      getPlaneStateVector(previousPlaneState),
-    );
+    this.uniforms[UniformName.PreviousPlaneState].value.copy(getPlaneStateVector(previousPlaneState));
   }
 }

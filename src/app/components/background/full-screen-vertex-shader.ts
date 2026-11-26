@@ -1,4 +1,4 @@
-export const fullScreenVertexShader: string = `
+export const fullScreenVertexShader = `
 varying vec2 normalizedCanvasPosition;
 
 void main() {

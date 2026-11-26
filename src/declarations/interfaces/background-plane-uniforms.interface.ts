@@ -1,5 +1,5 @@
-import { Uniform, Vector2 } from "three";
-import { BackgroundPlaneUniformName } from "../enums/background-plane-uniform-name.enum";
+import { type Uniform, type Vector2 } from 'three';
+import { type BackgroundPlaneUniformName } from '../enums/background-plane-uniform-name.enum';
 
 export interface BackgroundPlaneUniforms {
   readonly [BackgroundPlaneUniformName.CanvasSize]: Uniform<Vector2>;

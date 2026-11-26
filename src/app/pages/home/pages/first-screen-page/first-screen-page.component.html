@@ -1,15 +1,13 @@
 <section class="sticky top-0 flex min-h-svh flex-col items-center justify-center py-5">
-  <section class="grow flex flex-col items-center justify-center">
+  <section class="flex grow flex-col items-center justify-center">
     <section
-      class="flex flex-col min-[830px]:flex-row items-center justify-center gap-24 h-fit z-10 backdrop-blur-sm bg-gray-300/10 border border-gray-300/10 min-[830px]:ml-[clamp(calc(72px/2),calc(12.5vw/2),calc(160px/2))] rounded-sm"
+      class="z-10 flex h-fit flex-col items-center justify-center gap-24 rounded-sm border border-gray-300/10 bg-gray-300/10 backdrop-blur-sm min-[830px]:ml-[clamp(calc(72px/2),calc(12.5vw/2),calc(160px/2))] min-[830px]:flex-row"
     >
-      <section class="min-w-[72px] w-[12.5vw] max-w-[160px] relative">
-        <app-avatar
-          class="absolute w-[200%] -translate-x-1/4 -translate-y-1/2 left-0"
-        ></app-avatar>
+      <section class="relative w-[12.5vw] max-w-[160px] min-w-[72px]">
+        <app-avatar class="absolute left-0 w-[200%] -translate-x-1/4 -translate-y-1/2"></app-avatar>
       </section>
 
-      <section class="flex flex-col min-w-80 text-lg px-6 py-5">
+      <section class="flex min-w-80 flex-col px-6 py-5 text-lg">
         <span>Hello and welcome! 👋</span>
 
         <span>
@@ -43,7 +41,7 @@
 
   <div class="h-10">
     <app-contacts
-      class="fixed inset-x-0 bottom-5 [view-transition-name:first-screen-contacts] transition-[translate,visibility] duration-350 ease-[cubic-bezier(0.2,1.8,0.4,1)] motion-reduce:transition-none data-aligned:invisible data-aligned:translate-y-[calc(100%+--spacing(5))] data-aligned:ease-[cubic-bezier(0.4,-0.9,0.7,0)]"
+      class="fixed inset-x-0 bottom-5 transition-[translate,visibility] duration-350 ease-[cubic-bezier(0.2,1.8,0.4,1)] [view-transition-name:first-screen-contacts] data-aligned:invisible data-aligned:translate-y-[calc(100%+--spacing(5))] data-aligned:ease-[cubic-bezier(0.4,-0.9,0.7,0)] motion-reduce:transition-none"
       [attr.data-aligned]="isAligned() ? '' : null"
       [contacts]="[
         {
@@ -66,4 +64,7 @@
   </div>
 </section>
 
-<div class="h-svh" aria-hidden="true"></div>
+<div
+  class="h-svh"
+  aria-hidden="true"
+></div>

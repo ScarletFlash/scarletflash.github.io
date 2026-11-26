@@ -1,10 +1,10 @@
-import { isPlatformBrowser } from "@angular/common";
-import { inject, isDevMode, PLATFORM_ID, Service } from "@angular/core";
-import type { PostHog } from "posthog-js";
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, Service, inject, isDevMode } from '@angular/core';
+import type { PostHog } from 'posthog-js';
 
 @Service()
 export class PosthogClientService {
-  private readonly platformIdentifier: Object = inject(PLATFORM_ID);
+  private readonly platformIdentifier: object = inject(PLATFORM_ID);
 
   public readonly client: Promise<PostHog | null> = Promise.resolve(null);
 
@@ -13,31 +13,31 @@ export class PosthogClientService {
       return;
     }
 
-    const projectToken: string | undefined = process.env["POSTHOG_PROJECT_TOKEN"];
+    const projectToken = process.env['POSTHOG_PROJECT_TOKEN'];
     if (projectToken === undefined || projectToken.length === 0) {
-      throw new Error("POSTHOG_PROJECT_TOKEN is not configured at build time.");
+      throw new Error('POSTHOG_PROJECT_TOKEN is not configured at build time.');
     }
 
-    const apiHost: string | undefined = process.env["POSTHOG_API_HOST"];
+    const apiHost = process.env['POSTHOG_API_HOST'];
     if (apiHost === undefined || apiHost.length === 0) {
-      throw new Error("POSTHOG_API_HOST is not configured at build time.");
+      throw new Error('POSTHOG_API_HOST is not configured at build time.');
     }
 
-    const uiHost: string | undefined = process.env["POSTHOG_UI_HOST"];
+    const uiHost = process.env['POSTHOG_UI_HOST'];
     if (uiHost === undefined || uiHost.length === 0) {
-      throw new Error("POSTHOG_UI_HOST is not configured at build time.");
+      throw new Error('POSTHOG_UI_HOST is not configured at build time.');
     }
 
     if (!isPlatformBrowser(this.platformIdentifier)) {
       return;
     }
 
-    this.client = import("posthog-js").then(({ default: posthog }: typeof import("posthog-js")) =>
+    this.client = import('posthog-js').then(({ default: posthog }: typeof import('posthog-js')) =>
       posthog.init(projectToken, {
         api_host: apiHost,
         ui_host: uiHost,
-        defaults: "2026-08-30",
-      }),
+        defaults: '2026-08-30'
+      })
     );
   }
 }

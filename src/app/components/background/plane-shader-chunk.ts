@@ -1,9 +1,9 @@
-import { BackgroundPlaneUniformName } from "../../../declarations/enums/background-plane-uniform-name.enum";
-import { FILL_STATE_CELL_ROW_COUNT } from "./fill-state-cell-row-count";
-import { FILL_STATE_CELLS_PER_TEXEL } from "./fill-state-cells-per-texel";
-import { FILL_STATE_COLUMN_COUNT } from "./fill-state-column-count";
+import { BackgroundPlaneUniformName } from '../../../declarations/enums/background-plane-uniform-name.enum';
+import { FILL_STATE_CELL_ROW_COUNT } from './fill-state-cell-row-count';
+import { FILL_STATE_CELLS_PER_TEXEL } from './fill-state-cells-per-texel';
+import { FILL_STATE_COLUMN_COUNT } from './fill-state-column-count';
 
-export const planeShaderChunk: string = `
+export const planeShaderChunk = `
 uniform vec2 ${BackgroundPlaneUniformName.CanvasSize};
 uniform float ${BackgroundPlaneUniformName.CellSize};
 uniform float ${BackgroundPlaneUniformName.Tilt};

@@ -1,1 +1,1 @@
-export const PAGE_EDGE_TOLERANCE_PIXELS: number = 1;
+export const PAGE_EDGE_TOLERANCE_PIXELS = 1;

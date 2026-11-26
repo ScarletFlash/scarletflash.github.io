@@ -1,18 +1,16 @@
-import { inject, Service } from "@angular/core";
-import { ActivatedRouteSnapshot, PreloadingStrategy, Route, Router } from "@angular/router";
-import { Observable, of } from "rxjs";
-import { PageDirection } from "../../declarations/enums/page-direction.enum";
-import { RouteDataKey } from "../../declarations/enums/route-data-key.enum";
-import { getNeighbourPageRoute } from "../../utilities/get-neighbour-page-route.utility";
+import { Service, inject } from '@angular/core';
+import { Router, type ActivatedRouteSnapshot, type PreloadingStrategy, type Route } from '@angular/router';
+import { of, type Observable } from 'rxjs';
+import { PageDirection } from '../../declarations/enums/page-direction.enum';
+import { RouteDataKey } from '../../declarations/enums/route-data-key.enum';
+import { getNeighbourPageRoute } from '../../utilities/get-neighbour-page-route.utility';
 
 @Service()
 export class NeighbourPagePreloadingStrategy implements PreloadingStrategy {
   private readonly router: Router = inject(Router);
 
   public preload(route: Route, load: () => Observable<unknown>): Observable<unknown> {
-    const pageSnapshot: ActivatedRouteSnapshot = NeighbourPagePreloadingStrategy.getDeepestSnapshot(
-      this.router.routerState.snapshot.root,
-    );
+    const pageSnapshot = NeighbourPagePreloadingStrategy.getDeepestSnapshot(this.router.routerState.snapshot.root);
     const sequenceRoute: Route | null | undefined = pageSnapshot.parent?.routeConfig;
     if (sequenceRoute?.data?.[RouteDataKey.IsPageSequence] !== true) {
       return of(null);
@@ -20,13 +18,13 @@ export class NeighbourPagePreloadingStrategy implements PreloadingStrategy {
 
     const pageRoutes: readonly Route[] | undefined = sequenceRoute.children;
     if (pageRoutes === undefined) {
-      throw new Error("Expected the page sequence route to declare its page routes");
+      throw new Error('Expected the page sequence route to declare its page routes');
     }
 
     const neighbourPageRoutes: ReadonlySet<Route | undefined> = new Set<Route | undefined>(
       [PageDirection.Previous, PageDirection.Next].map((direction: PageDirection) =>
-        getNeighbourPageRoute({ pageRoutes, pageRoute: pageSnapshot.routeConfig, direction }),
-      ),
+        getNeighbourPageRoute({ pageRoutes, pageRoute: pageSnapshot.routeConfig, direction })
+      )
     );
     if (!neighbourPageRoutes.has(route)) {
       return of(null);

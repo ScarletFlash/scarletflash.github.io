@@ -1,24 +1,17 @@
-import { NgOptimizedImage } from "@angular/common";
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  InputSignal,
-  ViewEncapsulation,
-} from "@angular/core";
-import { ReferralCard } from "../../../../../declarations/interfaces/referral-card.interface";
-import { DataComponent } from "../../../../../declarations/types/data-component.type";
+import { NgOptimizedImage } from '@angular/common';
+import { Component, ViewEncapsulation, input, type InputSignal } from '@angular/core';
+import { type ReferralCard } from '../../../../../declarations/interfaces/referral-card.interface';
+import { type DataComponent } from '../../../../../declarations/types/data-component.type';
 
 @Component({
-    selector: "app-referrals-list-item",
-    imports: [NgOptimizedImage],
-    templateUrl: "./referrals-list-item.component.html",
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-referrals-list-item',
+  imports: [NgOptimizedImage],
+  templateUrl: './referrals-list-item.component.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class ReferralsListItemComponent implements DataComponent<ReferralCard> {
-  public name: InputSignal<string> = input.required();
-  public imageSrc: InputSignal<string> = input.required();
-  public description: InputSignal<string> = input.required();
-  public url: InputSignal<string> = input.required();
+  public readonly name: InputSignal<string> = input.required();
+  public readonly imageSrc: InputSignal<string> = input.required();
+  public readonly description: InputSignal<string> = input.required();
+  public readonly url: InputSignal<string> = input.required();
 }
