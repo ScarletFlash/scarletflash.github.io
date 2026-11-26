@@ -1,5 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": [
+    "src/app/pages/home/pages/bimeister-page/bimeister-page.component.ts",
+    "src/app/pages/home/pages/contacts-page/contacts-page.component.ts",
+    "src/app/pages/home/pages/sibe-page/sibe-page.component.ts"
+  ],
   "ignoreBinaries": ["ng"],
   "ignoreDependencies": ["@fontsource-variable/catamaran", "feather-icons", "tailwindcss"],
   "treatConfigHintsAsErrors": true
