@@ -33,6 +33,7 @@ yarn-error.log
 .prettiercache
 .cspellcache
 .knipcache
+.turbo
 
 # Miscellaneous
 /.angular/cache
