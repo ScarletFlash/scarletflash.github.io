@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "check-all": "pnpm run compiler__check && pnpm run linter__check && pnpm run formatter__check && pnpm run spell-checker__check && pnpm run dependencies-checker__check",
-    "fix-all": "pnpm run linter__fix && pnpm run formatter__fix",
+    "check-all": "pnpm run turbo-run _check-all",
+    "fix-all": "pnpm run turbo-run _fix-all",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -19,7 +19,9 @@
     "formatter__fix": "prettier --config .prettierrc.mjs --ignore-path .prettierignore --cache --cache-location .prettiercache --cache-strategy content --write .",
     "spell-checker__check": "cspell lint --config .cspell.json --cache --cache-location .cspellcache --no-progress .",
     "dependencies-checker__check": "knip --strict --cache --cache-location .knipcache",
-    "prettier": "prettier"
+    "prettier": "prettier",
+    "turbo": "turbo --color --no-update-notifier",
+    "turbo-run": "pnpm run turbo run --continue=dependencies-successful --env-mode=strict --log-order=stream --cache-dir=./.turbo --concurrency=75%"
   },
   "dependencies": {
     "@angular/common": "^22.3.0",
@@ -80,6 +82,7 @@
     "prettier-plugin-sort-json": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.5",
+    "turbo": "^2.11.13",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.74.0"
   },

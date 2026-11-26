@@ -63,4 +63,5 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Run `pnpm run fix-all` to apply the automatic linter and formatter fixes
 - Individual checks: `compiler__check`, `linter__check`, `formatter__check`, `spell-checker__check`, `dependencies-checker__check`; fixes: `linter__fix`, `formatter__fix`
 - Always run tools through `pnpm run <script>`; never call them directly or through `npx`
+- `check-all` and `fix-all` run through Turbo (`turbo.json`). Never manipulate Turbo caches by hand: no deleting `.turbo/`, no `--force`; if a cached result looks stale, fix the task inputs in `turbo.json`
 - Do NOT disable linter rules. A targeted `// eslint-disable-next-line <rule>` is allowed only where a fix would change behavior or is impossible because of an Angular or third-party contract

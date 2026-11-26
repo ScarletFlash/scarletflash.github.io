@@ -47,6 +47,8 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: |
+            .turbo/
+            !.turbo/runs/
             .prettiercache
             .cspellcache
             .knipcache/
@@ -64,6 +66,8 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: |
+            .turbo/
+            !.turbo/runs/
             .prettiercache
             .cspellcache
             .knipcache/

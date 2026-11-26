@@ -1,0 +1,75 @@
+{
+  "$schema": "./node_modules/turbo/schema.json",
+  "globalDependencies": [
+    ".cspell.json",
+    ".editorconfig",
+    ".gitignore",
+    ".postcssrc.json",
+    ".prettierignore",
+    ".prettierrc.mjs",
+    "angular.json",
+    "eslint*.mjs",
+    "knip.json",
+    "pnpm-*.yaml",
+    "tsconfig*.json",
+    "turbo.json"
+  ],
+  "tasks": {
+    "_check-all": {
+      "cache": false,
+      "dependsOn": [
+        "compiler__check",
+        "linter__check",
+        "formatter__check",
+        "spell-checker__check",
+        "dependencies-checker__check"
+      ],
+      "outputLogs": "errors-only"
+    },
+    "_fix-all": {
+      "cache": false,
+      "dependsOn": ["linter__fix", "formatter__fix"],
+      "outputLogs": "errors-only"
+    },
+    "compiler__check": {
+      "cache": true,
+      "inputs": ["./src/**"],
+      "outputLogs": "errors-only",
+      "outputs": []
+    },
+    "dependencies-checker__check": {
+      "cache": true,
+      "inputs": ["./src/**", "./*.{js,mjs,cjs,ts,mts,cts}", "./.*.{js,mjs,cjs,ts,mts,cts}", "./.github/workflows/*"],
+      "outputLogs": "errors-only",
+      "outputs": []
+    },
+    "formatter__check": {
+      "cache": true,
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputLogs": "errors-only",
+      "outputs": []
+    },
+    "formatter__fix": {
+      "cache": false,
+      "dependsOn": ["linter__fix"],
+      "outputLogs": "errors-only"
+    },
+    "linter__check": {
+      "cache": true,
+      "inputs": ["./src/**"],
+      "outputLogs": "errors-only",
+      "outputs": []
+    },
+    "linter__fix": {
+      "cache": false,
+      "outputLogs": "errors-only"
+    },
+    "spell-checker__check": {
+      "cache": true,
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputLogs": "errors-only",
+      "outputs": []
+    }
+  },
+  "ui": "stream"
+}

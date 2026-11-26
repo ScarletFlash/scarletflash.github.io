@@ -3,6 +3,7 @@
 .editorconfig
 .gitignore
 .npmrc
+.turbo/
 *.d.ts
 coverage/
 dist/
