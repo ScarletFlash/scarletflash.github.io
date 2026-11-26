@@ -67,12 +67,3 @@ jobs:
             !.turbo/runs/
             .*cache
           key: ${{ runner.os }}-check-${{ github.ref_name == 'main' && format('main-{0}', github.sha) || github.sha }}
-
-      - name: Save turbo logs
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: turbo-run-logs
-          path: .turbo/runs/
-          if-no-files-found: warn
-          retention-days: 1
