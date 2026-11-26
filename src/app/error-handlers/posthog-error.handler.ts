@@ -4,7 +4,7 @@ import { PosthogClientService } from '../services/posthog-client.service';
 
 @Service({ autoProvided: false })
 export class PosthogErrorHandler extends ErrorHandler {
-  private readonly posthogClientService: PosthogClientService = inject(PosthogClientService);
+  private readonly posthogClientService = inject(PosthogClientService);
 
   public override handleError(error: unknown): void {
     super.handleError(error);

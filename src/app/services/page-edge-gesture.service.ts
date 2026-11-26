@@ -1,4 +1,4 @@
-import { DestroyRef, Service, inject, signal, type WritableSignal } from '@angular/core';
+import { DestroyRef, Service, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { WheelGestures, type VectorXYZ, type WheelEventState } from 'wheel-gestures';
 import { KeyboardKey } from '../../declarations/enums/keyboard-key.enum';
@@ -23,10 +23,9 @@ const PAGE_DIRECTION_BY_KEY: ReadonlyMap<string, PageDirection> = new Map<string
   [KeyboardKey.PageUp, PageDirection.Previous],
   [KeyboardKey.Home, PageDirection.Previous]
 ]);
-const PAGE_DIRECTION_BY_SHIFTED_KEY: ReadonlyMap<string, PageDirection> = new Map<string, PageDirection>([
-  ...PAGE_DIRECTION_BY_KEY,
-  [KeyboardKey.Space, PageDirection.Previous]
-]);
+const PAGE_DIRECTION_BY_SHIFTED_KEY: ReadonlyMap<string, PageDirection> = new Map<string, PageDirection>(
+  Array.from(PAGE_DIRECTION_BY_KEY).concat([[KeyboardKey.Space, PageDirection.Previous]])
+);
 const BLOCKING_MODIFIER_FLAGS: readonly BlockingModifierFlag[] = ['altKey', 'ctrlKey', 'metaKey'];
 
 type BlockingModifierFlag = keyof Pick<KeyboardEvent, 'altKey' | 'ctrlKey' | 'metaKey'>;
@@ -43,19 +42,19 @@ interface GetPushedDirectionParameters {
 
 @Service({ autoProvided: false })
 export class PageEdgeGestureService {
-  private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly edgePushes = new Subject<PageNavigationInformation>();
 
   public readonly pushes = this.edgePushes.asObservable();
 
-  private readonly activeTouchIdentifier: WritableSignal<number | null> = signal(null);
+  private readonly activeTouchIdentifier = signal<number | null>(null);
 
-  private readonly touchEdgeAnchorY: WritableSignal<number | null> = signal(null);
+  private readonly touchEdgeAnchorY = signal<number | null>(null);
 
-  private readonly isTouchPushConsumed: WritableSignal<boolean> = signal(false);
+  private readonly isTouchPushConsumed = signal(false);
 
-  private readonly lastTouchSample: WritableSignal<TouchSample | null> = signal(null);
+  private readonly lastTouchSample = signal<TouchSample | null>(null);
 
   public observe(): void {
     const abortController = new AbortController();
@@ -68,7 +67,7 @@ export class PageEdgeGestureService {
       preventWheelAction: false,
       reverseSign: false
     });
-    const removeWheelGestureListener: VoidFunction = wheelGestures.on(
+    const removeWheelGestureListener = wheelGestures.on(
       'wheel',
       ({ isStart, axisDelta, axisVelocity, event }: WheelEventState) => {
         if (event.ctrlKey === true) {

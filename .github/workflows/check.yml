@@ -38,9 +38,11 @@ jobs:
             .turbo/
             !.turbo/runs/
             .*cache
-          key: ${{ runner.os }}-check-${{ github.sha }}
+          key:
+            ${{ runner.os }}-check-${{ github.ref_name == github.event.repository.default_branch &&
+            format('default-branch-{0}', github.sha) || github.sha }}
           restore-keys: |
-            ${{ runner.os }}-check-main-
+            ${{ runner.os }}-check-default-branch-
             ${{ runner.os }}-check-
 
       - name: Setup PNPM
@@ -59,11 +61,11 @@ jobs:
         run: pnpm run check-all
 
       - name: Save caches
-        if: ${{ failure() || steps.caches.outputs.cache-hit != 'true' }}
+        if: ${{ always() && steps.caches.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v6
         with:
           path: |
             .turbo/
             !.turbo/runs/
             .*cache
-          key: ${{ runner.os }}-check-${{ github.ref_name == 'main' && format('main-{0}', github.sha) || github.sha }}
+          key: ${{ steps.caches.outputs.cache-primary-key }}

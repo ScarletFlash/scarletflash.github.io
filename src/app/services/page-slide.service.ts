@@ -1,4 +1,4 @@
-import { ErrorHandler, Service, computed, inject, signal, type Signal, type WritableSignal } from '@angular/core';
+import { ErrorHandler, Service, computed, inject, signal } from '@angular/core';
 import { Router, type ViewTransitionInfo } from '@angular/router';
 import {
   animate,
@@ -53,15 +53,15 @@ interface ContinuedAnimation {
 
 @Service()
 export class PageSlideService {
-  private readonly router: Router = inject(Router);
+  private readonly router = inject(Router);
 
-  private readonly errorHandler: ErrorHandler = inject(ErrorHandler);
+  private readonly errorHandler = inject(ErrorHandler);
 
-  private readonly runningTransition: WritableSignal<ViewTransition | null> = signal(null);
+  private readonly runningTransition = signal<ViewTransition | null>(null);
 
-  public readonly isSliding: Signal<boolean> = computed(() => this.runningTransition() !== null);
+  public readonly isSliding = computed(() => this.runningTransition() !== null);
 
-  private readonly writableGridSlideOffset: WritableSignal<number> = signal(NO_GRID_SLIDE_OFFSET);
+  private readonly writableGridSlideOffset = signal(NO_GRID_SLIDE_OFFSET);
 
   public readonly gridSlideOffset = this.writableGridSlideOffset.asReadonly();
 

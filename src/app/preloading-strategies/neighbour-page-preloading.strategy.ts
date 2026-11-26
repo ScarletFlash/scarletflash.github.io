@@ -7,11 +7,11 @@ import { getNeighbourPageRoute } from '../../utilities/get-neighbour-page-route.
 
 @Service()
 export class NeighbourPagePreloadingStrategy implements PreloadingStrategy {
-  private readonly router: Router = inject(Router);
+  private readonly router = inject(Router);
 
   public preload(route: Route, load: () => Observable<unknown>): Observable<unknown> {
     const pageSnapshot = NeighbourPagePreloadingStrategy.getDeepestSnapshot(this.router.routerState.snapshot.root);
-    const sequenceRoute: Route | null | undefined = pageSnapshot.parent?.routeConfig;
+    const sequenceRoute = pageSnapshot.parent?.routeConfig;
     if (sequenceRoute?.data?.[RouteDataKey.IsPageSequence] !== true) {
       return of(null);
     }

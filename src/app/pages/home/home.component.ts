@@ -12,9 +12,7 @@ import {
   inject,
   signal,
   viewChild,
-  type ElementRef,
-  type Signal,
-  type WritableSignal
+  type ElementRef
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet, type Event, type Route } from '@angular/router';
@@ -30,6 +28,8 @@ import { ScrollStateService } from '../../services/scroll-state.service';
 
 const VISIBLE_VISIBILITY = 'visible';
 const HOME_OVERSCROLL_CLASS = 'overscroll-y-none';
+const REVEALED_CONTENT_CLASSES =
+  'opacity-100 visible transition-[opacity,visibility] duration-500 motion-reduce:duration-0';
 
 const enum RevealPhase {
   Fallback,
@@ -45,25 +45,25 @@ const enum RevealPhase {
   encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent {
-  private readonly root: Signal<ElementRef<HTMLElement>> = viewChild.required('root');
+  private readonly root = viewChild.required<ElementRef<HTMLElement>>('root');
 
-  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
-  private readonly router: Router = inject(Router);
+  private readonly router = inject(Router);
 
-  protected readonly scrollStateService: ScrollStateService = inject(ScrollStateService);
+  protected readonly scrollStateService = inject(ScrollStateService);
 
-  private readonly pageEdgeGestureService: PageEdgeGestureService = inject(PageEdgeGestureService);
+  private readonly pageEdgeGestureService = inject(PageEdgeGestureService);
 
-  private readonly pageSlideService: PageSlideService = inject(PageSlideService);
+  private readonly pageSlideService = inject(PageSlideService);
 
-  private readonly errorHandler: ErrorHandler = inject(ErrorHandler);
+  private readonly errorHandler = inject(ErrorHandler);
 
-  private readonly injector: Injector = inject(Injector);
+  private readonly injector = inject(Injector);
 
-  private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  private readonly destroyRef = inject(DestroyRef);
 
-  private readonly pageRoute: Signal<Route> = toSignal(
+  private readonly pageRoute = toSignal(
     this.router.events.pipe(
       filter(isNavigationEnd),
       map(() => this.getPageRoute())
@@ -71,28 +71,36 @@ export class HomeComponent {
     { initialValue: this.getPageRoute() }
   );
 
-  private readonly revealPhase: WritableSignal<RevealPhase> = signal(
+  private readonly revealPhase = signal(
     this.scrollStateService.landingEdge() === PageEdge.Start ? RevealPhase.Revealed : RevealPhase.Fallback
   );
 
-  protected readonly isContentHidden: Signal<boolean> = computed(() => this.revealPhase() === RevealPhase.Hidden);
+  protected readonly revealPhaseClasses = computed(() => {
+    const phase = this.revealPhase();
+    switch (phase) {
+      case RevealPhase.Fallback:
+        return `${REVEALED_CONTENT_CLASSES} delay-5000 starting:opacity-0 starting:invisible`;
+      case RevealPhase.Hidden:
+        return 'opacity-0 invisible transition-none';
+      case RevealPhase.Revealed:
+        return REVEALED_CONTENT_CLASSES;
+      default:
+        throw new Error(`Expected a known reveal phase, but got [${String(phase)}]`);
+    }
+  });
 
-  protected readonly isFallbackRevealApplied: Signal<boolean> = computed(
-    () => this.revealPhase() === RevealPhase.Fallback
-  );
+  private readonly isScrollStateSynchronized = signal(false);
 
-  private readonly isScrollStateSynchronized: WritableSignal<boolean> = signal(false);
-
-  protected readonly isFirstScreenAligned: Signal<boolean> = computed(
+  protected readonly isFirstScreenAligned = computed(
     () => this.isScrollStateSynchronized() && this.scrollStateService.isOpeningAligned()
   );
 
-  protected readonly slidingContentScrollDistance: Signal<number> = computed(
+  protected readonly slidingContentScrollDistance = computed(
     () => this.scrollStateService.contentScrollDistanceAfterAlignment() - this.pageSlideService.gridSlideOffset()
   );
 
   constructor() {
-    const renderer: Renderer2 = inject(Renderer2);
+    const renderer = inject(Renderer2);
     const documentElement = inject(DOCUMENT).documentElement;
     renderer.addClass(documentElement, HOME_OVERSCROLL_CLASS);
     this.destroyRef.onDestroy(() => {
@@ -185,7 +193,7 @@ export class HomeComponent {
   }
 
   private getPageRoute(): Route {
-    const pageRoute: Route | null | undefined = this.activatedRoute.snapshot.firstChild?.routeConfig;
+    const pageRoute = this.activatedRoute.snapshot.firstChild?.routeConfig;
     if (pageRoute === null || pageRoute === undefined) {
       throw new Error('Expected the home route to render one of its page routes');
     }

@@ -3,7 +3,6 @@ import { NodeMaterial, Vector2, Vector3, type Node, type Texture, type TextureNo
 import { TexelChannel } from '../../../declarations/enums/texel-channel.enum';
 import { type BackgroundPlaneState } from '../../../declarations/interfaces/background-plane-state.interface';
 import { type BackgroundPointerCell } from '../../../declarations/interfaces/background-pointer-cell.interface';
-import { getPlaneStateVector } from '../../../utilities/get-plane-state-vector.utility';
 import { type BackgroundPlaneNodes } from './background-plane-nodes';
 import { EMPTY_FILL } from './empty-fill';
 import { FILL_STATE_CELLS_PER_TEXEL_NODE } from './fill-state-cells-per-texel-node';
@@ -126,7 +125,11 @@ export class BackgroundFillMaterial extends NodeMaterial {
     this.isPressed.value = isPressed;
     this.previousPointerPosition.value.copy(previousPointerPosition);
     this.isPreviousPointerPresent.value = isPreviousPointerPresent;
-    this.previousPlaneState.value.copy(getPlaneStateVector(previousPlaneState));
+    this.previousPlaneState.value.set(
+      previousPlaneState.tilt,
+      previousPlaneState.gridOffset,
+      previousPlaneState.rowShift
+    );
   }
 
   private getNextCellState({

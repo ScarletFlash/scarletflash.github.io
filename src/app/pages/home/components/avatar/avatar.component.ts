@@ -12,7 +12,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
         const basePath = basePathParts.reverse().join('/');
         const [fileExtension, ...fileNameParts]: string[] = fileEntry.split('.').reverse();
         const fileName = fileNameParts.reverse().join('.');
-        const isPlaceholder: boolean = Boolean(rawIsPlaceholder) || typeof width !== 'number';
+        const isPlaceholder = Boolean(rawIsPlaceholder) || typeof width !== 'number';
         const variableSuffix = isPlaceholder ? '.placeholder' : `-${width}w`;
         return `/${basePath}/${fileName}${variableSuffix}.${fileExtension}`.replaceAll('//', '/');
       }

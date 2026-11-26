@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, ViewEncapsulation, input, type InputSignal } from '@angular/core';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 import { type ReferralCard } from '../../../../../declarations/interfaces/referral-card.interface';
 import { type DataComponent } from '../../../../../declarations/types/data-component.type';
 
@@ -10,8 +10,8 @@ import { type DataComponent } from '../../../../../declarations/types/data-compo
   encapsulation: ViewEncapsulation.None
 })
 export class ReferralsListItemComponent implements DataComponent<ReferralCard> {
-  public readonly name: InputSignal<string> = input.required();
-  public readonly imageSrc: InputSignal<string> = input.required();
-  public readonly description: InputSignal<string> = input.required();
-  public readonly url: InputSignal<string> = input.required();
+  public readonly name = input.required<string>();
+  public readonly imageSrc = input.required<string>();
+  public readonly description = input.required<string>();
+  public readonly url = input.required<string>();
 }

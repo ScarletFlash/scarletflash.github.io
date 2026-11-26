@@ -13,8 +13,7 @@ import {
   signal,
   viewChild,
   type ElementRef,
-  type Signal,
-  type WritableSignal
+  type Signal
 } from '@angular/core';
 import { debounce } from '@tanstack/pacer';
 import { TextRouletteAnimatedItemComponent } from '../text-roulette-animated-item/text-roulette-animated-item.component';
@@ -49,30 +48,25 @@ export class TextRouletteComponent {
 
   public readonly values = input.required<string[]>();
 
-  private readonly currentValueIndex: WritableSignal<number> = signal(0);
+  private readonly currentValueIndex = signal(0);
 
-  public readonly nextValue: Signal<string> = computed(() =>
+  public readonly nextValue = computed(() =>
     TextRouletteComponent.getValueByIndex({
       source: this.values,
       rawIndex: this.currentValueIndex()
     })
   );
 
-  private readonly dynamicValuesContainer: Signal<ElementRef<HTMLElement>> =
-    viewChild.required('dynamicValuesContainer');
+  private readonly dynamicValuesContainer = viewChild.required<ElementRef<HTMLElement>>('dynamicValuesContainer');
 
-  protected readonly currentItem: WritableSignal<TextRouletteItem[]> = signal([]);
+  protected readonly currentItem = signal<TextRouletteItem[]>([]);
 
-  private readonly isSelectionTarget: WritableSignal<boolean> = signal(false);
+  private readonly isSelectionTarget = signal(false);
 
-  private readonly renderer: Renderer2 = inject(Renderer2);
+  private readonly renderer = inject(Renderer2);
 
-  private readonly debouncedSelectionEventHandler: (event: unknown) => void = debounce(
-    (event: unknown) => {
-      if (!(event instanceof Event)) {
-        throw new Error(`Expected event to be an instance of Event`);
-      }
-
+  private readonly debouncedSelectionEventHandler = debounce(
+    () => {
       const currentSelection = window.getSelection();
       if (currentSelection === null || currentSelection.toString() === '') {
         this.isSelectionTarget.set(false);
@@ -98,18 +92,18 @@ export class TextRouletteComponent {
       throw new Error(`Expected swap-frequency to be a positive integer, but got [${rawSwapFrequencyMilliseconds}]`);
     }
 
-    const platformId: object = inject(PLATFORM_ID);
-    const destroyRef: DestroyRef = inject(DestroyRef);
+    const platformIdentifier: object = inject(PLATFORM_ID);
+    const destroyRef = inject(DestroyRef);
 
-    const isInitialized: WritableSignal<boolean> = signal(false);
+    const isInitialized = signal(false);
 
     afterEveryRender(() => {
-      if (!isPlatformBrowser(platformId) || isInitialized()) {
+      if (!isPlatformBrowser(platformIdentifier) || isInitialized()) {
         return;
       }
       isInitialized.set(true);
 
-      const unlistenFromSelectionChanges: VoidFunction = this.renderer.listen(
+      const unlistenFromSelectionChanges = this.renderer.listen(
         'document',
         'selectionchange',
         this.debouncedSelectionEventHandler

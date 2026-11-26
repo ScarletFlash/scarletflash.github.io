@@ -40,7 +40,6 @@ import {
 } from 'three/webgpu';
 import { type BackgroundPlanePoint } from '../../../declarations/interfaces/background-plane-point.interface';
 import { type BackgroundWave } from '../../../declarations/interfaces/background-wave.interface';
-import { getPlaneStateVector } from '../../../utilities/get-plane-state-vector.utility';
 import { type BackgroundPlaneNodes } from './background-plane-nodes';
 import { EMPTY_FILL } from './empty-fill';
 import { FADE_END_DEPTH_RATIO } from './fade-end-depth-ratio';
@@ -330,7 +329,7 @@ export class BackgroundGridPass {
     this.waveCount.value = waves.length;
     waves.forEach((wave: BackgroundWave, slot: number) => {
       this.wavePointerPositionValues[slot].copy(wave.pointerPosition);
-      this.wavePlaneStateValues[slot].copy(getPlaneStateVector(wave.planeState));
+      this.wavePlaneStateValues[slot].set(wave.planeState.tilt, wave.planeState.gridOffset, wave.planeState.rowShift);
       this.wavePowerValues[slot] = wave.power;
       this.waveAgeMillisecondsValues[slot] = Math.max(RELEASE_AGE_MILLISECONDS, timeStamp - wave.timeStamp);
     });
