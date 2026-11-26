@@ -533,10 +533,8 @@ export class BackgroundMaterial extends ShaderMaterial {
       this.wavePowers[slot] = wave.power;
       this.waveAgesMilliseconds[slot] = Math.max(RELEASE_AGE_MILLISECONDS, timeStamp - wave.timeStamp);
     });
-    const glowScope: GlowScope = Math.max(
-      chargeLevel > NO_ENERGY ? GlowScope.Charge : GlowScope.None,
-      waves.length > 0 ? GlowScope.ChargeAndWaves : GlowScope.None
-    );
+    const chargeGlowScope = chargeLevel > NO_ENERGY ? GlowScope.Charge : GlowScope.None;
+    const glowScope = waves.length > 0 ? GlowScope.ChargeAndWaves : chargeGlowScope;
     if (this.defines[DefineName.GlowScope] === glowScope) {
       return;
     }

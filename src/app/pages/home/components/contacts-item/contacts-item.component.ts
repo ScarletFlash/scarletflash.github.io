@@ -1,5 +1,5 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, InputSignal, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 import { type ContactButton } from '../../../../../declarations/interfaces/contact-button.interface';
 import { type DataComponent } from '../../../../../declarations/types/data-component.type';
 

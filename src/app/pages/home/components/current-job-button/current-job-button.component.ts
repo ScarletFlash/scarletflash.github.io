@@ -1,4 +1,4 @@
-import { Component, InputSignal, ViewEncapsulation, input } from '@angular/core';
+import { Component, ViewEncapsulation, input } from '@angular/core';
 
 @Component({
   selector: 'app-current-job-button',

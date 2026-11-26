@@ -1,4 +1,4 @@
-import { Service, computed, inject, signal, type Signal, type WritableSignal } from '@angular/core';
+import { ErrorHandler, Service, computed, inject, signal, type Signal, type WritableSignal } from '@angular/core';
 import { Router, type ViewTransitionInfo } from '@angular/router';
 import {
   animate,
@@ -7,7 +7,6 @@ import {
   type AnimationPlaybackControlsWithThen,
   type BezierDefinition
 } from 'motion';
-import { type PageNavigationInformation } from '../../declarations/interfaces/page-navigation-information.interface';
 import { getClampedValue } from '../../utilities/get-clamped-value.utility';
 import { getPageNavigationInformation } from '../../utilities/get-page-navigation-information.utility';
 import { getPageSlideDistance } from '../../utilities/get-page-slide-distance.utility';
@@ -55,6 +54,8 @@ interface ContinuedAnimation {
 @Service()
 export class PageSlideService {
   private readonly router: Router = inject(Router);
+
+  private readonly errorHandler: ErrorHandler = inject(ErrorHandler);
 
   private readonly runningTransition: WritableSignal<ViewTransition | null> = signal(null);
 
@@ -220,12 +221,16 @@ export class PageSlideService {
           }
         });
 
-        transition.finished.then(() => {
-          slideAnimations.forEach((slideAnimation: Animation) => {
-            slideAnimation.cancel();
+        transition.finished
+          .then(() => {
+            slideAnimations.forEach((slideAnimation: Animation) => {
+              slideAnimation.cancel();
+            });
+            gridSlideAnimation.complete();
+          })
+          .catch((error: unknown) => {
+            this.errorHandler.handleError(error);
           });
-          gridSlideAnimation.complete();
-        });
       },
       () => {
         this.finishSliding();

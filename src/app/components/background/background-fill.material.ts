@@ -87,12 +87,16 @@ void main() {
 `;
 
 export class BackgroundFillMaterial extends ShaderMaterial {
+  private readonly previousPlaneStateVector: Vector3;
+
   constructor({
     planeUniforms,
     pointerUniforms,
     cellFillDurationMilliseconds,
     cellFadeDurationMilliseconds
   }: BackgroundFillMaterialParameters) {
+    const previousPlaneStateVector = new Vector3();
+
     super({
       vertexShader: fullScreenVertexShader,
       fragmentShader,
@@ -106,9 +110,11 @@ export class BackgroundFillMaterial extends ShaderMaterial {
         [UniformName.IsPressed]: new Uniform(false),
         [UniformName.PreviousPointerPosition]: new Uniform(new Vector2()),
         [UniformName.IsPreviousPointerPresent]: new Uniform(false),
-        [UniformName.PreviousPlaneState]: new Uniform(new Vector3())
+        [UniformName.PreviousPlaneState]: new Uniform(previousPlaneStateVector)
       }
     });
+
+    this.previousPlaneStateVector = previousPlaneStateVector;
   }
 
   public setFrameState({
@@ -127,6 +133,6 @@ export class BackgroundFillMaterial extends ShaderMaterial {
     this.uniforms[UniformName.IsPressed].value = isPressed;
     this.uniforms[UniformName.PreviousPointerPosition].value = previousPointerPosition;
     this.uniforms[UniformName.IsPreviousPointerPresent].value = isPreviousPointerPresent;
-    this.uniforms[UniformName.PreviousPlaneState].value.copy(getPlaneStateVector(previousPlaneState));
+    this.previousPlaneStateVector.copy(getPlaneStateVector(previousPlaneState));
   }
 }

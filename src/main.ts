@@ -3,5 +3,6 @@ import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 
 bootstrapApplication(AppComponent, appConfig).catch((reason: unknown) => {
+  // eslint-disable-next-line no-console
   console.error(reason);
 });

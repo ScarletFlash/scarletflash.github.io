@@ -1,4 +1,6 @@
 import { type Routes } from '@angular/router';
+import type * as HomeRoutesModule from './pages/home/home.routes';
+import type * as ReferralComponentModule from './pages/referral/referral.component';
 
 export const routes: Routes = [
   {
@@ -6,13 +8,12 @@ export const routes: Routes = [
     title: 'Referral',
     loadComponent: () =>
       import('./pages/referral/referral.component').then(
-        ({ ReferralComponent }: typeof import('./pages/referral/referral.component')) => ReferralComponent
+        ({ ReferralComponent }: typeof ReferralComponentModule) => ReferralComponent
       )
   },
   {
     path: '',
-    loadChildren: () =>
-      import('./pages/home/home.routes').then(({ homeRoutes }: typeof import('./pages/home/home.routes')) => homeRoutes)
+    loadChildren: () => import('./pages/home/home.routes').then(({ homeRoutes }: typeof HomeRoutesModule) => homeRoutes)
   },
   {
     path: '*',

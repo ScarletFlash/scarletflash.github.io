@@ -3,11 +3,9 @@ import {
   Component,
   DestroyRef,
   HostAttributeToken,
-  InputSignal,
   PLATFORM_ID,
   Renderer2,
   ViewEncapsulation,
-  type WritableSignal,
   afterEveryRender,
   computed,
   inject,
@@ -15,7 +13,8 @@ import {
   signal,
   viewChild,
   type ElementRef,
-  type Signal
+  type Signal,
+  type WritableSignal
 } from '@angular/core';
 import { debounce } from '@tanstack/pacer';
 import { TextRouletteAnimatedItemComponent } from '../text-roulette-animated-item/text-roulette-animated-item.component';
